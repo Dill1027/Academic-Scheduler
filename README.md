@@ -1,3 +1,3 @@
 # Academic-Scheduler
-
 MERN project
+
