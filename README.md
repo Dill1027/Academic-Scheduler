@@ -1,0 +1,2 @@
+# Academic-Scheduler
+MERN project
