@@ -57,7 +57,7 @@ function AllEmployee() {
     doc.text("Employee Report", 20, 10);
 
     const columns = [
-      "EmployeID",
+      // "EmployeID",
       "Full name",
       "NIC",
       "address",
@@ -69,7 +69,7 @@ function AllEmployee() {
     ];
 
     const rows = employee.map((item) => [
-      item.empID,
+      // item.empID,
       item.name,
       item.nic,
       item.address,
@@ -135,7 +135,7 @@ function AllEmployee() {
                   <table className="admin_table">
                     <thead>
                       <tr className="">
-                        <th className="admin_table_th">EmployeID</th>
+                        {/* <th className="admin_table_th">EmployeID</th> */}
                         <th className="admin_table_th">full name</th>
                         <th className="admin_table_th">nic</th>
                         <th className="admin_table_th">address</th>
@@ -151,7 +151,7 @@ function AllEmployee() {
                     <tbody>
                       {employee.map((item, index) => (
                         <tr className="" key={index}>
-                          <td className="admin_table_td">{item.empID}</td>
+                          {/* <td className="admin_table_td">{item.empID}</td> */}
                           <td className="admin_table_td">{item.name}</td>
                           <td className="admin_table_td">{item.nic}</td>
                           <td className="admin_table_td">{item.address}</td>

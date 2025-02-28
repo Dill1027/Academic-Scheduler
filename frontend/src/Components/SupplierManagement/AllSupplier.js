@@ -141,6 +141,7 @@ function AllSupplier() {
                       <th className="admin_table_th">Email</th>
                       <th className="admin_table_th">Phone</th>
                       <th className="admin_table_th">Address</th>
+                      <th className="admin_table_th">action</th>
                     </tr>
                   </thead>
 

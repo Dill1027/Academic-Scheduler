@@ -23,7 +23,7 @@ function UpdateEmployee() {
   const sendRequest = async () => {
     await axios
       .put(`http://localhost:8081/employee/${id}`, {
-        empID: String(inputs.empID),
+        // empID: String(inputs.empID),
         name: String(inputs.name),
         nic: String(inputs.nic),
         address: String(inputs.address),
@@ -58,7 +58,7 @@ function UpdateEmployee() {
         <div className="lef_child">
           <h1 className="main_topic_function">Update Employee </h1>
           <form className="from_data" onSubmit={handleSubmit}>
-            <div className="">
+            {/* <div className="">
               <label className="form_lable">Employe ID:</label>
               <br />
               <input
@@ -71,7 +71,7 @@ function UpdateEmployee() {
                 required
                 readOnly
               />
-            </div>
+            </div> */}
             <div className="">
               <label className="form_lable">Employe name:</label>
               <br />

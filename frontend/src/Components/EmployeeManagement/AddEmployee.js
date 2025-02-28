@@ -3,7 +3,7 @@ import axios from "axios";
 import SideBar from "../Home/SideBar";
 function AddEmployee() {
   const [inputs, setInputs] = useState({
-    empID: "",
+    // empID: "",
     name: "",
     nic: "",
     address: "",
@@ -43,7 +43,7 @@ function AddEmployee() {
 
   const sendRequest = async () => {
     await axios.post("http://localhost:8081/employee", {
-      empID: inputs.empID,
+      // empID: inputs.empID,
       name: inputs.name,
       nic: inputs.nic,
       address: inputs.address,
@@ -62,7 +62,7 @@ function AddEmployee() {
         <div className="lef_child">
           <h1 className="main_topic_function">Add Employee </h1>
           <form className="from_data" onSubmit={handleSubmit}>
-            <div className="">
+            {/* <div className="">
               <label className="form_lable">Employe ID:</label>
               <br />
               <input
@@ -75,7 +75,7 @@ function AddEmployee() {
                 required
                 readOnly
               />
-            </div>
+            </div> */}
             <div className="">
               <label className="form_lable">Employe name:</label>
               <br />
