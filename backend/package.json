@@ -8,7 +8,6 @@
   },
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -16,5 +15,8 @@
     "mongodb": "^6.9.0",
     "mongoose": "^8.6.3",
     "nodemon": "^3.1.7"
-  }
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
 }
