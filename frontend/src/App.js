@@ -22,7 +22,7 @@ import UpdateSupplier from "./Components/SupplierManagement/UpdateSupplier";
 //Acdemic sheduler-----------------------------
 import Header from "./Components/Navbar/Header";
 import Footer from "./Components/Navbar/footer";
-
+import Coursed from "./Components/CourseManagement/coursedash";
 
 
 
@@ -53,11 +53,12 @@ function App() {
           <Route path="/SupplierDash" element={<AllSupplier />} />
           <Route path="/updateSupplier/:id" element={<UpdateSupplier />} />
 
-
           {/*Academic sheduler */}
 
           <Route path="/header" element={<Header />} />
-          <Route path="/Footer" element={<Footer />} />
+          <Route path="/footer" element={<Footer />} />
+          <Route path="/course" element={<Coursed />} />
+      
 
         </Routes>
       </React.Fragment>
