@@ -17,6 +17,15 @@ import UpdateOrder from "./Components/OrderManagement/UpdateOrder";
 import AddSupplier from "./Components/SupplierManagement/AddSupplier";
 import AllSupplier from "./Components/SupplierManagement/AllSupplier";
 import UpdateSupplier from "./Components/SupplierManagement/UpdateSupplier";
+
+
+//Acdemic sheduler-----------------------------
+import Header from "./Components/Navbar/Header";
+import Footer from "./Components/Navbar/footer";
+
+
+
+
 function App() {
   return (
     <div>
@@ -43,6 +52,13 @@ function App() {
           <Route path="/addSupplier" element={<AddSupplier />} />
           <Route path="/SupplierDash" element={<AllSupplier />} />
           <Route path="/updateSupplier/:id" element={<UpdateSupplier />} />
+
+
+          {/*Academic sheduler */}
+
+          <Route path="/header" element={<Header />} />
+          <Route path="/Footer" element={<Footer />} />
+
         </Routes>
       </React.Fragment>
     </div>
