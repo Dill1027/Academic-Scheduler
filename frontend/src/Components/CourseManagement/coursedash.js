@@ -19,21 +19,21 @@ function Coursed() {
        <div style={{ marginTop: "20px" , padding:'125px' }}>
         
             <div className="p1">
-                <Link to="/module-allocation" style={{ textDecoration: 'none' , color:'white'}}>
-                   <h3>Module Allocation for Students</h3>
+                <Link to="/StudentCourse" style={{ textDecoration: 'none' , color:'white'}}>
+                   <h3 class="title">Module Allocation for Students</h3>
                 </Link>
             </div>
 
       {/* Course Requirements Section */}
             <div className="p1 mt-5">
-                <Link to="/upload-course-requirements" style={{ textDecoration: 'none' }}>
-                   <h3>Uploading Course Requirements</h3>
+                <Link to="/AddDoc" style={{ textDecoration: 'none' }}>
+                   <h3 class="title">Uploading Course Requirements</h3>
                 </Link>
             </div>
 
 
              <div className=" p1 container mt-5">
-                <h3>Available Courses</h3>
+                <h3 class="title">Available Courses</h3>
 
                  
                 <div className=" row mt-4">

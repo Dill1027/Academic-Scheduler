@@ -21,9 +21,10 @@ import UpdateSupplier from "./Components/SupplierManagement/UpdateSupplier";
 
 //Acdemic sheduler-----------------------------
 // import Header from "./Components/Navbar/Header";
-import Footer from "./Components/Navbar/footer";
+// import Footer from "./Components/Navbar/footer";
 import Coursed from "./Components/CourseManagement/coursedash";
-
+import AddDoc from "./Components/CourseManagement/AddDoc";
+import StudentCourse from  "./Components/CourseManagement/studentCourse"
 
 
 function App() {
@@ -56,9 +57,10 @@ function App() {
           {/*Academic sheduler */}
 
           {/* <Route path="/header" element={<Header />} /> */}
-          <Route path="/footer" element={<Footer />} />
+          {/* <Route path="/footer" element={<Footer />} /> */}
           <Route path="/course" element={<Coursed />} />
-      
+          <Route path="/AddDoc" element={<AddDoc />} />
+          <Route path="/StudentCourse" element={<StudentCourse />} />
 
         </Routes>
       </React.Fragment>

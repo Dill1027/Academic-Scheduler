@@ -1,8 +1,9 @@
 /* Footer Styles */
 .footer-container {
-    padding: 1.5rem;  /* Reduced footer height */
+    padding: 1rem;  /* Reduced footer height */
     background-color: #333;
     color: #fff;
+    background-size:cover;
   }
   
   .footer-container h6 {
