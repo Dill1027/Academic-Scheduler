@@ -84,6 +84,7 @@ function AddDoc() {
                         <label>Year</label>
                         <select
                             className="form-control"
+                            name="year"
                             value={year}
                             onChange={(e) => setYear(e.target.value)}
                             required
@@ -101,6 +102,7 @@ function AddDoc() {
                         <input
                             type="text"
                             className="form-control"
+                            name="moduleName"
                             value={moduleName}
                             onChange={(e) => setModuleName(e.target.value)}
                             required
@@ -111,6 +113,8 @@ function AddDoc() {
                         <label>Description (Optional)</label>
                         <textarea
                             className="form-control"
+                            rows="4"
+                            name="description"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
@@ -125,6 +129,7 @@ function AddDoc() {
                                     type="text"
                                     className="form-control me-2"
                                     placeholder={`Lecture ${index + 1}`}
+                                    name="lecture"
                                     value={lecture}
                                     onChange={(e) => handleLectureChange(index, e.target.value)}
                                     required
@@ -154,6 +159,8 @@ function AddDoc() {
                             <div key={index} className="d-flex align-items-center mb-2">
                                 <input
                                     type="file"
+                                    name="image"
+                                    accept="image/*"
                                     className="form-control me-2"
                                     onChange={(e) => handleDocumentChange(index, e.target.files[0])}
                                 />
