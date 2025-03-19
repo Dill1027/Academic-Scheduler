@@ -21,7 +21,7 @@ import UpdateSupplier from "./Components/SupplierManagement/UpdateSupplier";
 
 //Acdemic sheduler-----------------------------
 // import Header from "./Components/Navbar/Header";
-// import Footer from "./Components/Navbar/footer";
+import Footer from "./Components/Navbar/footer";
 import Coursed from "./Components/CourseManagement/coursedash";
 
 
@@ -56,7 +56,7 @@ function App() {
           {/*Academic sheduler */}
 
           {/* <Route path="/header" element={<Header />} /> */}
-          {/* <Route path="/footer" element={<Footer />} /> */}
+          <Route path="/footer" element={<Footer />} />
           <Route path="/course" element={<Coursed />} />
       
 
