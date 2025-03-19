@@ -1,0 +1,139 @@
+.p1{
+    background-color: #8e9498;
+    padding: 25px 20px;
+    border-radius: 5px;
+    /* color: rgb(4, 4, 28); */
+    box-shadow: 5px 5px 15px rgba(88, 85, 85, 0.2);
+    cursor: pointer;
+    position: relative;
+    align-items: center;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.p1:hover {
+    background-color: #6f7a81;       /* Darker shade of the original color */
+    transform: translateY(-5px);      /* Lift the element slightly */
+    box-shadow: 5px 5px 20px rgba(88, 85, 85, 0.3);  /* Slightly bigger shadow */
+} 
+
+
+h3 {
+    color: #333;
+    font-size: 24px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out; /* Smooth transition for text color and decoration */
+}
+
+/* Hover effect */
+h3:hover {
+    color: #eef0f3; /* Change text color to a blue shade on hover */
+    text-decoration: bold; /* Underline the text when hovered */
+    cursor: pointer; /* Change the cursor to indicate interactivity */
+}
+
+
+/* General Styling for the main layout */
+.main_function {
+    padding: 20px;
+    background-color: #f8f9fa;
+    align-items: center;
+  }
+  
+
+  h4 {
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .card-body {
+    padding: 30px;
+    background-color: #fff;
+    text-align: center;
+    border-radius: 10px;
+  }
+  
+  .card-title {
+    color: #007bff;
+    font-size: 22px;
+  }
+  
+  .card-text {
+    color: #6c757d;
+    margin-bottom: 20px;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 16px;
+    text-decoration: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+  
+  /* Card spacing and column layout */
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .col-md-3 {
+    width: 100%;
+    max-width: 25%;
+    margin-bottom: 30px;
+  }
+  
+  @media (max-width: 768px) {
+    .col-md-3 {
+      width: 100%;
+    }
+  }
+  
+  /* Styling for the Links in the divs */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Padding and margin for the individual sections */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .mt-5 {
+    margin-top: 50px;
+  }
+  
+  .mt-3 {
+    margin-top: 30px;
+  }
+  
+  .mb-4 {
+    margin-bottom: 20px;
+  }
+  
+
+  
+  
