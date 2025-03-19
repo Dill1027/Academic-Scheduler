@@ -13,14 +13,16 @@ function Header() {
               <div className="menu-icon1">
                 <i className="fa fa-bars"></i>
               </div>
-              <h3>TravelMate</h3>
+              <h3>Academic  Sheduler</h3>
             </div>
             <div className="menu-container1">
               <ul className="menu-list1">
+              <li><a href="/EventManager/Dashboard">Home</a></li>
                 <li><a href="/EventManager/Dashboard">Dashboard</a></li>
-                <li><a href="/EventManager/addEvent">Add Event</a></li>
-                <li><a href="/EventManager/EventList">View Event</a></li>
-                <li><Link to="/EventManager/report">Report</Link></li>
+                <li><a href="/EventManager/addEvent">Student</a></li>
+                <li><a href="/EventManager/EventList">Lecturer</a></li>
+                <li><Link to="/course">Course</Link></li>
+                <li><Link to="/EventManager/report">Time Table</Link></li>
               </ul>
             </div>
             <div 
