@@ -11,6 +11,8 @@ const EmployeeRoute = require("./Routes/EmployeeRoutes.js");
 const AttendanceRoute = require("./Routes/AttendanceRoutes.js");
 const OrderRoute = require("./Routes/OrderRoute.js");
 const SupplierRoute = require("./Routes/SupplierRoutes.js");
+const path = require("path");
+
 
 //academic shedular
 
@@ -25,6 +27,7 @@ connectDB();
 app.use(cors()); // You can add custom options if needed
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use("/inventory", InventoryRoute);

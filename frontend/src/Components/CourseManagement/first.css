@@ -1,0 +1,55 @@
+.fetch-data-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.fetch-data-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.data-list {
+    margin-top: 20px;
+}
+
+.data-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    background-color: #fff;
+}
+
+.data-item h5 {
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.data-item p {
+    margin-bottom: 5px;
+}
+
+.data-item a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.data-item a:hover {
+    text-decoration: underline;
+}
+
+.text-danger {
+    color: #dc3545;
+}

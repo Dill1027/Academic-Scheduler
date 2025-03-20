@@ -69,6 +69,18 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Backend route to fetch data by year
+router.get("/year/:year", async (req, res) => {
+  try {
+      const year = req.params.year;
+      const data = await Docs.find({ year: year }); // Fetch data from MongoDB
+      res.status(200).json(data);
+  } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).json({ message: "Failed to fetch data" });
+  }
+});
+
 // Update document
 router.put("/update/:id", upload.array('documents', 3), async (req, res) => {
   const docId = req.params.id;

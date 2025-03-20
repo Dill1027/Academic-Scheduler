@@ -24,7 +24,8 @@ import UpdateSupplier from "./Components/SupplierManagement/UpdateSupplier";
 // import Footer from "./Components/Navbar/footer";
 import Coursed from "./Components/CourseManagement/coursedash";
 import AddDoc from "./Components/CourseManagement/AddDoc";
-import StudentCourse from  "./Components/CourseManagement/studentCourse"
+import StudentCourse from  "./Components/CourseManagement/studentCourse";
+import FirstYear from "./Components/CourseManagement/firstYear";
 
 
 function App() {
@@ -61,6 +62,7 @@ function App() {
           <Route path="/course" element={<Coursed />} />
           <Route path="/AddDoc" element={<AddDoc />} />
           <Route path="/StudentCourse" element={<StudentCourse />} />
+          <Route path="/first" element={<FirstYear />} />
 
         </Routes>
       </React.Fragment>

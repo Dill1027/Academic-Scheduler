@@ -43,7 +43,7 @@ function Coursed() {
                             <div className="card-body text-center">
                                <h4 className="card-title">1st Year</h4>
                                <p className="card-text">View courses for 1st-year students</p>
-                               <Link to="/1st-year" className="btn btn-primary">Go to 1st Year</Link>
+                               <Link to="/first" className="btn btn-primary">Go to 1st Year</Link>
                             </div>
                         </div>
                     </div>
