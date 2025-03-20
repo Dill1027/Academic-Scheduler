@@ -1,45 +1,23 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 import Header from "../Navbar/Header";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./AddDoc.css";
 
 function AddDoc() {
+    const navigate = useNavigate();
     const [year, setYear] = useState("");
     const [moduleName, setModuleName] = useState("");
     const [description, setDescription] = useState("");
-    const [lectures, setLectures] = useState([""]);
-    const [documents, setDocuments] = useState([]);
-
-    // Add a new lecture field
-    const addLectureField = () => {
-        if (lectures.length < 6) {
-            setLectures([...lectures, ""]);
-        }
-    };
-
-    // Remove a lecture field
-    const removeLectureField = (index) => {
-        setLectures(lectures.filter((_, i) => i !== index));
-    };
+    const [lectures, setLectures] = useState(["", "", ""]); // Fixed 3 lecture fields
+    const [documents, setDocuments] = useState([null, null, null]); // Fixed 3 document fields
 
     // Handle lecture name change
     const handleLectureChange = (index, value) => {
         const updatedLectures = [...lectures];
         updatedLectures[index] = value;
         setLectures(updatedLectures);
-    };
-
-    // Add a new document field
-    const addDocumentField = () => {
-        if (documents.length < 5) {
-            setDocuments([...documents, null]);
-        }
-    };
-
-    // Remove a document field
-    const removeDocumentField = (index) => {
-        setDocuments(documents.filter((_, i) => i !== index));
     };
 
     // Handle file selection
@@ -52,33 +30,70 @@ function AddDoc() {
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate if at least one document is uploaded
+        const isAnyDocumentUploaded = documents.some(doc => doc !== null);
+        if (!isAnyDocumentUploaded) {
+            alert("Please upload at least one document.");
+            return;
+        }
+
+        // Create FormData object
         const formData = new FormData();
         formData.append("year", year);
         formData.append("moduleName", moduleName);
         formData.append("description", description);
+
+        // Append lectures
         lectures.forEach((lecture, index) => {
-            formData.append(`lectures[${index}]`, lecture);
+            if (lecture) formData.append(`lectures[${index}]`, lecture);
         });
+
+        // Append documents
         documents.forEach((doc, index) => {
-            if (doc) formData.append("documents", doc);
+            if (doc) formData.append("documents", doc); // Use the same key for all files
         });
 
         try {
-            const response = await axios.post("http://localhost:5000/api/documents", formData, {
+            // Send POST request to the backend
+            const response = await axios.post("http://localhost:8081/api/docs/add", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
+
+            // Handle success
             alert("Document uploaded successfully!");
             console.log(response.data);
+
+            // Reset form fields
+            setYear("");
+            setModuleName("");
+            setDescription("");
+            setLectures(["", "", ""]);
+            setDocuments([null, null, null]);
+
+            // Reload the page
+            navigate(0);
         } catch (error) {
+            // Handle error
             console.error("Error uploading document:", error);
+            if (error.response) {
+                // Server responded with an error
+                alert("Error uploading document: " + error.response.data.message);
+            } else if (error.request) {
+                // No response from the server
+                alert("Network error: Could not connect to the server.");
+            } else {
+                // Other errors
+                alert("Error: " + error.message);
+            }
         }
     };
 
     return (
         <div>
             <Header />
-            <div class="Add" style={{ marginTop: "100px", padding: "50px 100px" }}>
-            <h3 class='head'>Uploading Course Requirements</h3>
+            <div className="Add" style={{ marginTop: "100px", padding: "50px 100px" }}>
+                <h3 className='head'>Uploading Course Requirements</h3>
                 <form onSubmit={handleSubmit}>
                     <div className="form-group mt-5">
                         <label>Year</label>
@@ -120,64 +135,36 @@ function AddDoc() {
                         />
                     </div>
 
-                    {/* Lecture Fields */}
+                    {/* Fixed 3 Lecture Fields */}
                     <div className="form-group mt-4">
-                        <label>Lectures</label>
+                        <label>Lecturers</label>
                         {lectures.map((lecture, index) => (
                             <div key={index} className="d-flex align-items-center mb-2">
                                 <input
                                     type="text"
                                     className="form-control me-2"
-                                    placeholder={`Lecture ${index + 1}`}
+                                    placeholder={`Lecturer ${index + 1}`}
                                     name="lecture"
                                     value={lecture}
                                     onChange={(e) => handleLectureChange(index, e.target.value)}
-                                    required
                                 />
-                                {lectures.length > 1 && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                        onClick={() => removeLectureField(index)}
-                                    >
-                                        X
-                                    </button>
-                                )}
                             </div>
                         ))}
-                        {lectures.length < 6 && (
-                            <button type="button" className="btn btn-info mt-2" onClick={addLectureField}>
-                                + Add Lecture
-                            </button>
-                        )}
                     </div>
 
-                    {/* Document Upload Fields */}
+                    {/* Fixed 3 Document Upload Fields */}
                     <div className="form-group mt-4">
-                        <label>Upload Documents</label>
+                        <label>Upload Documents (PDF, Word, or Images)</label>
                         {documents.map((doc, index) => (
                             <div key={index} className="d-flex align-items-center mb-2">
                                 <input
                                     type="file"
-                                    name="image"
-                                    accept="image/*"
                                     className="form-control me-2"
+                                    accept=".pdf,.doc,.docx,image/*"
                                     onChange={(e) => handleDocumentChange(index, e.target.files[0])}
                                 />
-                                <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={() => removeDocumentField(index)}
-                                >
-                                    X
-                                </button>
                             </div>
                         ))}
-                        {documents.length < 5 && (
-                            <button type="button" className=" doc btn btn-success mt-2" onClick={addDocumentField}>
-                                + Add Document
-                            </button>
-                        )}
                     </div>
 
                     <button type="submit" className="btn btn-primary mt-4">

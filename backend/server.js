@@ -12,6 +12,10 @@ const AttendanceRoute = require("./Routes/AttendanceRoutes.js");
 const OrderRoute = require("./Routes/OrderRoute.js");
 const SupplierRoute = require("./Routes/SupplierRoutes.js");
 
+//academic shedular
+
+const CourseRoutes = require("./Routes/CourseRoutes.js");
+
 dotenv.config();
 
 // Database connection
@@ -20,6 +24,7 @@ connectDB();
 // Middleware
 app.use(cors()); // You can add custom options if needed
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
 
 // Routes
 app.use("/inventory", InventoryRoute);
@@ -27,6 +32,11 @@ app.use("/employee", EmployeeRoute);
 app.use("/attendance", AttendanceRoute);
 app.use("/order", OrderRoute);
 app.use("/supplier", SupplierRoute);
+
+app.use("/api/docs", CourseRoutes);
+
+
+
 
 // Global Error Handling Middleware (optional)
 app.use((err, req, res, next) => {

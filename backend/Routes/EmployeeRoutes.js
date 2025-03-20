@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const EmployeeController = require("../Controllers/EmployeeController");
 
+
+
 router.get("/", EmployeeController.getAll);
 router.post("/", EmployeeController.add);
 router.put("/:id", EmployeeController.update);
