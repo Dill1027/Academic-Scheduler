@@ -82,13 +82,13 @@ function First() {
     return (
         <div className="dashboard-container">
             <Header />
-            <div className="left-section " style={{ marginTop: "90px"  }}>
+            <div className="left-section" style={{ marginTop: "90px" }}>
                 <div className="main-1 mt-5">
                     <h3>1st Year Modules</h3>
                     <hr />
 
                     {/* Search Bar */}
-                    <div className="form-group mb-4 mt-5">
+                    <div className="search form-group mb-4 mt-5">
                         <input
                             type="text"
                             className="form-control"
@@ -166,9 +166,8 @@ function First() {
                         )}
                     </div>
                 </div>
-                <Footer/>
             </div>
-           
+            <Footer />
         </div>
     );
 }

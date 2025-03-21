@@ -11,8 +11,8 @@ function Coursed() {
 
 
   return (
-    <div>
-      <div className="main_function ">
+    <div className="main_function ">
+      <div >
         <div>
           <Header />
           
@@ -54,7 +54,7 @@ function Coursed() {
                         <div className="card-body text-center">
                         <h4 className="card-title">2nd Year</h4>
                         <p className="card-text">View courses for 2nd-year students</p>
-                        <Link to="/2nd-year" className="btn btn-primary">
+                        <Link to="/second" className="btn btn-primary">
                             Go to 2nd Year
                         </Link>
                         </div>
@@ -67,7 +67,7 @@ function Coursed() {
                         <div className="card-body text-center">
                         <h4 className="card-title">3rd Year</h4>
                         <p className="card-text">View courses for 3rd-year students</p>
-                        <Link to="/3rd-year" className="btn btn-primary">
+                        <Link to="/Third" className="btn btn-primary">
                             Go to 3rd Year
                         </Link>
                         </div>
@@ -80,7 +80,7 @@ function Coursed() {
                         <div className="card-body text-center">
                         <h4 className="card-title">4th Year</h4>
                         <p className="card-text">View courses for 4th-year students</p>
-                        <Link to="/4th-year" className="btn btn-primary">
+                        <Link to="/Fourth" className="btn btn-primary">
                             Go to 4th Year
                         </Link>
                         </div>
@@ -91,11 +91,13 @@ function Coursed() {
 
            </div>
 
-           <Footer/>
+           
         </div>
-
+        <Footer/>
       </div>
+      
     </div>
+    
   );
 }
 

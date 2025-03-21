@@ -1,3 +1,10 @@
+.main_function{
+  display: flex;
+  flex-direction: column;
+  background-size: cover;
+  min-height: 100vh;
+}
+
 .p1{
     background-color: #8e9498;
     padding: 25px 20px;

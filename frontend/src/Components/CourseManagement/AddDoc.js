@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
 import Header from "../Navbar/Header";
+import Footer from "../Navbar/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./AddDoc.css";
 
@@ -172,6 +173,7 @@ function AddDoc() {
                     </button>
                 </form>
             </div>
+            <Footer/>
         </div>
     );
 }

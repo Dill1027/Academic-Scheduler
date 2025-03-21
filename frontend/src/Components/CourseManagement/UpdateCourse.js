@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Header from "../Navbar/Header";
+import Footer from "../Navbar/footer";
 
 function EditDoc() {
     const { id } = useParams(); // Get the module ID from the URL
@@ -43,6 +45,10 @@ function EditDoc() {
 
     return (
         <div>
+            <Header />
+
+            <div className="Edit-container mt-5" style={{ marginTop: "100px", padding: "50px 100px" }}>
+
             <h2>Edit Module: {module.moduleName}</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -63,10 +69,12 @@ function EditDoc() {
                     />
                 </div>
                 {/* Add more fields as needed */}
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="save btn btn-primary mt-5" style={{ width:"400px" , }}>
                     Save Changes
                 </button>
             </form>
+            </div>
+            <Footer />
         </div>
     );
 }
