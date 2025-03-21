@@ -26,6 +26,7 @@ import Coursed from "./Components/CourseManagement/coursedash";
 import AddDoc from "./Components/CourseManagement/AddDoc";
 import StudentCourse from  "./Components/CourseManagement/studentCourse";
 import FirstYear from "./Components/CourseManagement/firstYear";
+import EditDoc from "./Components/CourseManagement/UpdateCourse";
 
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
           <Route path="/AddDoc" element={<AddDoc />} />
           <Route path="/StudentCourse" element={<StudentCourse />} />
           <Route path="/first" element={<FirstYear />} />
+          <Route path="/edit/:id" element={<EditDoc />} />
 
         </Routes>
       </React.Fragment>

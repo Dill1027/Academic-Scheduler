@@ -1,55 +1,127 @@
-.fetch-data-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+    background-size: cover;
+    min-height: 100vh;
 }
 
-.fetch-data-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
+
+
+
+
+.mini-1 {
+    padding: 50px 20px;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-.data-list {
-    margin-top: 20px;
-}
-
-.data-item {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 15px;
+.mini-2 {
     background-color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    color: rgb(59, 58, 58);
 }
 
-.data-item h5 {
-    margin-bottom: 10px;
-    color: #007bff;
+.upcoming {
+    color: rgb(70, 70, 70);
 }
 
-.data-item p {
-    margin-bottom: 5px;
+.main-1 {
+    background-color: #fff;
+    padding: 15px 15px;
+    border-radius: 7px 7px 0px 0px;
+    color: rgba(82, 80, 80, 0.871);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.data-item a {
-    color: #007bff;
-    text-decoration: none;
+.main-2 {
+    background-color: #fff;
+    padding: 15px 15px;
+    border-radius: 7px 7px 0px 0px;
+    color: rgba(82, 80, 80, 0.871);
+    box-shadow: 5px 5px 15px rgba(84, 39, 39, 0.2);
 }
 
-.data-item a:hover {
-    text-decoration: underline;
+.mini1 {
+    background-color:  #041a70e0;
+    padding: 15px 15px;
+    border-radius: 1px;
+    color: rgb(244, 240, 240);
+    box-shadow: 5px 5px 15px rgba(208, 195, 195, 0.2);
+    cursor: pointer;
+    position: relative;
 }
 
-.text-danger {
-    color: #dc3545;
+.notice {
+    background-color: #041a70e0;
+    padding: 2px 15px;
+    color: #fcfcfc;
+}
+
+.noticeContent {
+    padding: 15px 15px;
+}
+
+.mini2 {
+    background-color: #aeaaaa34;
+    padding: 15px 15px;
+    border-radius: 2px;
+    color: rgba(82, 80, 80, 0.871);
+    box-shadow: 5px 5px 15px rgba(208, 195, 195, 0.2);
+    cursor: pointer;
+}
+
+.announce {
+    background-color: #840608d9;
+    padding: 2px 15px;
+    color: #fcfcfc;
+}
+
+.announceContent {
+    padding: 15px 15px;
+}
+
+.action-buttons {
+    margin-top: 10px;
+    margin-left: 790px;
+}
+
+.main{
+    text-align: left;
+}
+
+.des{
+    margin-left: 60px;
+}
+
+.des1{
+    margin-left: 60px;
+    font-size: larger;
+    color: rgb(63, 59, 59);
+}
+
+.edit{
+    margin-left: 60px;
+    margin-top: 10px;
+}
+
+.name{
+    color: rgb(49, 48, 48);
+}
+
+.lec{
+    margin-left: 30px;
+}
+
+
+/* Add hover effect to the card */
+.data-item:hover {
+    background-color: #f8f9fa; /* Light gray background on hover */
+    transition: background-color 0.3s ease;
+}
+
+.firstcard{
+    padding: 10px;
+}
+
+.main-1{
+    padding: 30px;
 }
