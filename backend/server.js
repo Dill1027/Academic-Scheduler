@@ -6,11 +6,6 @@ const cors = require("cors");
 const app = express();
 
 // Import Routes
-const InventoryRoute = require("./Routes/InventoryRoutes.js");
-const EmployeeRoute = require("./Routes/EmployeeRoutes.js");
-const AttendanceRoute = require("./Routes/AttendanceRoutes.js");
-const OrderRoute = require("./Routes/OrderRoute.js");
-const SupplierRoute = require("./Routes/SupplierRoutes.js");
 const path = require("path");
 
 
@@ -30,11 +25,7 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bo
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
-app.use("/inventory", InventoryRoute);
-app.use("/employee", EmployeeRoute);
-app.use("/attendance", AttendanceRoute);
-app.use("/order", OrderRoute);
-app.use("/supplier", SupplierRoute);
+
 
 app.use("/api/docs", CourseRoutes);
 

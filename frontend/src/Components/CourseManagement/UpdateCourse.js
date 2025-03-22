@@ -51,7 +51,26 @@ function EditDoc() {
 
             <h2>Edit Module: {module.moduleName}</h2>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
+
+                <div className="form-group mt-5">
+                        <label>Year</label>
+                        <select
+                            className="form-control"
+                            name="year"
+                            value={module.year}
+                            onChange={(e) => setModule({...module, year: e.target.value})}
+                            required
+                        >
+                            <option value="">Select Year</option>
+                            <option value="1st Year">1st Year</option>
+                            <option value="2nd Year">2nd Year</option>
+                            <option value="3rd Year">3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                        </select>
+                </div>
+
+
+                <div className="form-group mt-5">
                     <label>Module Name</label>
                     <input
                         type="text"
@@ -68,7 +87,23 @@ function EditDoc() {
                         onChange={(e) => setModule({ ...module, description: e.target.value })}
                     />
                 </div>
-                {/* Add more fields as needed */}
+
+                {/* <div className="form-group mt-4">
+                        <label>Lecturers</label>
+                        {lectures.map((lecture, index) => (
+                            <div key={index} className="d-flex align-items-center mb-2">
+                                <input
+                                    type="text"
+                                    className="form-control me-2"
+                                    placeholder={`Lecturer ${index + 1}`}
+                                    name="lecture"
+                                    value={lecture}
+                                    onChange={(e) => handleLectureChange(index, e.target.value)}
+                                />
+                            </div>
+                        ))}
+                    </div> */}
+                
                 <button type="submit" className="save btn btn-primary mt-5" style={{ width:"400px" , }}>
                     Save Changes
                 </button>
