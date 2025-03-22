@@ -1,0 +1,64 @@
+/* Footer Styles */
+.footer-container {
+    padding: 1rem;  /* Reduced footer height */
+    background-color: #333;
+    color: #fff;
+    background-size:cover;
+  }
+  
+  .footer-container h6 {
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  
+  .calendar-footer {
+    margin-top: 10px;
+  }
+  
+  table#calendar {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+  }
+  
+  table#calendar th,
+  table#calendar td {
+    padding: 8px;
+    text-align: center;
+    width: 14.28%;
+  }
+  
+  table#calendar th {
+    background-color: #444;
+  }
+  
+  table#calendar td {
+    background-color: #222;
+  }
+  
+  table#calendar td.current-date {
+    background-color: #ff9e00;
+    border-radius: 50%;
+  }
+  
+  .footer-container a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .footer-container a:hover {
+    text-decoration: underline;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+
+  /* Footer Image Styles */
+.footer-container img {
+    width: 20px;  /* Adjust width */
+    height: 20px; /* Adjust height */
+    margin-right: 8px; /* Add spacing between text and image */
+    vertical-align: middle; /* Align images with text */
+  }
+  
