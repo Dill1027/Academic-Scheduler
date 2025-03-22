@@ -1,48 +1,45 @@
 import React from "react";
 import { Route, Routes } from "react-router";
 import Home from "./Components/Home/Home";
-import AddItem from "./Components/InventoryManagement/AddItem";
-import ItemsDetails from "./Components/InventoryManagement/ItemsDetails";
-import UpdateItem from "./Components/InventoryManagement/UpdateItem";
 import './App.css'
-import AddAttendance from "./Components/AttendanceManagement/AddAttendance";
-import AllAttendance from "./Components/AttendanceManagement/AllAttendance";
-import UpdateAttendance from "./Components/AttendanceManagement/UpdateAttendance";
-import AddEmployee from "./Components/EmployeeManagement/AddEmployee";
-import AllEmployee from "./Components/EmployeeManagement/AllEmployee";
-import UpdateEmployee from "./Components/EmployeeManagement/UpdateEmployee";
-import AddOrder from "./Components/OrderManagement/AddOrder";
-import AllOrder from "./Components/OrderManagement/AllOrder";
-import UpdateOrder from "./Components/OrderManagement/UpdateOrder";
-import AddSupplier from "./Components/SupplierManagement/AddSupplier";
-import AllSupplier from "./Components/SupplierManagement/AllSupplier";
-import UpdateSupplier from "./Components/SupplierManagement/UpdateSupplier";
+
+
+//Acdemic sheduler-----------------------------
+// import Header from "./Components/Navbar/Header";
+// import Footer from "./Components/Navbar/footer";
+import Coursed from "./Components/CourseManagement/coursedash";
+import AddDoc from "./Components/CourseManagement/AddDoc";
+import StudentCourse from  "./Components/CourseManagement/studentCourse";
+import FirstYear from "./Components/CourseManagement/firstYear";
+import EditDoc from "./Components/CourseManagement/UpdateCourse";
+import Second from "./Components/CourseManagement/secondYear";
+import Third from "./Components/CourseManagement/ThirdYear";
+import Fourth from "./Components/CourseManagement/fourthYear";
+
+
 function App() {
   return (
     <div>
       <React.Fragment>
         <Routes>
           <Route path="/" element={<Home />} />
-          {/*Attendance */}
-          <Route path="/addAttendance" element={<AddAttendance />} />
-          <Route path="/AttendanceDash" element={<AllAttendance />} />
-          <Route path="/updateAttendance/:id" element={<UpdateAttendance />} />
-          {/*Employee */}
-          <Route path="/addEmployee" element={<AddEmployee />} />
-          <Route path="/EmployeeDash" element={<AllEmployee />} />
-          <Route path="/updateEmployee/:id" element={<UpdateEmployee />} />
-          {/*Inventory */}
-          <Route path="/additem" element={<AddItem />} />
-          <Route path="/inventoryDash" element={<ItemsDetails />} />
-          <Route path="/updateItem/:id" element={<UpdateItem />} />
-          {/*Order */}
-          <Route path="/addOrder" element={<AddOrder />} />
-          <Route path="/orderDash" element={<AllOrder />} />
-          <Route path="/updateOrder/:id" element={<UpdateOrder />} />
-          {/*Supplier */}
-          <Route path="/addSupplier" element={<AddSupplier />} />
-          <Route path="/SupplierDash" element={<AllSupplier />} />
-          <Route path="/updateSupplier/:id" element={<UpdateSupplier />} />
+
+          {/*Academic sheduler */}
+
+          {/* <Route path="/header" element={<Header />} /> */}
+          {/* <Route path="/footer" element={<Footer />} /> */}
+          <Route path="/course" element={<Coursed />} />
+          <Route path="/AddDoc" element={<AddDoc />} />
+          <Route path="/StudentCourse" element={<StudentCourse />} />
+          <Route path="/first" element={<FirstYear />} />
+          <Route path="/second" element={<Second />} />
+          <Route path="/Third" element={<Third />} />
+          <Route path="/Fourth" element={<Fourth />} />
+          <Route path="/edit/:id" element={<EditDoc />} />
+
+          
+          
+
         </Routes>
       </React.Fragment>
     </div>
