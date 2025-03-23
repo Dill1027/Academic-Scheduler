@@ -34,41 +34,44 @@ const TimetableList = () => {
     };
 
     return (
-        <div>
-            <h1>Timetable List</h1>
+        <div className="container mt-5">
+            <h1 className="text-center mb-4">Timetable List</h1>
             {timetables.map((timetable) => (
-                <div key={timetable._id} style={{ border: '1px solid #ccc', padding: '10px', margin: '10px' }}>
-                    <h3>{timetable.moduleName}</h3>
-                    <p><strong>Year:</strong> {timetable.year}</p>
-                    <p><strong>Description:</strong> {timetable.description}</p>
-                    <div>
-                        <strong>Schedule:</strong>
-                        {timetable.schedule.map((day, index) => (
-                            <div key={index}>
-                                <p>{day.day}: {day.startTime} - {day.endTime}</p>
-                            </div>
-                        ))}
+                <div key={timetable._id} className="card mb-3">
+                    <div className="card-body">
+                        <h3 className="card-title">{timetable.moduleName}</h3>
+                        <p className="card-text"><strong>Year:</strong> {timetable.year}</p>
+                        <p className="card-text"><strong>Description:</strong> {timetable.description}</p>
+                        <div className="mb-3">
+                            <strong>Schedule:</strong>
+                            {timetable.schedule.map((day, index) => (
+                                <div key={index} className="ml-3">
+                                    <p className="mb-1">{day.day}: {day.startTime} - {day.endTime}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mb-3">
+                            <strong>Documents:</strong>
+                            {timetable.documents && timetable.documents.map((doc, index) => (
+                                <div key={index} className="ml-3">
+                                    <a
+                                        href={`http://localhost:5000/uploads/${doc}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn btn-link"
+                                    >
+                                        Document {index + 1}
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
+                        <button
+                            onClick={() => handleDelete(timetable._id)}
+                            className="btn btn-danger"
+                        >
+                            Delete
+                        </button>
                     </div>
-                    <div>
-                        <strong>Documents:</strong>
-                        {timetable.documents && timetable.documents.map((doc, index) => (
-                            <div key={index}>
-                                <a
-                                    href={`http://localhost:5000/uploads/${doc}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Document {index + 1}
-                                </a>
-                            </div>
-                        ))}
-                    </div>
-                    <button
-                        onClick={() => handleDelete(timetable._id)}
-                        style={{ backgroundColor: 'red', color: 'white', padding: '5px 10px', border: 'none', cursor: 'pointer' }}
-                    >
-                        Delete
-                    </button>
                 </div>
             ))}
         </div>

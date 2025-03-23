@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Dill1027/Academic-Scheduler/issues"
   },
-  "homepage": "https://github.com/Dill1027/Academic-Scheduler#readme"
+  "homepage": "https://github.com/Dill1027/Academic-Scheduler#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.3"
+  }
 }
