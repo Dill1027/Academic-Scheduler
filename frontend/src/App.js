@@ -15,6 +15,8 @@ import EditDoc from "./Components/CourseManagement/UpdateCourse";
 import Second from "./Components/CourseManagement/secondYear";
 import Third from "./Components/CourseManagement/ThirdYear";
 import Fourth from "./Components/CourseManagement/fourthYear";
+import TimetableForm from "./Components/TimetableManagement/TimetableForm";
+
 
 
 function App() {
@@ -36,6 +38,7 @@ function App() {
           <Route path="/Third" element={<Third />} />
           <Route path="/Fourth" element={<Fourth />} />
           <Route path="/edit/:id" element={<EditDoc />} />
+          <Route path="/timetable" element={<TimetableForm />} />
 
           
           

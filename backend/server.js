@@ -10,6 +10,9 @@ const path = require("path");
 
 
 //academic shedular
+//prabhath
+const timetableRoutes = require('./Routes/TimetableRoutes.js');
+//prabhath
 
 const CourseRoutes = require("./Routes/CourseRoutes.js");
 
@@ -26,7 +29,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 
-
+app.use('/api/courses', timetableRoutes);
 app.use("/api/docs", CourseRoutes);
 
 
