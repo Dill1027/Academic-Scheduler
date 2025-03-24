@@ -6,7 +6,7 @@ import Footer from "../Navbar/footer";
 import "./first.css"; // Add your custom CSS here
 import { Link } from 'react-router-dom';
 
-function First() {
+function Third() {
     const [data, setData] = useState([]); // Stores all 1st Year modules
     const [filteredData, setFilteredData] = useState([]); // Stores filtered modules based on search
     const [searchQuery, setSearchQuery] = useState(""); // Stores the search query
@@ -38,14 +38,27 @@ function First() {
 
     // Handle search input change
     const handleSearchChange = (e) => {
-        const query = e.target.value;
+        const query = e.target.value.toLowerCase();
         setSearchQuery(query);
 
-        // Filter modules based on the search query
+        // Filter modules based on the search query (search in both moduleName and course)
         const filtered = data.filter((item) =>
-            item.moduleName.toLowerCase().includes(query.toLowerCase())
+            (item.moduleName && item.moduleName.toLowerCase().includes(query)) || 
+            (item.course && item.course.toLowerCase().includes(query))
         );
         setFilteredData(filtered);
+    };
+
+    // Group modules by course
+    const groupByCourse = (modules) => {
+        return modules.reduce((acc, module) => {
+            const course = module.course || "Uncategorized"; // Default to "Uncategorized" if no course
+            if (!acc[course]) {
+                acc[course] = [];
+            }
+            acc[course].push(module);
+            return acc;
+        }, {});
     };
 
     // Handle document download with the real file name
@@ -79,6 +92,9 @@ function First() {
         }
     };
 
+    // Group filtered data by course
+    const groupedData = groupByCourse(filteredData);
+
     return (
         <div className="dashboard-container">
             <Header />
@@ -102,63 +118,69 @@ function First() {
                     {error && <p className="text-danger">{error}</p>}
 
                     <div className="data-list mt-5">
-                        {filteredData.length > 0 ? (
-                            filteredData.map((item, index) => (
-                                <div
-                                    key={index}
-                                    className="firstcard data-item card mb-3"
-                                    onClick={() => handleCardClick(item._id)} // Handle card click
-                                    style={{ cursor: "pointer" }} // Change cursor to pointer
-                                >
-                                    <div className="main card-body">
-                                        <h5 className="mini1 card-title">{item.moduleName}</h5>
-                                        <p className="des1 card-text mt-3">{item.description}</p>
-                                        <p className="des card-text">
-                                            <strong className="name">Lectures:</strong>
-                                            {item.lectures.map((lecture, idx) => (
-                                                <div className="lec" key={idx}>{lecture}</div> // Display each lecture on a new line
-                                            ))}
-                                        </p>
-                                        <p className="des card-text">
-                                            <strong className="name">Documents:</strong>
-                                            {item.documents.map((doc, idx) => {
-                                                // Extract the original file name from the stored file name
-                                                const originalName = doc.split("-").slice(1).join("-");
-                                                return (
-                                                    <div key={idx} className="lec d-flex gap-4">
-                                                        <a
-                                                            href={`http://localhost:8081/uploads/${doc}`}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="d-block"
-                                                        >
-                                                            {originalName}
-                                                        </a>
+                        {Object.keys(groupedData).length > 0 ? (
+                            Object.keys(groupedData).map((course, courseIndex) => (
+                                <div key={courseIndex} className="course-group mb-5">
+                                    <h4 className="course-title">{course}</h4>
+                                    <hr />
+                                    {groupedData[course].map((item, index) => (
+                                        <div
+                                            key={index}
+                                            className="firstcard data-item card mb-3"
+                                            onClick={() => handleCardClick(item._id)} // Handle card click
+                                            style={{ cursor: "pointer" }} // Change cursor to pointer
+                                        >
+                                            <div className="main card-body">
+                                                <h5 className="mini1 card-title">{item.moduleName}</h5>
+                                                <p className="des1 card-text mt-3">{item.description}</p>
+                                                <p className="des card-text">
+                                                    <strong className="name">Lectures:</strong>
+                                                    {item.lectures.map((lecture, idx) => (
+                                                        <div className="lec" key={idx}>{lecture}</div> // Display each lecture on a new line
+                                                    ))}
+                                                </p>
+                                                <p className="des card-text">
+                                                    <strong className="name">Documents:</strong>
+                                                    {item.documents.map((doc, idx) => {
+                                                        // Extract the original file name from the stored file name
+                                                        const originalName = doc.split("-").slice(1).join("-");
+                                                        return (
+                                                            <div key={idx} className="lec d-flex gap-4">
+                                                                <a
+                                                                    href={`http://localhost:8081/uploads/${doc}`}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="d-block"
+                                                                >
+                                                                    {originalName}
+                                                                </a>
+                                                                <button
+                                                                    className="btn btn-link"
+                                                                    onClick={() => handleDownload(doc, originalName)}
+                                                                >
+                                                                    Download
+                                                                </button>
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </p>
+                                                {/* Update and Delete Buttons */}
+                                                {activeCard === item._id && ( // Show buttons only if the card is clicked
+                                                    <div className="edit mt-3 d-flex gap-2">
+                                                        <Link to={`/edit/${item._id}`}>
+                                                            <button className="btn btn-primary event-button">Edit</button>
+                                                        </Link>
                                                         <button
-                                                            className="btn btn-link"
-                                                            onClick={() => handleDownload(doc, originalName)}
+                                                            className="btn btn-danger"
+                                                            onClick={() => handleDelete(item._id)}
                                                         >
-                                                            Download
+                                                            Delete
                                                         </button>
                                                     </div>
-                                                );
-                                            })}
-                                        </p>
-                                        {/* Update and Delete Buttons */}
-                                        {activeCard === item._id && ( // Show buttons only if the card is clicked
-                                            <div className="edit mt-3 d-flex gap-2">
-                                                <Link to={`/edit/${item._id}`}>
-                                                    <button className="btn btn-primary event-button">Edit</button>
-                                                </Link>
-                                                <button
-                                                    className="btn btn-danger"
-                                                    onClick={() => handleDelete(item._id)}
-                                                >
-                                                    Delete
-                                                </button>
+                                                )}
                                             </div>
-                                        )}
-                                    </div>
+                                        </div>
+                                    ))}
                                 </div>
                             ))
                         ) : (
@@ -172,4 +194,4 @@ function First() {
     );
 }
 
-export default First;
+export default Third;

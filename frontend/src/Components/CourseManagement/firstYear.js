@@ -38,12 +38,13 @@ function First() {
 
     // Handle search input change
     const handleSearchChange = (e) => {
-        const query = e.target.value;
+        const query = e.target.value.toLowerCase();
         setSearchQuery(query);
 
-        // Filter modules based on the search query
+        // Filter modules based on the search query (search in both moduleName and course)
         const filtered = data.filter((item) =>
-            item.moduleName.toLowerCase().includes(query.toLowerCase())
+            (item.moduleName && item.moduleName.toLowerCase().includes(query)) || 
+            (item.course && item.course.toLowerCase().includes(query))
         );
         setFilteredData(filtered);
     };
