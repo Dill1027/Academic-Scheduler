@@ -122,7 +122,7 @@ function AddDoc() {
                             className="form-control"
                             name="course"
                             value={course}
-                            onChange={(e) => setCourse(e.target.course)}
+                            onChange={(e) => setCourse(e.target.value)} // Fixed typo here
                             required
                         >
                             <option value="">Select Year</option>
