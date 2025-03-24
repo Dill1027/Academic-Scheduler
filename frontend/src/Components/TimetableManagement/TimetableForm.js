@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import './TimetableForm.css';
+import backgroundVideo from '../assets/background.mp4'; // Add your video in the `assets` folder
 
 const TimetableForm = () => {
     const { id } = useParams();
@@ -51,15 +53,11 @@ const TimetableForm = () => {
         try {
             if (id) {
                 await axios.put(`http://localhost:5000/api/timetables/update/${id}`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
+                    headers: { 'Content-Type': 'multipart/form-data' },
                 });
             } else {
                 await axios.post('http://localhost:5000/api/timetables/add', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
+                    headers: { 'Content-Type': 'multipart/form-data' },
                 });
             }
             navigate('/');
@@ -69,57 +67,63 @@ const TimetableForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <select value={year} onChange={(e) => setYear(e.target.value)} required>
-                <option value="">Select Year</option>
-                <option value="1st Year">1st Year</option>
-                <option value="2nd Year">2nd Year</option>
-                <option value="3rd Year">3rd Year</option>
-                <option value="4th Year">4th Year</option>
-            </select>
-            <input
-                type="text"
-                placeholder="Module Name"
-                value={moduleName}
-                onChange={(e) => setModuleName(e.target.value)}
-                required
-            />
-            <textarea
-                placeholder="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-            />
-            {schedule.map((day, index) => (
-                <div key={index}>
-                    <input
-                        type="text"
-                        placeholder="Day"
-                        value={day.day}
-                        onChange={(e) => handleScheduleChange(index, 'day', e.target.value)}
-                        required
-                    />
-                    <input
-                        type="time"
-                        value={day.startTime}
-                        onChange={(e) => handleScheduleChange(index, 'startTime', e.target.value)}
-                        required
-                    />
-                    <input
-                        type="time"
-                        value={day.endTime}
-                        onChange={(e) => handleScheduleChange(index, 'endTime', e.target.value)}
-                        required
-                    />
-                </div>
-            ))}
-            <button type="button" onClick={handleAddDay}>Add Day</button>
-            <input
-                type="file"
-                multiple
-                onChange={handleFileChange}
-            />
-            <button type="submit">{id ? 'Update' : 'Submit'}</button>
-        </form>
+        <div className="video-container">
+            <video autoPlay loop muted className="background-video">
+                <source src={backgroundVideo} type="video/mp4" />
+            </video>
+            <form className="timetable-form" onSubmit={handleSubmit}>
+                <select className="form-input" value={year} onChange={(e) => setYear(e.target.value)} required>
+                    <option value="">Select Year</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                </select>
+                <input
+                    type="text"
+                    className="form-input"
+                    placeholder="Module Name"
+                    value={moduleName}
+                    onChange={(e) => setModuleName(e.target.value)}
+                    required
+                />
+                <textarea
+                    className="form-input"
+                    placeholder="Description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                />
+                {schedule.map((day, index) => (
+                    <div key={index} className="schedule-item">
+                        <input
+                            type="text"
+                            className="form-input"
+                            placeholder="Day"
+                            value={day.day}
+                            onChange={(e) => handleScheduleChange(index, 'day', e.target.value)}
+                            required
+                        />
+                        <input
+                            type="time"
+                            className="form-input"
+                            value={day.startTime}
+                            onChange={(e) => handleScheduleChange(index, 'startTime', e.target.value)}
+                            required
+                        />
+                        <input
+                            type="time"
+                            className="form-input"
+                            value={day.endTime}
+                            onChange={(e) => handleScheduleChange(index, 'endTime', e.target.value)}
+                            required
+                        />
+                    </div>
+                ))}
+                <button type="button" className="add-day-btn" onClick={handleAddDay}>Add Day</button>
+                <input type="file" className="file-input" multiple onChange={handleFileChange} />
+                <button type="submit" className="submit-btn">{id ? 'Update' : 'Submit'}</button>
+            </form>
+        </div>
     );
 };
 

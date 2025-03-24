@@ -3,7 +3,6 @@ import { Route, Routes } from "react-router";
 import Home from "./Components/Home/Home";
 import './App.css'
 
-
 //Acdemic sheduler-----------------------------
 // import Header from "./Components/Navbar/Header";
 // import Footer from "./Components/Navbar/footer";
@@ -16,8 +15,6 @@ import Second from "./Components/CourseManagement/secondYear";
 import Third from "./Components/CourseManagement/ThirdYear";
 import Fourth from "./Components/CourseManagement/fourthYear";
 import TimetableForm from "./Components/TimetableManagement/TimetableForm";
-
-
 
 function App() {
   return (
@@ -39,10 +36,6 @@ function App() {
           <Route path="/Fourth" element={<Fourth />} />
           <Route path="/edit/:id" element={<EditDoc />} />
           <Route path="/timetable" element={<TimetableForm />} />
-
-          
-          
-
         </Routes>
       </React.Fragment>
     </div>
