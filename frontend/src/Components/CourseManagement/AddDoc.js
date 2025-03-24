@@ -9,6 +9,7 @@ import "./AddDoc.css";
 function AddDoc() {
     const navigate = useNavigate();
     const [year, setYear] = useState("");
+    const [course, setCourse] = useState("");
     const [moduleName, setModuleName] = useState("");
     const [description, setDescription] = useState("");
     const [lectures, setLectures] = useState(["", "", ""]); // Fixed 3 lecture fields
@@ -42,6 +43,7 @@ function AddDoc() {
         // Create FormData object
         const formData = new FormData();
         formData.append("year", year);
+        formData.append("course", course);
         formData.append("moduleName", moduleName);
         formData.append("description", description);
 
@@ -67,6 +69,7 @@ function AddDoc() {
 
             // Reset form fields
             setYear("");
+            setCourse("");
             setModuleName("");
             setDescription("");
             setLectures(["", "", ""]);
@@ -105,7 +108,7 @@ function AddDoc() {
                             onChange={(e) => setYear(e.target.value)}
                             required
                         >
-                            <option value="">Select Year</option>
+                            <option value="">Select Year :</option>
                             <option value="1st Year">1st Year</option>
                             <option value="2nd Year">2nd Year</option>
                             <option value="3rd Year">3rd Year</option>
@@ -113,8 +116,26 @@ function AddDoc() {
                         </select>
                     </div>
 
+                    <div className="form-group mt-5">
+                        <label>Specialization :</label>
+                        <select
+                            className="form-control"
+                            name="course"
+                            value={course}
+                            onChange={(e) => setCourse(e.target.course)}
+                            required
+                        >
+                            <option value="">Select Year</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Software Engineering">Software Engineering</option>
+                            <option value="Cyber Security">Cyber Security</option>
+                            <option value="Interactive Media">Interactive Media</option>
+                            <option value="Data Science">Data Science</option>
+                        </select>
+                    </div>
+
                     <div className="form-group mt-4">
-                        <label>Module Name</label>
+                        <label>Module Name :</label>
                         <input
                             type="text"
                             className="form-control"
@@ -126,7 +147,7 @@ function AddDoc() {
                     </div>
 
                     <div className="form-group mt-4">
-                        <label>Description (Optional)</label>
+                        <label>Description (Optional) :</label>
                         <textarea
                             className="form-control"
                             rows="4"
@@ -138,7 +159,7 @@ function AddDoc() {
 
                     {/* Fixed 3 Lecture Fields */}
                     <div className="form-group mt-4">
-                        <label>Lecturers</label>
+                        <label>Lecturers :</label>
                         {lectures.map((lecture, index) => (
                             <div key={index} className="d-flex align-items-center mb-2">
                                 <input

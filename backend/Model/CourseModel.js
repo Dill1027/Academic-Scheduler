@@ -41,6 +41,11 @@ const docSchema = new mongoose.Schema({
         required: true,
         enum: ["1st Year", "2nd Year", "3rd Year", "4th Year"] // Only allow specific year values
     },
+    course: {
+        type: String,
+        required: true,
+        enum: ["Information Technology", "Software Engineering", "Cyber Security", "Interactive Media", "Data Science"] // Only allow specific course values
+    },
     moduleName: {
         type: String,
         required: true
