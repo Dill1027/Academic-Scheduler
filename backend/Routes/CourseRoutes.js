@@ -11,7 +11,7 @@ router.post('/add',
     body('course').notEmpty().withMessage('Specialization is required').isIn(["Information Technology", "Software Engineering", "Cyber Security", "Interactive Media", "Data Science"]).withMessage('Invalid Specialization'),
     body('moduleName').notEmpty().withMessage('Module name is required').isLength({ max: 100 }).withMessage('Module name must be at most 100 characters long'),
     body('description').optional().isLength({ max: 500 }).withMessage('Description must be at most 500 characters long'),
-    body('lectures').isArray({ min: 1, max: 3 }).withMessage('You must provide between 1 and 3 lectures'),
+    body('lectures').isArray({ min: 1, max: 5 }).withMessage('You must provide between 1 and 5 lectures'),
     body('lectures.*').notEmpty().withMessage('Lecture name cannot be empty').isLength({ max: 100 }).withMessage('Lecture name must be at most 100 characters long'),
   ],
   async (req, res) => {

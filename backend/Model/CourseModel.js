@@ -59,7 +59,7 @@ const docSchema = new mongoose.Schema({
         required: false,
         validate: {
             validator: function (v) {
-                return v.length <= 3; // Ensure no more than 3 lectures are added
+                return v.length <= 5; // Ensure no more than 3 lectures are added
             },
             message: 'Maximum of 3 lectures allowed!'
         }
