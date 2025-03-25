@@ -121,7 +121,9 @@ function First() {
                         {Object.keys(groupedData).length > 0 ? (
                             Object.keys(groupedData).map((course, courseIndex) => (
                                 <div key={courseIndex} className="course-group mb-5">
-                                    <h4 className="course-title">{course}</h4>
+                                    <div className="course-title">
+                                    <h2 >{course}</h2>
+                                    </div>
                                     <hr />
                                     {groupedData[course].map((item, index) => (
                                         <div
