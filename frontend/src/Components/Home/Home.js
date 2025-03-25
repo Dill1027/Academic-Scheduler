@@ -1,178 +1,137 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaUserCheck, FaUsers, FaBoxOpen, FaShoppingCart, FaTruck } from "react-icons/fa"; // Added new icons
+import { FaCalendarAlt, FaBook, FaChalkboardTeacher, FaUserGraduate, FaFileAlt } from "react-icons/fa";
 import BackIm from "./img/bk.jpg";
+import Footer from "../Navbar/footer";
+import Header from "../Navbar/Header";
+import "./home.css";
 
 function Home() {
   return (
-    <div style={{ fontFamily: "Poppins, sans-serif", margin: "0", padding: "0", backgroundColor: "#f9f9f9" }}>
-      {/* Header Section */}
-      <header style={headerStyle}>
-        <h1 style={{ margin: "0", fontSize: "24px" }}>Apparel Manufacturing Management System</h1>
-      </header>
+    <div className="home-container">
+      <Header />
 
-      {/* Main Content */}
-      <div style={{ padding: "30px 5%", textAlign: "center" }}>
-        {/* Welcome Section */}
-        <div style={{ marginBottom: "40px" }}>
-          <img src={BackIm} alt="Background" style={imageStyle} />
-          <p style={welcomeText}>Welcome to the Apparel Manufacturing Management System!</p>
-        </div>
-
-        {/* Dashboard Overview */}
-        <div>
-          <h2 style={sectionHeading}>Quick Overview</h2>
-          <div style={dashboardContainer}>
-            {/* Attendance Card */}
-            <div style={cardStyle}>
-              <FaUserCheck size={40} style={iconStyle} />
-              <h3>Attendance</h3>
-              <p><strong>Total Present:</strong> 120</p>
-              <p><strong>Total Absent:</strong> 8</p>
-              <Link to="/AttendanceDash" style={linkStyle}>View Details</Link>
-            </div>
-
-            {/* Employees Card */}
-            <div style={cardStyle}>
-              <FaUsers size={40} style={iconStyle} />
-              <h3>Employees</h3>
-              <p><strong>Total Employees:</strong> 50</p>
-              <Link to="/employeeDash" style={linkStyle}>View Details</Link>
-            </div>
-
-            {/* Inventory Card */}
-            <div style={cardStyle}>
-              <FaBoxOpen size={40} style={iconStyle} />
-              <h3>Inventory</h3>
-              <p><strong>Items Available:</strong> 200</p>
-              <Link to="/inventoryDash" style={linkStyle}>View Details</Link>
-            </div>
-
-            {/* Orders Card */}
-            <div style={cardStyle}>
-              <FaShoppingCart size={40} style={iconStyle} />
-              <h3>Orders</h3>
-              <p><strong>New Orders Today:</strong> 10</p>
-              <p><strong>Total Orders:</strong> 500</p>
-              <Link to="/orderDash" style={linkStyle}>View Details</Link>
-            </div>
-
-            {/* Suppliers Card */}
-            <div style={cardStyle}>
-              <FaTruck size={40} style={iconStyle} />
-              <h3>Suppliers</h3>
-              <p><strong>Total Suppliers:</strong> 20</p>
-              <p><strong>Active Suppliers:</strong> 15</p>
-              <Link to="/SupplierDash" style={linkStyle}>View Details</Link>
+      <div className="main-content">
+        <div className="welcome-section">
+          <img src={BackIm} alt="Background" className="hero-image" />
+          <div className="welcome-overlay">
+            <h1 className="welcome-title">Academic Management System</h1>
+            <p className="welcome-subtitle">Streamline your academic workflows and enhance the learning experience</p>
+            <div className="welcome-buttons">
+              <Link to="/timetablelist" className="primary-button">View Timetables</Link>
+              <Link to="/course" className="secondary-button">Explore Courses</Link>
             </div>
           </div>
         </div>
 
-        {/* Recent Activity Section */}
-        <div style={{ marginTop: "50px", textAlign: "left", maxWidth: "600px", margin: "auto" }}>
-          <h2 style={sectionHeading}>Recent Activity</h2>
-          <div style={activityContainer}>
-            <p>✔ Attendance marked for 15 employees today.</p>
-            <p>✔ 10 new orders placed today.</p>
-            <p>✔ 5 items added to inventory.</p>
-            <p>✔ 2 new suppliers added.</p>
+        <div className="dashboard-section">
+          <h2 className="section-heading">Quick Access</h2>
+          <div className="dashboard-cards">
+            <div className="dashboard-card">
+              <div className="card-icon">
+                <FaCalendarAlt size={40} />
+              </div>
+              <div className="card-content">
+                <h3>Timetable</h3>
+                <p>Manage your timetables with ease</p>
+                <Link to="/timetablelist" className="card-link">Go to Timetable</Link>
+              </div>
+            </div>
+            <div className="dashboard-card">
+              <div className="card-icon">
+                <FaBook size={40} />
+              </div>
+              <div className="card-content">
+                <h3>Courses</h3>
+                <p>Explore available courses</p>
+                <Link to="/course" className="card-link">View Courses</Link>
+              </div>
+            </div>
+            <div className="dashboard-card">
+              <div className="card-icon">
+                <FaChalkboardTeacher size={40} />
+              </div>
+              <div className="card-content">
+                <h3>Faculty</h3>
+                <p>View faculty members</p>
+                <Link to="/faculty" className="card-link">View Faculty</Link>
+              </div>
+            </div>
+            <div className="dashboard-card">
+              <div className="card-icon">
+                <FaUserGraduate size={40} />
+              </div>
+              <div className="card-content">
+                <h3>Students</h3>
+                <p>Manage student details</p>
+                <Link to="/student" className="card-link">Manage Students</Link>
+              </div>
+            </div>
+            <div className="dashboard-card">
+              <div className="card-icon">
+                <FaFileAlt size={40} />
+              </div>
+              <div className="card-content">
+                <h3>Documents</h3>
+                <p>Upload and view important documents</p>
+                <Link to="/documents" className="card-link">View Documents</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="activity-section">
+          <h2 className="section-heading">Recent Activity</h2>
+          <div className="activity-container">
+            <div className="activity-item">
+              <div className="activity-icon">
+                <FaCalendarAlt size={20} />
+              </div>
+              <div className="activity-content">
+                <h4>New Timetable Added</h4>
+                <p>New timetables have been added for the upcoming semester.</p>
+                <span className="activity-date">March 25, 2025</span>
+              </div>
+            </div>
+            <div className="activity-item">
+              <div className="activity-icon">
+                <FaBook size={20} />
+              </div>
+              <div className="activity-content">
+                <h4>New Course Available</h4>
+                <p>Introduction to Machine Learning course is now available.</p>
+                <span className="activity-date">March 24, 2025</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="stats-section">
+          <h2 className="section-heading">System Statistics</h2>
+          <div className="stats-container">
+            <div className="stat-item">
+              <div className="stat-number">150</div>
+              <div className="stat-label">Courses</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">200</div>
+              <div className="stat-label">Faculty Members</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">1500</div>
+              <div className="stat-label">Students</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">300</div>
+              <div className="stat-label">Documents</div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer style={footerStyle}>
-        <p>© 2025 Apparel Manufacturing Management System</p>
-      </footer>
+      <Footer />
     </div>
   );
 }
-
-// Styles
-const headerStyle = {
-  backgroundColor: "#4f55c3",
-  color: "white",
-  padding: "15px 20px",
-  textAlign: "center",
-  fontSize: "20px",
-  fontWeight: "600",
-  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-};
-
-const imageStyle = {
-  width: "100%",
-  maxWidth: "800px",
-  borderRadius: "10px",
-  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
-};
-
-const welcomeText = {
-  fontSize: "24px",
-  fontWeight: "600",
-  marginTop: "20px",
-  color: "#333",
-};
-
-const sectionHeading = {
-  fontSize: "26px",
-  marginBottom: "20px",
-  color: "#4f55c3",
-  fontWeight: "700",
-};
-
-const dashboardContainer = {
-  display: "flex",
-  justifyContent: "center",
-  flexWrap: "wrap",
-  gap: "20px",
-};
-
-const cardStyle = {
-  backgroundColor: "white",
-  color: "#333",
-  padding: "20px",
-  borderRadius: "10px",
-  width: "270px",
-  textAlign: "center",
-  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-  cursor: "pointer",
-};
-
-const iconStyle = {
-  color: "#4f55c3",
-  marginBottom: "10px",
-};
-
-const linkStyle = {
-  display: "inline-block",
-  marginTop: "15px",
-  color: "white",
-  textDecoration: "none",
-  backgroundColor: "#4f55c3",
-  padding: "8px 15px",
-  borderRadius: "5px",
-  fontSize: "14px",
-  fontWeight: "600",
-  transition: "background 0.3s",
-};
-
-const activityContainer = {
-  backgroundColor: "#f4f4f4",
-  padding: "15px",
-  borderRadius: "8px",
-  fontSize: "18px",
-  color: "#333",
-};
-
-const footerStyle = {
-  marginTop: "50px",
-  backgroundColor: "#4f55c3",
-  color: "white",
-  padding: "15px",
-  textAlign: "center",
-  fontSize: "14px",
-  fontWeight: "500",
-};
 
 export default Home;
