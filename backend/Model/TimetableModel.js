@@ -1,50 +1,48 @@
-const express = require("express");
-const router = express.Router();
-const { Docs, upload } = require('../Model/CourseModel'); // Import the Docs model and upload middleware
-const { body, validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
-// Add document
-router.post('/add', 
-  upload.array('documents', 1), // Allow up to 3 files to be uploaded
-  [
-    body('year').notEmpty().withMessage('Year is required').isIn(["1st Year", "2nd Year", "3rd Year", "4th Year"]).withMessage('Invalid year'),
-    body('moduleName').notEmpty().withMessage('Module name is required').isLength({ max: 100 }).withMessage('Module name must be at most 100 characters long'),
-    body('day').notEmpty().withMessage('day is required').isIn(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']).withMessage('Invalid day'),
-    body('startTime').notEmpty().withMessage('Start time is required'),
-    body('endTime').notEmpty().withMessage('End time is required').custom((value, { req }) => value > req.body.startTime).withMessage('End time must be after start time'),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+const timetableSchema = new mongoose.Schema({
+    year: {
+        type: String,
+        required: true,
+        enum: ['1st Year', '2nd Year', '3rd Year', '4th Year']
+    },
+    moduleName: {
+        type: String,
+        required: true, 
+        maxlength: [100, 'Module name must be at most 100 characters long']
+    },
+    day: {
+        type: String,
+        required: true, 
+        enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    },
+    startTime: {
+        type: String,
+        required: true, 
+    },
+    endTime: {
+        type: String,
+        required: true, 
+    },
+   
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
+});
 
-    const { year, moduleName, description, lectures } = req.body;
-
-    // Check if at least one document is uploaded
-    // if (!req.files || req.files.length === 0) {
-    //   return res.status(400).json({ error: 'At least one document must be uploaded' });
-    // }
-
-    // Get the file paths of the uploaded documents
-    const documents = req.files.map(file => file.path);
-
-    try {
-      const newDoc = new Docs({
-        year,
-        moduleName,
-        day,
-        startTime,
-        endTime,
-        documents
-      });
-
-      await newDoc.save();
-      res.status(201).json({ message: 'Create schedule successfully!', data: newDoc });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+// Add custom validation for endTime > startTime
+timetableSchema.pre('save', function(next) {
+    if (this.endTime <= this.startTime) {
+        const err = new Error('End time must be after start time');
+        next(err);
+    } else {
+        next();
     }
-  }
-);
+});
 
-module.exports = router;
+const Docs = mongoose.model('Docs', timetableSchema);
+
+module.exports = {
+    Docs
+};
