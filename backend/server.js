@@ -13,6 +13,7 @@ const path = require("path");
 
 const CourseRoutes = require("./Routes/CourseRoutes.js");
 const timetableRoutes = require("./Routes/TimetableRoutes.js");
+
 dotenv.config();
 
 // Database connection
@@ -29,6 +30,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/docs", CourseRoutes);
 app.use('/api/timetables', timetableRoutes);
+
 
 
 
