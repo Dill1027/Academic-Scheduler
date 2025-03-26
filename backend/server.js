@@ -3,42 +3,46 @@ const mongoose = require("mongoose");
 const connectDB = require("./Config/db.js");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const app = express();
-
-// Import Routes
 const path = require("path");
 
+// Initialize app
+const app = express();
 
-//academic shedular
-//prabhath
-const timetableRoutes = require('./Routes/TimetableRoutes.js');
-//prabhath
-
-const CourseRoutes = require("./Routes/CourseRoutes.js");
-
+// Load environment variables
 dotenv.config();
 
 // Database connection
 connectDB();
 
 // Middleware
-app.use(cors()); // You can add custom options if needed
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
+app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
+const timetableRoutes = require("../Routes/TimetableRoutes.js");
+const courseRoutes = require("../Routes/CourseRoutes.js");
 
-app.use('/api/courses', timetableRoutes);
-app.use("/api/docs", CourseRoutes);
+app.use('/api/timetables', timetableRoutes);
+app.use("/api/docs", courseRoutes);
 
-
-
-
-// Global Error Handling Middleware (optional)
+// Global Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack); // Logs error stack to console
-  res.status(500).json({ message: "Something went wrong!" });
+  console.error(err.stack);
+  res.status(500).json({ 
+    success: false,
+    message: "Internal Server Error",
+    error: err.message 
+  });
+});
+
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Endpoint not found"
+  });
 });
 
 // Start the server

@@ -74,13 +74,11 @@ const Footer = () => {
                 <table id="calendar">
                   <thead>
                     <tr>
-                      <th>Sun</th>
                       <th>Mon</th>
                       <th>Tue</th>
                       <th>Wed</th>
                       <th>Thu</th>
                       <th>Fri</th>
-                      <th>Sat</th>
                     </tr>
                   </thead>
                   <tbody id="calendar-body">

@@ -40,7 +40,6 @@ section.home-section1 {
 .home-container1 .navbar-custom1 {
     width: calc(100% - 2rem);
     background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
     border-radius: .7rem;
     display: flex;
     justify-content: space-between;
