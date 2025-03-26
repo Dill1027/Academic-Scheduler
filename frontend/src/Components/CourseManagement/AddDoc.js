@@ -168,11 +168,11 @@ function AddDoc({ onClose }) {
                     ))}
                 </div>
 
-                <div className="form-group mt-4 d-flex justify-content-between">
-                    <button type="button" className="btn btn-secondary" onClick={onClose}>
+                <div className="addbtn form-group mt-4 d-flex justify-content-between d-flex gap-5">
+                    <button type="button" className=" cancel btn btn-success" onClick={onClose}>
                         Cancel
                     </button>
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="submit btn btn-primary">
                         Submit
                     </button>
                 </div>
