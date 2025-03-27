@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Schedule = require('../Model/SchedulModel');
+const schedule = require('../Model/SchedulModel');
 
 const isValidTime = (time) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(time);
 
@@ -50,7 +50,7 @@ router.post('/create', async (req, res) => {
         }
 
         // Save to DB
-        const newSchedule = new Schedule({ year, course, moduleName, day, lecturer, starttime, endtime, venue });
+        const newSchedule = new schedule({ year, course, moduleName, day, lecturer, starttime, endtime, venue });
         const savedSchedule = await newSchedule.save();
         
         res.status(201).json(savedSchedule);
@@ -59,5 +59,16 @@ router.post('/create', async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
+
+// Get all documents
+router.get("/", async (req, res) => {
+    try {
+      const schedule = await schedule.find();
+      res.json(schedule);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+  
 
 module.exports = router;
