@@ -27,12 +27,25 @@ const scheduleSchema = new mongoose.Schema({
     },
     starttime: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: function (value) {
+                return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value); // Validate HH:MM format
+            },
+            message: "Invalid time format. Use HH:MM (24-hour format)."
+        }
     },
     
     endtime: {
         type: String,
         required: true,
+        validate: {
+            validator: function (value) {
+                return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value); // Validate HH:MM format
+            },
+            message: "Invalid time format. Use HH:MM (24-hour format)."
+        }
+
     },
     venue: {
         type: String,

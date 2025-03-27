@@ -12,6 +12,7 @@ const path = require("path");
 //academic shedular
 
 const CourseRoutes = require("./Routes/CourseRoutes.js");
+const ScheduleRoutes = require("./Routes/SchedulRoute.js");
 
 
 dotenv.config();
@@ -29,6 +30,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 app.use("/api/docs", CourseRoutes);
+app.use("/api/schedules", ScheduleRoutes);
 
 
 
