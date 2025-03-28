@@ -1,45 +1,48 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const connectDB = require("./Config/db.js");
-const dotenv = require("dotenv");
 const cors = require("cors");
+const path = require("path");
+const fs = require("fs");
+const routes= require("./Routes/lecturerRoutes");
+const bodyParser = require("body-parser");
+
 const app = express();
 
+// Ensure the uploads directory exists
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 // Import Routes
-const path = require("path");
-
-
-//academic shedular
-
 const CourseRoutes = require("./Routes/CourseRoutes.js");
-
-dotenv.config();
+const lecturerRoutes= require("./Routes/lecturerRoutes.js")
 
 // Database connection
 connectDB();
 
 // Middleware
-app.use(cors()); // You can add custom options if needed
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(uploadDir));
 
 // Routes
-
-
 app.use("/api/docs", CourseRoutes);
+app.use("/api/lecturers", lecturerRoutes);
 
 
 
-
-// Global Error Handling Middleware (optional)
+// Global Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack); // Logs error stack to console
+  console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!" });
 });
 
 // Start the server
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
