@@ -100,7 +100,7 @@ function SecondYear() {
             <Header />
             <div className="left-section" style={{ marginTop: "90px" }}>
                 <div className="main-1 mt-5">
-                    <h3>2nd Year Modules</h3>
+                    <h3 style={{marginLeft:"50px"}}>2nd Year Modules</h3>
                     <hr />
 
                     {/* Search Bar */}
@@ -133,7 +133,7 @@ function SecondYear() {
                                             style={{ cursor: "pointer" }} // Change cursor to pointer
                                         >
                                             <div className="main card-body">
-                                                <h5 className="mini1 card-title">{item.moduleName}</h5>
+                                                <h5 className="mini1 card-title" >{item.moduleName}</h5>
                                                 <p className="des1 card-text mt-3">{item.description}</p>
                                                 <p className="des card-text">
                                                     <strong className="name">Lectures:</strong>

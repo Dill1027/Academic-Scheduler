@@ -100,7 +100,7 @@ function First() {
             <Header />
             <div className="left-section" style={{ marginTop: "90px" }}>
                 <div className="main-1 mt-5">
-                    <h3>1st Year Modules</h3>
+                    <h3 style={{marginLeft:"50px"}}>1st Year Modules</h3>
                     <hr />
 
                     {/* Search Bar */}

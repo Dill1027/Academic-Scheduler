@@ -100,7 +100,7 @@ function Third() {
             <Header />
             <div className="left-section" style={{ marginTop: "90px" }}>
                 <div className="main-1 mt-5">
-                    <h3>3rd Year Modules</h3>
+                    <h3 style={{marginLeft:"50px"}}>3rd Year Modules</h3>
                     <hr />
 
                     {/* Search Bar */}

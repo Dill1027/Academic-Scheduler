@@ -1,6 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
-import SideBar from "../Home/SideBar";
 import Header from "../Navbar/Header";
 import Footer from "../Navbar/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
