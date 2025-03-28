@@ -1,74 +1,127 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const schedule = require('../Model/SchedulModel');
+const { schedule, upload } = require('../Model/CourseModel');
+const { body, validationResult } = require('express-validator');
 
-const isValidTime = (time) => /^([01]\d|2[0-3]):([0-5]\d)$/.test(time);
-
-router.post('/create', async (req, res) => {
-    try {
-        const { year, course, moduleName, day, lecturer, starttime, endtime, venue } = req.body;
-
-        // Check if any field is missing
-        const requiredFields = ['year', 'course', 'moduleName', 'day', 'lecturer', 'starttime', 'endtime', 'venue'];
-        const missingField = requiredFields.find(field => !req.body[field]);
-        
-        if (missingField) {
-            return res.status(400).json({ 
-                message: 'All fields are required.',
-                missing: missingField  // 👈 Tells you which field is missing
-            });
-        }
-
-        // Validate year
-        if (!["1st Year", "2nd Year", "3rd Year", "4th Year"].includes(year)) {
-            return res.status(400).json({ message: "Invalid year." });
-        }
-
-        // Validate course
-        if (!["Information Technology", "Software Engineering", "Cyber Security", "Interactive Media", "Data Science"].includes(course)) {
-            return res.status(400).json({ message: "Invalid course." });
-        }
-
-        // Validate day
-        if (!["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].includes(day)) {
-            return res.status(400).json({ message: "Invalid day." });
-        }
-
-        // Validate lecturer (only letters/spaces)
-        if (!/^[a-zA-Z\s]+$/.test(lecturer)) {
-            return res.status(400).json({ message: "Lecturer name can only contain letters and spaces." });
-        }
-
-        // Validate time format
-        if (!isValidTime(starttime) || !isValidTime(endtime)) {
-            return res.status(400).json({ message: "Time must be in HH:MM (24-hour format)." });
-        }
-
-        // Validate end time > start time
-        if (new Date(`2000-01-01T${endtime}`) <= new Date(`2000-01-01T${starttime}`)) {
-            return res.status(400).json({ message: "End time must be after start time." });
-        }
-
-        // Save to DB
-        const newSchedule = new schedule({ year, course, moduleName, day, lecturer, starttime, endtime, venue });
-        const savedSchedule = await newSchedule.save();
-        
-        res.status(201).json(savedSchedule);
-    } catch (error) {
-        console.error("Error:", error);
-        res.status(500).json({ message: "Server error", error: error.message });
+// Add document
+router.post('/add', 
+  upload.array('documents', 3),
+  [
+    body('year').notEmpty().withMessage('Year is required').isIn(["1st Year", "2nd Year", "3rd Year", "4th Year"]).withMessage('Invalid year'),
+    body('course').notEmpty().withMessage('Specialization is required').isIn(["Information Technology", "Software Engineering", "Cyber Security", "Interactive Media", "Data Science"]).withMessage('Invalid Specialization'),
+    body('moduleName').notEmpty().withMessage('Module name is required').isLength({ max: 100 }).withMessage('Module name must be at most 100 characters long'),
+    body('description').optional().isLength({ max: 500 }).withMessage('Description must be at most 500 characters long'),
+    body('lectures').isArray({ min: 1, max: 5 }).withMessage('You must provide between 1 and 5 lectures'),
+    body('lectures.*').notEmpty().withMessage('Lecture name cannot be empty').isLength({ max: 100 }).withMessage('Lecture name must be at most 100 characters long'),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-});
+
+    const { year, course, moduleName, description, lectures } = req.body;
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'At least one document must be uploaded' });
+    }
+
+    const documents = req.files.map(file => file.path);
+
+    try {
+      const newSchedule = new schedule({
+        year,
+        course,
+        moduleName,
+        description,
+        lectures,
+        documents
+      });
+
+      await newSchedule.save();
+      res.status(201).json({ message: 'Document uploaded successfully!', data: newSchedule });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+);
 
 // Get all documents
 router.get("/", async (req, res) => {
-    try {
-      const schedule = await schedule.find();
-      res.json(schedule);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
+  try {
+    const schedules = await Schedule.find();
+    res.json(schedules);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get one document by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const schedule = await Schedule.findById(req.params.id);
+    if (!schedule) {
+      return res.status(404).json({ error: 'Schedule not found' });
     }
-  });
-  
+    res.json(schedule);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get documents by year
+router.get("/year/:year", async (req, res) => {
+  try {
+      const year = req.params.year;
+      const data = await Schedule.find({ year: year });
+      res.status(200).json(data);
+  } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).json({ message: "Failed to fetch data" });
+  }
+});
+
+// Update document
+router.put("/update/:id", upload.array('documents', 3), async (req, res) => {
+  const scheduleId = req.params.id;
+  const { year, course, moduleName, description, lectures } = req.body;
+
+  try {
+    const updatedSchedule = await Schedule.findById(scheduleId);
+    if (!updatedSchedule) {
+      return res.status(404).json({ error: 'Schedule not found' });
+    }
+
+    updatedSchedule.year = year || updatedSchedule.year;
+    updatedSchedule.course = course || updatedSchedule.course;
+    updatedSchedule.moduleName = moduleName || updatedSchedule.moduleName;
+    updatedSchedule.description = description || updatedSchedule.description;
+    updatedSchedule.lectures = lectures || updatedSchedule.lectures;
+
+    if (req.files && req.files.length > 0) {
+      updatedSchedule.documents = req.files.map(file => file.path);
+    }
+
+    await updatedSchedule.save();
+    res.json({ message: 'Schedule updated successfully!', data: updatedSchedule });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete document
+router.delete("/delete/:id", async (req, res) => {
+  const scheduleId = req.params.id;
+
+  try {
+    const deletedSchedule = await Schedule.findByIdAndDelete(scheduleId);
+    if (!deletedSchedule) {
+      return res.status(404).json({ error: 'Schedule not found' });
+    }
+    res.json({ message: 'Schedule deleted successfully!' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;

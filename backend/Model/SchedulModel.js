@@ -1,7 +1,38 @@
 const mongoose = require('mongoose');
+const multer = require('multer');
 const path = require('path');
 
-const scheduleSchema = new mongoose.Schema({
+// Multer configuration for file uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../frontend/public/uploads');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 10000000 },
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    }
+});
+
+function checkFileType(file, cb) {
+    const filetypes = /jpeg|jpg|png|gif|pdf|doc|docx/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb('Error: Only images (JPEG, JPG, PNG, GIF), PDFs, and Word documents (DOC, DOCX) are allowed!');
+    }
+}
+
+const ScheduleSchema = new mongoose.Schema({
     year: {
         type: String,
         required: true,
@@ -10,50 +41,46 @@ const scheduleSchema = new mongoose.Schema({
     course: {
         type: String,
         required: true,
-        enum: ["Information Technology", "Software Engineering", "Cyber Security", "Interactive Media", "Data Science"] // Only allow specific course values
+        enum: ["Information Technology", "Software Engineering", "Cyber Security", "Interactive Media", "Data Science"]
     },
     moduleName: {
         type: String,
         required: true
-    }, 
-    day: {
-        type: String,
-        required: true,
-        enum: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] // Only allow specific day values
     },
-    lecturer: {
+    description: {
         type: String,
-        required: true
+        required: false
     },
-    starttime: {
-        type: String,
-        required: true,
+    lectures: {
+        type: [String],
+        required: false,
         validate: {
-            validator: function (value) {
-                return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value); // Validate HH:MM format
+            validator: function (v) {
+                return v.length <= 5;
             },
-            message: "Invalid time format. Use HH:MM (24-hour format)."
+            message: 'Maximum of 5 lectures allowed!'
         }
     },
-    
-    endtime: {
-        type: String,
+    documents: {
+        type: [String],
         required: true,
         validate: {
-            validator: function (value) {
-                return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value); // Validate HH:MM format
+            validator: function (v) {
+                return v.length <= 3;
             },
-            message: "Invalid time format. Use HH:MM (24-hour format)."
+            message: 'Maximum of 3 documents allowed!'
         }
-
     },
-    venue: {
-        type: String,
-        required: true
-    },
-   
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
-const schedule = mongoose.model('Schedule', scheduleSchema);
+// Create the Mongoose model - changed variable name to Schedule
+const schedule = mongoose.model("schedule", ScheduleSchema);
 
-module.exports = schedule;
+module.exports = {
+    schedule,  // Changed from 'schedule' to 'Schedule'
+    upload
+};
