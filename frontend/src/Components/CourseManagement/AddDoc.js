@@ -139,20 +139,32 @@ function AddDoc({ onClose }) {
                 </div>
 
                 <div className="form-group mt-3">
-                    <label>Lecturers :</label>
-                    {lectures.map((lecture, index) => (
-                        <div key={index} className="d-flex align-items-center mb-2">
-                            <input
-                                type="text"
-                                className="form-control me-2"
-                                placeholder={`Lecturer ${index + 1}`}
-                                name="lecture"
-                                value={lecture}
-                                onChange={(e) => handleLectureChange(index, e.target.value)}
-                            />
-                        </div>
-                    ))}
-                </div>
+                        <label>Lecturers :</label>
+                        {lectures.map((lecture, index) => (
+                            <div key={index} className="d-flex align-items-center mb-2">
+                                <input
+                                    type="text"
+                                    className="form-control me-2"
+                                    placeholder={`Lecturer ${index + 1}`}
+                                    name="lecture"
+                                    value={lecture}
+                                    onChange={(e) => {
+                                        // Validation - only allow letters, spaces, and certain common characters
+                                        const value = e.target.value;
+                                        if (/^[a-zA-Z\s.'-]*$/.test(value)) {
+                                            handleLectureChange(index, value);
+                                        }
+                                    }}
+                                />
+                                {lecture && !/^[a-zA-Z\s.'-]+$/.test(lecture) && (
+                                    <small className="text-danger ms-2">
+                                        Only letters, spaces, and basic punctuation (.'-) allowed
+                                    </small>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+              
 
                 <div className="form-group mt-3">
                     <label>Upload Documents (PDF, Word, or Images)</label>
