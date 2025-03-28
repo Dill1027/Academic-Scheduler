@@ -13,6 +13,8 @@ const path = require("path");
 
 const CourseRoutes = require("./Routes/CourseRoutes.js");
 
+
+
 dotenv.config();
 
 // Database connection
@@ -28,6 +30,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 app.use("/api/docs", CourseRoutes);
+
 
 
 

@@ -35,10 +35,12 @@
 }
 
 .mini1 {
-    background-color:  #041a70e0;
+    /* background-color:  #041a70e0; */
+    
+    background: linear-gradient(135deg, #667eea, #764ba2);
     padding: 15px 15px;
     border-radius: 1px;
-    color: rgb(244, 240, 240);
+    color: rgb(255, 255, 255);
     box-shadow: 5px 5px 15px rgba(208, 195, 195, 0.2);
     cursor: pointer;
     position: relative;
@@ -46,7 +48,7 @@
 
 .notice {
     background-color: #041a70e0;
-    padding: 2px 15px;
+    padding: 1px 13px;
     color: #fcfcfc;
 }
 
@@ -63,15 +65,7 @@
     cursor: pointer;
 }
 
-.announce {
-    background-color: #840608d9;
-    padding: 2px 15px;
-    color: #fcfcfc;
-}
 
-.announceContent {
-    padding: 15px 15px;
-}
 
 .action-buttons {
     margin-top: 10px;
@@ -119,4 +113,15 @@
 
 .main-1{
     padding: 30px;
+}
+
+.course-title{
+    /* background-color: #840608d9; */   
+     background: linear-gradient(135deg, #840608d9, #373434d9);
+    
+    padding: 5px 15px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
 }
