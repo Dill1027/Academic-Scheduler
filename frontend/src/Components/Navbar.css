@@ -17,4 +17,18 @@
     background-color: #add8e6; /* Light Blue */
     color: black;
   }
+  /* Navbar.css */
+.navbar {
+  height: 100px; /* Adjust this value to increase/decrease the navbar height */
+}
+
+.navbar-nav .nav-link {
+  padding-top: 20px; /* Adjust padding to center text vertically */
+  padding-bottom: 20px; /* Adjust padding to center text vertically */
+}
+
+.navbar-toggler {
+  padding: 10px; /* Optional: Adjust the padding for the toggle button */
+}
+
   

@@ -1,21 +1,19 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 
-import Footer from "./Components/Footer";
 import Home from "./Components/Home";
 
 import Profile from "./Components/StudentManagement/Profile";
 import StudentRegisterForm from "./Components/StudentManagement/StudentRegisterForm";
 import CurrentStudent from "./Components/Authentication/CurrentStudent";
 import Register from "./Components/Authentication/Register";
-
-
 import Login from "./Components/Authentication/Login";
 import Dashboard from "./Components/Authentication/Dashboard";
 import UserBaseLogin from "./Components/Authentication/UserBaseLogin";
 import AdminReview from "./Components/Admin/AdminReview";
 import StudentDashboard from "./Components/StudentManagement/StudentDashboard";
-
+import LecturerRegisterForm from "./Components/Authentication/LectureRegisterForm";
+import StudentList from "./Components/StudentManagement/StudentList";
 
 
 
@@ -30,8 +28,8 @@ import EditDoc from "./Components/CourseManagement/UpdateCourse";
 import Second from "./Components/CourseManagement/secondYear";
 import Third from "./Components/CourseManagement/ThirdYear";
 import Fourth from "./Components/CourseManagement/fourthYear";
-import LecturerRegisterForm from "./Components/Authentication/LectureRegisterForm";
-import StudentList from "./Components/StudentManagement/StudentList";
+
+
 
 
 function App() {
