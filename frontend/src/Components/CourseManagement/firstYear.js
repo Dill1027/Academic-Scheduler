@@ -14,6 +14,8 @@ function First() {
     const [error, setError] = useState("");
     const [activeCard, setActiveCard] = useState(null); // Tracks which card is clicked
 
+    
+
     // Fetch 1st Year data when the component mounts
     useEffect(() => {
         fetchData();
@@ -100,7 +102,7 @@ function First() {
             <Header />
             <div className="left-section" style={{ marginTop: "90px" }}>
                 <div className="main-1 mt-5">
-                    <h3>1st Year Modules</h3>
+                    <h3>1st Year Courses & Modules</h3>
                     <hr />
 
                     {/* Search Bar */}

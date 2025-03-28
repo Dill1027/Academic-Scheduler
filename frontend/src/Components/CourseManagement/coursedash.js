@@ -45,10 +45,10 @@ function Coursed() {
           <div className="row mt-4">
             {/* 1st Year */}
             <div className="col-md-3 mb-4">
-              <div className="card">
-                <div className="card-body text-center">
-                  <h4 className="card-title">1st Year</h4>
-                  <p className="card-text">View courses for 1st-year students</p>
+              <div className="card1">
+                <div className="card1-body text-center">
+                  <h4 className="card1-title">1st Year</h4>
+                  <p className="card1-text">View courses for 1st-year students</p>
                   <Link to="/first" className="btn btn-primary">Go to 1st Year</Link>
                 </div>
               </div>
@@ -56,10 +56,10 @@ function Coursed() {
 
             {/* 2nd Year */}
             <div className="col-md-3 mb-4">
-              <div className="card">
-                <div className="card-body text-center">
-                  <h4 className="card-title">2nd Year</h4>
-                  <p className="card-text">View courses for 2nd-year students</p>
+              <div className="card1">
+                <div className="card1-body text-center">
+                  <h4 className="card1-title">2nd Year</h4>
+                  <p className="card1-text">View courses for 2nd-year students</p>
                   <Link to="/second" className="btn btn-primary">
                     Go to 2nd Year
                   </Link>
@@ -69,10 +69,10 @@ function Coursed() {
 
             {/* 3rd Year */}
             <div className="col-md-3 mb-4">
-              <div className="card">
-                <div className="card-body text-center">
-                  <h4 className="card-title">3rd Year</h4>
-                  <p className="card-text">View courses for 3rd-year students</p>
+              <div className="card1">
+                <div className="card1-body text-center">
+                  <h4 className="card1-title">3rd Year</h4>
+                  <p className="card1-text">View courses for 3rd-year students</p>
                   <Link to="/Third" className="btn btn-primary">
                     Go to 3rd Year
                   </Link>
@@ -82,10 +82,10 @@ function Coursed() {
 
             {/* 4th Year */}
             <div className="col-md-3 mb-4">
-              <div className="card">
-                <div className="card-body text-center">
-                  <h4 className="card-title">4th Year</h4>
-                  <p className="card-text">View courses for 4th-year students</p>
+              <div className="card1">
+                <div className="card1-body text-center">
+                  <h4 className="card1-title">4th Year</h4>
+                  <p className="card1-text">View courses for 4th-year students</p>
                   <Link to="/Fourth" className="btn btn-primary">
                     Go to 4th Year
                   </Link>

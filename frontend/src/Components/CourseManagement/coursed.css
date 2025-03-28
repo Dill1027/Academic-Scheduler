@@ -48,35 +48,30 @@
   }
   
 
-  h4 {
-    color: #333;
-    font-size: 18px;
-    font-weight: bold;
-  }
   
-  .card {
+  .card1 {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
   }
   
-  .card:hover {
+  .card1:hover {
     transform: translateY(-10px);
   }
   
-  .card-body {
+  .card1-body {
     padding: 30px;
     background-color: #fff;
     text-align: center;
     border-radius: 10px;
   }
   
-  .card-title {
+  .card1-title {
     color: #007bff;
     font-size: 22px;
   }
   
-  .card-text {
+  .card1-text {
     color: #6c757d;
     margin-bottom: 20px;
   }
