@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { addcourse, upload } = require('../Model/AddCourseModel'); // Import the Docs model and upload middleware
+const { Docs, upload } = require('../Model/CourseModel'); // Import the Docs model and upload middleware
 const { body, validationResult } = require('express-validator');
-const multer = require('multer');
 
 // Add document
 router.post('/add', 
@@ -32,7 +31,7 @@ router.post('/add',
     const documents = req.files.map(file => file.path);
 
     try {
-      const newDoc = new addcourse({
+      const newDoc = new Docs({
         year,
         course,
         moduleName,
@@ -52,7 +51,7 @@ router.post('/add',
 // Get all documents
 router.get("/", async (req, res) => {
   try {
-    const docs = await addcourse.find();
+    const docs = await Docs.find();
     res.json(docs);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -62,7 +61,7 @@ router.get("/", async (req, res) => {
 // Get one document by ID
 router.get("/:id", async (req, res) => {
   try {
-    const doc = await addcourse.findById(req.params.id);
+    const doc = await Docs.findById(req.params.id);
     if (!doc) {
       return res.status(404).json({ error: 'Document not found' });
     }
@@ -76,7 +75,7 @@ router.get("/:id", async (req, res) => {
 router.get("/year/:year", async (req, res) => {
   try {
       const year = req.params.year;
-      const data = await addcourse.find({ year: year }); // Fetch data from MongoDB
+      const data = await Docs.find({ year: year }); // Fetch data from MongoDB
       res.status(200).json(data);
   } catch (error) {
       console.error("Error fetching data:", error);
@@ -90,7 +89,7 @@ router.put("/update/:id", upload.array('documents', 3), async (req, res) => {
   const { year, course, moduleName, description, lectures } = req.body;
 
   try {
-    const updatedDoc = await addcourse.findById(docId);
+    const updatedDoc = await Docs.findById(docId);
     if (!updatedDoc) {
       return res.status(404).json({ error: 'Document not found' });
     }
@@ -119,7 +118,7 @@ router.delete("/delete/:id", async (req, res) => {
   const docId = req.params.id;
 
   try {
-    const deletedDoc = await addcourse.findByIdAndDelete(docId);
+    const deletedDoc = await Docs.findByIdAndDelete(docId);
     if (!deletedDoc) {
       return res.status(404).json({ error: 'Document not found' });
     }
