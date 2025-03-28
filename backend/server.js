@@ -1,6 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const connectDB = require("./Config/db.js");
+const StudentRoutes = require("./Routes/StudentRoutes.js");
+const AuthRoutes = require("./Routes/AuthRoutes.js");
+
 const dotenv = require("dotenv");
 const cors = require("cors");
 const app = express();
@@ -12,6 +15,7 @@ const path = require("path");
 //academic shedular
 
 const CourseRoutes = require("./Routes/CourseRoutes.js");
+const GroupRoutes = require("./Routes/GroupRoutes.js");
 
 dotenv.config();
 
@@ -28,6 +32,10 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 app.use("/api/docs", CourseRoutes);
+app.use("/api/student", StudentRoutes);
+app.use("/api/groups", GroupRoutes);
+app.use("/api/auth",AuthRoutes)
+
 
 
 
@@ -39,7 +47,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

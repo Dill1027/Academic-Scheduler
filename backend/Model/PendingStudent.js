@@ -36,41 +36,10 @@ const StudentSchema = new mongoose.Schema({
     ref: "Group",
     required: false,
   },
-  status: { type: String, enum: ["pending", "approved"], default: "pending" },
   password: {
     type: String,
     required: true,
   },
-  schedule: [
-    {
-      courseName: String,
-      startTime: Date,
-      endTime: Date,
-      instructor: String,
-      location: String
-    }
-  ],
-  assignments: [
-    {
-      title: String,
-      description: String,
-      dueDate: Date
-    }
-  ],
-  exams: [
-    {
-      title: String,
-      date: Date,
-      location: String
-    }
-  ],
-  announcements: [
-    {
-      title: String,
-      description: String,
-      date: Date
-    }
-  ]
 }, { timestamps: true });
 
 // Hash password before saving
