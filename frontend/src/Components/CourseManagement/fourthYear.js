@@ -180,7 +180,7 @@ function First() {
             <Header />
             <div className="left-section" style={{ marginTop: "90px" }}>
                 <div className="main-1 mt-5">
-                    <h3>4th Year Courses & Modules</h3>
+                    <h3 style={{marginLeft:"50px"}}>4th Year Courses & Modules</h3>
                     <hr />
 
                     <div className="search form-group mb-4 mt-5">
