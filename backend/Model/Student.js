@@ -75,7 +75,7 @@ const StudentSchema = new mongoose.Schema({
       description: String,
       date: Date
     }
-  ]
+  ],
 }, { timestamps: true });
 
 // Hash password before saving

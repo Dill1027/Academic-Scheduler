@@ -186,4 +186,103 @@ router.get('/dashboard', async (req, res) => {
     }
 });
 
+/////////////////////////////////
+
+// Get approved students with their modules
+router.get("/approved/with-modules", async (req, res) => {
+    try {
+        const students = await Student.find({ status: "approved" })
+            .populate('modules', 'moduleName -_id') // Only populate module names
+            .select('studentName year specialization modules');
+        res.json(students);
+    } catch (error) {
+        res.status(500).json({ error: "Error fetching approved students" });
+    }
+});
+
+
+// Get modules filtered by year and specialization
+router.get("/available-modules", async (req, res) => {
+    try {
+        const { year, specialization } = req.query;
+        
+        if (!year || !specialization) {
+            return res.status(400).json({ error: "Year and specialization are required" });
+        }
+
+        const modules = await Docs.find({ 
+            year: `${year} Year`, 
+            course: specialization 
+        }).select('moduleName -_id');
+
+        res.json(modules);
+    } catch (error) {
+        res.status(500).json({ error: "Error fetching modules" });
+    }
+});
+
+// Add module to student
+router.post("/:id/add-module", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { moduleId } = req.body;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ error: "Invalid student ID" });
+        }
+
+        const student = await Student.findById(id);
+        if (!student) {
+            return res.status(404).json({ error: "Student not found" });
+        }
+
+        // Check if module exists
+        const module = await Docs.findById(moduleId);
+        if (!module) {
+            return res.status(404).json({ error: "Module not found" });
+        }
+
+        // Check if student already has this module
+        if (student.modules.includes(moduleId)) {
+            return res.status(400).json({ error: "Module already assigned" });
+        }
+
+        student.modules.push(moduleId);
+        await student.save();
+
+        res.json({ message: "Module added successfully", student });
+    } catch (error) {
+        res.status(500).json({ error: "Error adding module" });
+    }
+
+
+
+
+
+    router.post("/:id/add-module", async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { moduleId } = req.body;
+    
+            if (!mongoose.Types.ObjectId.isValid(id)) {
+                return res.status(400).json({ error: "Invalid student ID" });
+            }
+    
+            const student = await Student.findById(id);
+            if (!student) {
+                return res.status(404).json({ error: "Student not found" });
+            }
+    
+            // Check if student already has 5 modules
+            if (student.modules.length >= 5) {
+                return res.status(400).json({ error: "Maximum of 5 modules allowed per student" });
+            }
+    
+            // Rest of your existing code...
+        } catch (error) {
+            res.status(500).json({ error: "Error adding module" });
+        }
+    });
+});
+
 module.exports = router;

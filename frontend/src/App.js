@@ -38,6 +38,7 @@ import AdminDashboard from "./Components/Admin/AdminDashboard";
 
 
 
+
 function App() {
   return (
     <>
@@ -74,6 +75,9 @@ function App() {
         <Route path="/Third" element={<Third />} />
         <Route path="/Fourth" element={<Fourth />} />
         <Route path="/edit/:id" element={<EditDoc />} />
+        <Route path="/studentCourse" element={<StudentCourse />} />
+
+        {/* Add other routes here */}
       </Routes>
 
        {/* Footer should also be outside of Routes */}
