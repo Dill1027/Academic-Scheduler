@@ -15,6 +15,11 @@ import StudentDashboard from "./Components/StudentManagement/StudentDashboard";
 import LecturerRegisterForm from "./Components/Authentication/LectureRegisterForm";
 import StudentList from "./Components/StudentManagement/StudentList";
 
+//lecturer managmnet 
+import AddLecturerForm from  "./Components/lecturerManagement/AddLecturerForm";
+import LecturerDetails from "./Components/lecturerManagement/LecturerDetails";
+import UpdateLecturer from "./Components/lecturerManagement/UpdateLecturer";
+
 
 
 import './App.css';
@@ -28,6 +33,7 @@ import EditDoc from "./Components/CourseManagement/UpdateCourse";
 import Second from "./Components/CourseManagement/secondYear";
 import Third from "./Components/CourseManagement/ThirdYear";
 import Fourth from "./Components/CourseManagement/fourthYear";
+import AdminDashboard from "./Components/Admin/AdminDashboard";
 
 
 
@@ -50,7 +56,13 @@ function App() {
         <Route path="/userbase" element={<UserBaseLogin/>} />
         <Route path="/adminReview" element={<AdminReview/>} />
         <Route path="/dashboardd" element={<StudentDashboard/>} />
+        <Route path="/adminDashboard" element={<AdminDashboard/>} />
 
+
+       {/* Lecturer Routes*/}
+        <Route path="/addLecturer" element={<AddLecturerForm />}/>
+        <Route path="/lecturerDetails" element={<LecturerDetails />} />
+        <Route path="/lecturers/update/:id" component={UpdateLecturer} />
 
 
          {/* Academic Scheduler Routes */}

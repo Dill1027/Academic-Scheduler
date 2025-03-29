@@ -37,7 +37,7 @@ const Profile = () => {
   return (
     <div>
       <h2>Welcome, {student.studentName}!</h2>
-      <p>Faculty: {student.faculty}</p>
+      <p>Specialization: {student.specialization}</p>
       <p>Year: {student.year}</p>
       <p>Email: {student.email}</p>
     </div>

@@ -7,7 +7,7 @@ const InsertStudent = () => {
     registrationNumber: "",
     email: "",
     phoneNumber: "",
-    faculty: "",
+    specialization: "",
     groupId: "",
     password: "",
   });
@@ -60,8 +60,8 @@ const InsertStudent = () => {
       formErrors.phoneNumber = "Phone number must be exactly 10 digits starting with 07.";
     }
 
-    if (!studentData.faculty) {
-      formErrors.faculty = "Faculty is required";
+    if (!studentData.specialization) {
+      formErrors.specialization = "Specialization is required";
     }
 
     if (!studentData.password) {
@@ -81,7 +81,7 @@ const InsertStudent = () => {
       try {
         const response = await axios.post("http://localhost:5000/api/student", {
           ...studentData,
-          status: "pending", // Initially set status to pending
+          status: "pending",
         });
 
         if (response.data.message) {
@@ -91,7 +91,7 @@ const InsertStudent = () => {
             registrationNumber: "",
             email: "",
             phoneNumber: "",
-            faculty: "",
+            specialization: "",
             groupId: "",
             password: "",
           });
@@ -115,7 +115,6 @@ const InsertStudent = () => {
       {errors.submit && <div className="alert alert-danger">{errors.submit}</div>}
 
       <form onSubmit={handleSubmit}>
-        {/* Student Name */}
         <div className="mb-3">
           <label htmlFor="studentName" className="form-label">Student Name</label>
           <input
@@ -130,7 +129,6 @@ const InsertStudent = () => {
           {errors.studentName && <div className="text-danger">{errors.studentName}</div>}
         </div>
 
-        {/* Registration Number */}
         <div className="mb-3">
           <label htmlFor="registrationNumber" className="form-label">Registration Number</label>
           <input
@@ -145,7 +143,6 @@ const InsertStudent = () => {
           {errors.registrationNumber && <div className="text-danger">{errors.registrationNumber}</div>}
         </div>
 
-        {/* Email */}
         <div className="mb-3">
           <label htmlFor="email" className="form-label">Email</label>
           <input
@@ -160,7 +157,6 @@ const InsertStudent = () => {
           {errors.email && <div className="text-danger">{errors.email}</div>}
         </div>
 
-        {/* Phone Number */}
         <div className="mb-3">
           <label htmlFor="phoneNumber" className="form-label">Phone Number (optional)</label>
           <input
@@ -175,7 +171,6 @@ const InsertStudent = () => {
           {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
         </div>
 
-        {/* Password */}
         <div className="mb-3">
           <label htmlFor="password" className="form-label">Password</label>
           <input
@@ -190,26 +185,25 @@ const InsertStudent = () => {
           {errors.password && <div className="text-danger">{errors.password}</div>}
         </div>
 
-        {/* Faculty Dropdown */}
         <div className="mb-3">
-          <label htmlFor="faculty" className="form-label">Faculty</label>
+          <label htmlFor="specialization" className="form-label">Specialization</label>
           <select
-            name="faculty"
-            id="faculty"
+            name="specialization"
+            id="specialization"
             className="form-select"
             onChange={handleChange}
-            value={studentData.faculty}
+            value={studentData.specialization}
           >
-            <option value="">Select Faculty</option>
-            <option value="Computing">Computing</option>
-            <option value="Business">Business</option>
-            <option value="Engineering">Engineering</option>
-            <option value="Humanities">Humanities</option>
+            <option value="">Select Specialization</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Software Engineering">Software Engineering</option>
+            <option value="Cyber Security">Cyber Security</option>
+            <option value="Interactive Media">Interactive Media</option>
+            <option value="Data Science">Data Science</option>
           </select>
-          {errors.faculty && <div className="text-danger">{errors.faculty}</div>}
+          {errors.specialization && <div className="text-danger">{errors.specialization}</div>}
         </div>
 
-        {/* Group Dropdown */}
         <div className="mb-3">
           <label htmlFor="groupId" className="form-label">Group (optional)</label>
           <select
@@ -228,7 +222,6 @@ const InsertStudent = () => {
           </select>
         </div>
 
-        {/* Submit Button */}
         <button type="submit" className="btn btn-primary w-100">Register Student</button>
       </form>
     </div>

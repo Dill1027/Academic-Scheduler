@@ -8,26 +8,10 @@ const Group = require("../Model/Groups");
 // Test route
 router.get("/test", (req, res) => res.send("Student routes working"));
 
-/*router.post("/", async (req, res) => {
-    try {
-      const { studentName, registrationNumber, email, phoneNumber, faculty, groupId, password } = req.body;
-  
-      if (!studentName || !email || !password) {
-        return res.status(400).json({ error: "All fields are required." });
-      }
-  
-      // Save student to database (mock response for now)
-      res.status(201).json({ message: "Student registered successfully" });
-    } catch (error) {
-      console.error("Error registering student:", error);
-      res.status(500).json({ error: "Server error" });
-    }
-  });*/
-
 // Register a new student with "pending" status
 router.post("/", async (req, res) => {
     try {
-        const { studentName, registrationNumber, email, phoneNumber, faculty, groupId, password } = req.body;
+        const { studentName, registrationNumber, email, phoneNumber, specialization, groupId, password } = req.body;
 
         if (!registrationNumber) {
             return res.status(400).json({ error: "Registration number is required." });
@@ -63,7 +47,7 @@ router.post("/", async (req, res) => {
             registrationNumber,
             email,
             phoneNumber,
-            faculty,
+            specialization,
             year,
             group: groupId || null,
             password: hashedPassword,
@@ -119,10 +103,12 @@ router.post("/login", async (req, res) => {
         if (!student) return res.status(400).json({ error: "Invalid email or password." });
         const isMatch = await bcrypt.compare(password, student.password);
         if (!isMatch) return res.status(400).json({ error: "Invalid email or password." });
-         // Check status
-    if (student.status !== "Approved") {
-        return res.status(403).json({ message: "Your account is not approved yet." });
-      }
+
+        // Check status
+        if (student.status !== "Approved") {
+            return res.status(403).json({ message: "Your account is not approved yet." });
+        }
+        
         res.json({ message: "Login successful", student });
     } catch (error) {
         console.error("Login error:", error);
@@ -181,22 +167,23 @@ router.delete("/:id", async (req, res) => {
         res.status(400).json({ message: "Cannot be deleted" });
     }
 });
+
 // Fetch dashboard data for the logged-in student
 router.get('/dashboard', async (req, res) => {
-  try {
-    const studentId = req.user.id; // Assuming you have authentication middleware to get user ID
-    const student = await Student.findById(studentId);
-    
-    // Return student's schedule, assignments, exams, and announcements
-    res.json({
-      schedule: student.schedule,
-      assignments: student.assignments,
-      exams: student.exams,
-      announcements: student.announcements
-    });
-  } catch (err) {
-    res.status(500).json({ message: 'Error fetching dashboard data' });
-  }
+    try {
+        const studentId = req.user.id; // Assuming you have authentication middleware to get user ID
+        const student = await Student.findById(studentId);
+        
+        // Return student's schedule, assignments, exams, and announcements
+        res.json({
+            schedule: student.schedule,
+            assignments: student.assignments,
+            exams: student.exams,
+            announcements: student.announcements
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Error fetching dashboard data" });
+    }
 });
 
 module.exports = router;

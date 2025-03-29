@@ -22,7 +22,7 @@ const Login = () => {
         alert('Login successful');
 
         // 🚀 Redirect to Profile Page after login
-        navigate(`/profile/${data.user.id}`); 
+        navigate(`/adminDashboard`); 
       } else {
         alert(data.message);
       }

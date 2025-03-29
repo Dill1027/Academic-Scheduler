@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
-  const [facultyFilter, setFacultyFilter] = useState('');
+  const [specializationFilter, setSpecializationFilter] = useState('');
 
   useEffect(() => {
     axios.get('http://localhost:5000/api/student')
@@ -16,8 +16,8 @@ const StudentList = () => {
   }, []);
 
   const filteredStudents = students.filter(student => {
-    if (facultyFilter) {
-      return student.faculty === facultyFilter;
+    if (specializationFilter) {
+      return student.specialization === specializationFilter;
     }
     return true;
   });
@@ -28,15 +28,16 @@ const StudentList = () => {
       
       <div className="d-flex justify-content-between mb-4">
         <select 
-          onChange={(e) => setFacultyFilter(e.target.value)} 
-          value={facultyFilter} 
+          onChange={(e) => setSpecializationFilter(e.target.value)} 
+          value={specializationFilter} 
           className="form-select w-25"
         >
-          <option value="">Select Faculty</option>
-          <option value="Computing">Computing</option>
-          <option value="Business">Business</option>
-          <option value="Engineering">Engineering</option>
-          <option value="Humanities">Humanities</option>
+          <option value="">Select Specialization</option>
+          <option value="Information Technology">Information Technology</option>
+          <option value="Software Engineering">Software Engineering</option>
+          <option value="Cyber Security">Cyber Security</option>
+          <option value="Interactive Media">Interactive Media</option>
+          <option value="Data Science">Data Science</option>
         </select>
       </div>
 
@@ -48,7 +49,7 @@ const StudentList = () => {
               <th>Registration Number</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Faculty</th>
+              <th>Specialization</th>
             </tr>
           </thead>
           <tbody>
@@ -58,7 +59,7 @@ const StudentList = () => {
                 <td>{student.registrationNumber}</td>
                 <td>{student.email}</td>
                 <td>{student.phoneNumber}</td>
-                <td>{student.faculty}</td>
+                <td>{student.specialization}</td>
               </tr>
             ))}
           </tbody>

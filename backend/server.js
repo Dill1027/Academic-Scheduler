@@ -16,6 +16,7 @@ const path = require("path");
 
 const CourseRoutes = require("./Routes/CourseRoutes.js");
 const GroupRoutes = require("./Routes/GroupRoutes.js");
+const lecturerRoutes = require("./Routes/lecturerRoutes.js");
 
 dotenv.config();
 
@@ -34,7 +35,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/docs", CourseRoutes);
 app.use("/api/student", StudentRoutes);
 app.use("/api/groups", GroupRoutes);
-app.use("/api/auth",AuthRoutes)
+app.use("/api/auth",AuthRoutes);
+app.use("/api/lecturers",lecturerRoutes);
 
 
 

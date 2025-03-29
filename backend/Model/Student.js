@@ -23,7 +23,7 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  faculty: {
+  specialization: {
     type: String,
     required: true,
   },
@@ -40,6 +40,11 @@ const StudentSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  module: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "docs",
+    required: false,
   },
   schedule: [
     {
