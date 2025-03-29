@@ -75,7 +75,7 @@ function App() {
         <Route path="/Third" element={<Third />} />
         <Route path="/Fourth" element={<Fourth />} />
         <Route path="/edit/:id" element={<EditDoc />} />
-        <Route path="/studentCourse" element={<StudentCourse />} />
+       
 
         {/* Add other routes here */}
       </Routes>
