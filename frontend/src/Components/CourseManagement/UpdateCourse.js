@@ -14,7 +14,7 @@ function EditDoc() {
     useEffect(() => {
         const fetchModule = async () => {
             try {
-                const response = await axios.get(`http://localhost:5001/api/docs/${id}`);
+                const response = await axios.get(`http://localhost:5000/api/docs/${id}`);
                 setModule(response.data);
             } catch (error) {
                 console.error("Error fetching module:", error);
@@ -51,7 +51,7 @@ function EditDoc() {
                 }
             });
 
-            await axios.put(`http://localhost:5001/api/docs/update/${id}`, formData, {
+            await axios.put(`http://localhost:5000/api/docs/update/${id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -184,7 +184,7 @@ function EditDoc() {
                                     // Display existing document name with a download link
                                     <div className="me-2">
                                         <a
-                                            href={`http://localhost:5001/uploads/${doc}`}
+                                            href={`http://localhost:5000/uploads/${doc}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >

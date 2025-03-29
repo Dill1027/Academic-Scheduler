@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api/timetables';
+const API_URL = 'http://localhost:5000/api/timetables';
 
 export const generateTimetables = () => {
   return axios.post(`${API_URL}/generate`);

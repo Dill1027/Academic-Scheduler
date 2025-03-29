@@ -5,7 +5,7 @@ const connectDB = async () => {
     await mongoose.connect('mongodb+srv://dilkiprabodya:dilki123@cluster0.k43vw.mongodb.net/', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5001 // Timeout after 5s instead of 30s
+      serverSelectionTimeoutMS: 5000 // Timeout after 5s instead of 30s
     });
     console.log('MongoDB connected successfully');
   } catch (error) {
