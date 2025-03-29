@@ -17,6 +17,9 @@ const LoginSelection = () => {
     },
     {
       name: "Current Student",
+      icon: "/icons/currentStudent.jpeg",
+      loginPath: "/studentlogin",
+      registerPath: "/register",
       icon: <FaUserGraduate size={48} />,
       loginPath: "/login",
       showLogin: true,
