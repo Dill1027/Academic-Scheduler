@@ -23,7 +23,8 @@ function Navbar() {
         {/* Navbar Items */}
         <div className="collapse navbar-collapse justify-content-between" id="navbarNav">
           <ul className="navbar-nav">
-            <li className="nav-item">
+            
+            <li className="nav-item d-flex gap-2">
               <Link className="nav-link text-white" to="/">Home</Link>
             </li>
             <li className="nav-item">

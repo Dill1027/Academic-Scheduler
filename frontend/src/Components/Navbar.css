@@ -1,34 +1,91 @@
-/* White Login Button */
-.login-btn {
-    background-color: white !important;
-    color: black !important;
-    border: 1px solid #ccc; /* Optional: Light border */
-  }
-  
-  /* Search Button Hover Effect */
-  .search-btn {
-    background-color: rgba(46, 123, 192, 0.849); /* Default */
-    color: black;
-    border: 1px solid #ccc;
-    transition: background-color 0.3s ease-in-out;
-  }
-  
-  .search-btn:hover {
-    background-color: #add8e6; /* Light Blue */
-    color: black;
-  }
-  /* Navbar.css */
+/* Navbar.css */
 .navbar {
-  height: 100px; /* Adjust this value to increase/decrease the navbar height */
+  height: 100px;
+  gap: 30px;
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
 }
 
 .navbar-nav .nav-link {
-  padding-top: 20px; /* Adjust padding to center text vertically */
-  padding-bottom: 20px; /* Adjust padding to center text vertically */
+  position: relative;
+  padding: 20px 15px;
+  font-weight: bold;
+  font-size: 23px;
+  color: white !important;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-right: 25px;
 }
 
+/* Beautiful Hover Effects */
+.navbar-nav .nav-link::before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 3px;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #add8e6;
+  transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::before {
+  width: 80%;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #ecf0f2 !important;
+  transform: translateY(-6px);
+}
+
+/* Active Link Styling */
+.navbar-nav .nav-link.active {
+  color: #add8e6 !important;
+}
+
+.navbar-nav .nav-link.active::before {
+  width: 80%;
+}
+
+/* Toggle Button Styling */
 .navbar-toggler {
-  padding: 10px; /* Optional: Adjust the padding for the toggle button */
+  padding: 10px;
+  border-color: white !important;
 }
 
-  
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='white' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Login Button */
+.login-btn {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid #ccc;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.login-btn:hover {
+  background-color: #f8f9fa !important;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Search Button */
+.search-btn {
+  background-color: rgba(46, 123, 192, 0.849);
+  color: white !important;
+  border: 1px solid #ccc;
+  transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+  background-color: #2e7bc0 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
