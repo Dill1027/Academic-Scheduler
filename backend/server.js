@@ -4,8 +4,7 @@ const mongoose = require("mongoose");
 const connectDB = require("./Config/db.js");
 const cors = require("cors");
 const path = require("path");
-
-const TimetableRoutes = require("./Routes/timetable.routes");//////////////////
+const rateLimit = require('express-rate-limit');
 
 // Import Routes
 const StudentRoutes = require("./Routes/StudentRoutes.js");
@@ -13,11 +12,18 @@ const AuthRoutes = require("./Routes/AuthRoutes.js");
 const CourseRoutes = require("./Routes/CourseRoutes.js");
 const GroupRoutes = require("./Routes/GroupRoutes.js");
 const LecturerRoutes = require("./Routes/lecturerRoutes.js");
+const TimetableRoutes = require("./Routes/timetable.routes");
 
 const app = express();
 
 // Database connection
 connectDB();
+
+// Rate limiting configuration
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
 
 // Middleware Configuration
 app.use(cors({
@@ -26,26 +32,18 @@ app.use(cors({
   credentials: true, // If using cookies/sessions
 }));
 
+app.use(limiter);
 app.use(express.json({ limit: '10mb' })); // Add body size limit
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Rate limiting (optional but recommended)
-const rateLimit = require('express-rate-limit');
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use(limiter);
-
 // Routes
-app.use("/api/docs", CourseRoutes); // Changed from "/api/docs" to more meaningful path
-app.use("/api/students", StudentRoutes); // Pluralized for REST consistency
+app.use("/api/courses", CourseRoutes); // Changed from "/api/docs" to more meaningful path
+app.use("/api/students", StudentRoutes);
 app.use("/api/groups", GroupRoutes);
 app.use("/api/auth", AuthRoutes);
 app.use("/api/lecturers", LecturerRoutes);
-
-app.use("/api/timetables", TimetableRoutes);///////////////////////////
+app.use("/api/timetables", TimetableRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -68,6 +66,7 @@ app.use((err, req, res, next) => {
 
 // Start the server
 const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

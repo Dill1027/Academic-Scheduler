@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";  // Import useNavigate
+import { useNavigate } from "react-router-dom";
+import moduleOptions from "./moduleOptions";
+import "./AddLectureForm.css";
 
-const moduleOptions = {
-    "1st Year": ["Mathematics", "Programming Fundamentals", "Database Systems", "Computer Networks"],
-    "2nd Year": ["Data Structures", "Operating Systems", "Software Engineering", "Web Development"],
-    "3rd Year": ["Machine Learning", "Cloud Computing", "Cyber Security", "Mobile App Development"],
-    "4th Year": ["Artificial Intelligence", "Big Data Analytics", "Blockchain Technology", "Advanced Web Tech"]
-};
-
-const AddLectureForm = () => {
-    const navigate = useNavigate();  // Initialize useNavigate
+const AddLectureForm = ({ closeModal }) => {
+    const navigate = useNavigate();
 
     const [lecturer, setLecturer] = useState({
         lecturerId: "",
@@ -22,208 +17,208 @@ const AddLectureForm = () => {
         gender: "",
         address: "",
         nic: "",
-        faculty: "Computing", // Default
+        specialization: "",
         year: "",
         modules: []
     });
 
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Handle input change
     const handleChange = (e) => {
-        setLecturer({ ...lecturer, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setLecturer(prev => ({
+            ...prev,
+            [name]: value
+        }));
     };
 
-    // Handle module selection (checkbox)
     const handleModuleChange = (module) => {
-        setLecturer((prevState) => {
-            const updatedModules = prevState.modules.includes(module)
-                ? prevState.modules.filter((m) => m !== module)
-                : [...prevState.modules, module];
-
-            return { ...prevState, modules: updatedModules };
-        });
+        setLecturer(prev => ({
+            ...prev,
+            modules: prev.modules.includes(module)
+                ? prev.modules.filter(m => m !== module)
+                : [...prev.modules, module]
+        }));
     };
 
-    // Handle form submission
+    const validateForm = () => {
+        // NIC validation (Sri Lankan format)
+        const nicRegex = /^(\d{9}[vV]|\d{12})$/;
+        if (!nicRegex.test(lecturer.nic)) {
+            return "Invalid NIC format (e.g., 123456789V or 123456789012)";
+        }
+
+        // Phone number validation (10 digits)
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(lecturer.phoneNumber)) {
+            return "Phone number must be 10 digits";
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(lecturer.email)) {
+            return "Invalid email format";
+        }
+
+        // Required fields
+        const requiredFields = [
+            'lecturerId', 'fullName', 'userName', 'email', 
+            'phoneNumber', 'DOB', 'gender', 'address', 
+            'nic', 'specialization', 'year'
+        ];
+        
+        for (const field of requiredFields) {
+            if (!lecturer[field]) {
+                return `${field.replace(/([A-Z])/g, ' $1').trim()} is required`;
+            }
+        }
+
+        // Modules validation
+        if (lecturer.modules.length === 0) {
+            return "At least one module must be selected";
+        }
+
+        return null;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage("");
         setError("");
+        
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
+            return;
+        }
+
+        setIsSubmitting(true);
 
         try {
-            const response = await axios.post("http://localhost:5001/api/lecturers/add", lecturer);
-            setMessage(response.data.message);
-            setLecturer({
-                lecturerId: "",
-                fullName: "",
-                userName: "",
-                email: "",
-                phoneNumber: "",
-                DOB: "",
-                gender: "",
-                address: "",
-                nic: "",
-                faculty: "Computing",
-                year: "",
-                modules: []
-            });
+            console.log("Submitting lecturer data:", lecturer);
 
-            // Redirect to the "Lecture Details" page after successful form submission
-            navigate("/lecturerDetails");  // Adjust the URL according to your route
+            const response = await axios.post(
+                "http://localhost:5001/api/lecturers/add", 
+                {
+                    ...lecturer,
+                    DOB: lecturer.DOB // Keep as string, backend will convert
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+
+            if (response.data.success) {
+                setMessage("Lecturer added successfully!");
+                setLecturer({
+                    lecturerId: "",
+                    fullName: "",
+                    userName: "",
+                    email: "",
+                    phoneNumber: "",
+                    DOB: "",
+                    gender: "",
+                    address: "",
+                    nic: "",
+                    specialization: "",
+                    year: "",
+                    modules: []
+                });
+
+                setTimeout(() => {
+                    if (closeModal) closeModal();
+                    navigate("/lecturerDetails");
+                }, 1500);
+            } else {
+                setError(response.data.message || "Failed to add lecturer");
+            }
         } catch (err) {
-            setError(err.response?.data?.message || "An error occurred");
+            console.error("Full error:", err);
+            if (err.response) {
+                setError(err.response.data.message || "Failed to add lecturer");
+            } else if (err.request) {
+                setError("No response from server. Please try again.");
+            } else {
+                setError("An error occurred. Please try again.");
+            }
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
-    const formContainerStyle = {
-        maxWidth: "600px",
-        margin: "auto",
-        padding: "20px",
-        border: "1px solid #ddd",
-        borderRadius: "10px",
-        backgroundColor: "#f9f9f9",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"
-    };
-
-    const labelStyle = {
-        display: "block",
-        margin: "10px 0 5px",
-        fontSize: "14px",
-        fontWeight: "bold",
-        color: "#333"
-    };
-
-    const inputStyle = {
-        width: "100%",
-        padding: "10px",
-        marginBottom: "15px",
-        border: "1px solid #ccc",
-        borderRadius: "5px",
-        fontSize: "14px",
-        boxSizing: "border-box"
-    };
-
-    const selectStyle = {
-        width: "100%",
-        padding: "10px",
-        marginBottom: "15px",
-        border: "1px solid #ccc",
-        borderRadius: "5px",
-        fontSize: "14px",
-        boxSizing: "border-box"
-    };
-
-    const checkboxContainerStyle = {
-        display: "flex",
-        flexDirection: "column",
-        gap: "5px"
-    };
-
-    const buttonStyle = {
-        width: "100%",
-        padding: "12px",
-        backgroundColor: "#4CAF50",
-        color: "#fff",
-        border: "none",
-        borderRadius: "5px",
-        fontSize: "16px",
-        cursor: "pointer",
-        transition: "background-color 0.3s ease"
-    };
-
-    const buttonHoverStyle = {
-        backgroundColor: "#45a049"
-    };
-
-    const messageStyle = {
-        color: "green",
-        fontSize: "14px",
-        marginBottom: "15px"
-    };
-
-    const errorStyle = {
-        color: "red",
-        fontSize: "14px",
-        marginBottom: "15px"
-    };
-
     return (
-        <div style={formContainerStyle}>
+        <div className="form-container">
             <h2>Add New Lecturer</h2>
-
-            {message && <p style={messageStyle}>{message}</p>}
-            {error && <p style={errorStyle}>{error}</p>}
+            {message && <p className="message">{message}</p>}
+            {error && <p className="error">{error}</p>}
 
             <form onSubmit={handleSubmit}>
-                <label style={labelStyle}>Lecturer ID:</label>
+                <label>Lecturer ID:</label>
                 <input
                     type="text"
                     name="lecturerId"
                     value={lecturer.lecturerId}
                     onChange={handleChange}
                     required
-                    style={inputStyle}
                 />
 
-                <label style={labelStyle}>Full Name:</label>
+                <label>Full Name:</label>
                 <input
                     type="text"
                     name="fullName"
                     value={lecturer.fullName}
                     onChange={handleChange}
                     required
-                    style={inputStyle}
                 />
 
-                <label style={labelStyle}>Username:</label>
+                <label>Username:</label>
                 <input
                     type="text"
                     name="userName"
                     value={lecturer.userName}
                     onChange={handleChange}
                     required
-                    style={inputStyle}
                 />
 
-                <label style={labelStyle}>Email:</label>
+                <label>Email:</label>
                 <input
                     type="email"
                     name="email"
                     value={lecturer.email}
                     onChange={handleChange}
                     required
-                    style={inputStyle}
                 />
 
-                <label style={labelStyle}>Phone Number:</label>
+                <label>Phone Number:</label>
                 <input
                     type="text"
                     name="phoneNumber"
                     value={lecturer.phoneNumber}
                     onChange={handleChange}
                     required
-                    style={inputStyle}
+                    pattern="\d{10}"
+                    title="Please enter exactly 10 digits"
                 />
 
-                <label style={labelStyle}>Date of Birth:</label>
+                <label>Date of Birth:</label>
                 <input
                     type="date"
                     name="DOB"
                     value={lecturer.DOB}
                     onChange={handleChange}
                     required
-                    style={inputStyle}
                 />
 
-                <label style={labelStyle}>Gender:</label>
+                <label>Gender:</label>
                 <select
                     name="gender"
                     value={lecturer.gender}
                     onChange={handleChange}
                     required
-                    style={selectStyle}
                 >
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>
@@ -231,42 +226,48 @@ const AddLectureForm = () => {
                     <option value="Other">Other</option>
                 </select>
 
-                <label style={labelStyle}>Address:</label>
+                <label>Address:</label>
                 <input
                     type="text"
                     name="address"
                     value={lecturer.address}
                     onChange={handleChange}
                     required
-                    style={inputStyle}
                 />
 
-                <label style={labelStyle}>NIC:</label>
+                <label>NIC:</label>
                 <input
                     type="text"
                     name="nic"
                     value={lecturer.nic}
                     onChange={handleChange}
                     required
-                    style={inputStyle}
+                    pattern="(\d{9}[vV]|\d{12})"
+                    title="Enter valid NIC (e.g., 123456789V or 123456789012)"
                 />
 
-                <label style={labelStyle}>Faculty:</label>
-                <input
-                    type="text"
-                    name="faculty"
-                    value={lecturer.faculty}
-                    readOnly
-                    style={inputStyle}
-                />
+                <label>Specialization:</label>
+                <select
+                    name="specialization"
+                    value={lecturer.specialization}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Select Specialization</option>
+                    <option value="Software Engineering">Software Engineering</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Data Science">Data Science</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                    <option value="Interactive Media">Interactive Media</option>
+                </select>
 
-                <label style={labelStyle}>Year:</label>
+                <label>Year:</label>
                 <select
                     name="year"
                     value={lecturer.year}
                     onChange={handleChange}
                     required
-                    style={selectStyle}
+                    disabled={!lecturer.specialization}
                 >
                     <option value="">Select Year</option>
                     <option value="1st Year">1st Year</option>
@@ -275,11 +276,11 @@ const AddLectureForm = () => {
                     <option value="4th Year">4th Year</option>
                 </select>
 
-                {lecturer.year && (
+                {lecturer.specialization && lecturer.year && (
                     <>
-                        <label style={labelStyle}>Modules:</label>
-                        <div style={checkboxContainerStyle}>
-                            {moduleOptions[lecturer.year]?.map((module) => (
+                        <label>Modules:</label>
+                        <div className="checkbox-container">
+                            {moduleOptions[lecturer.specialization]?.[lecturer.year]?.map((module) => (
                                 <label key={module}>
                                     <input
                                         type="checkbox"
@@ -296,11 +297,10 @@ const AddLectureForm = () => {
 
                 <button
                     type="submit"
-                    style={buttonStyle}
-                    onMouseOver={(e) => e.target.style.backgroundColor = buttonHoverStyle.backgroundColor}
-                    onMouseOut={(e) => e.target.style.backgroundColor = buttonStyle.backgroundColor}
+                    disabled={isSubmitting}
+                    className={isSubmitting ? "submitting" : ""}
                 >
-                    Add Lecturer
+                    {isSubmitting ? "Adding..." : "Add Lecturer"}
                 </button>
             </form>
         </div>
