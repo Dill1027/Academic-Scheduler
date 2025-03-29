@@ -6,7 +6,7 @@ const AdminReview = () => {
 
   // Fetch only pending students
   useEffect(() => {
-    axios.get("http://localhost:5000/api/student?status=pending")  // Ensure 'status=pending' is passed correctly
+    axios.get("http://localhost:5001/api/student?status=pending")  // Ensure 'status=pending' is passed correctly
       .then(response => setPendingStudents(response.data))
       .catch(error => console.error("Error fetching pending students:", error));
   }, []);

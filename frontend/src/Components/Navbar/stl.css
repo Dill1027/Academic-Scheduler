@@ -1,208 +1,226 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Poppins;
-    text-decoration: none;
-    text-transform: capitalize;
-    transition: .5s ease;
-}
-:root {
-    --dark-green: #112a34;
-    --green-color: #00404f;
-    --white-color: #fff;
-    --text-color: #333;
-}
-::selection {
-    background: var(--green-color);
-    color: var(--white-color);
-}
-
-/* .label {
-    font-size: 1.1rem;
-    color: #666;
-    text-transform: uppercase;
-    font-weight: 500;
-} */
-.heading {
-    font-size: 2.5rem;
-    margin-top: 1rem;
-    line-height: 1.2;
-}
-section.home-section1 {
-    padding: 1rem;
-    width: 100%;
-    
-}
-
-.home-container1 .navbar-custom1 {
-    width: calc(100% - 2rem);
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    border-radius: .7rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem 4rem;
-    z-index: 100;
-    position: fixed;
-    
-}
-.home-container1 .navbar-custom1 .logo-container1 {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-.home-container1 .navbar-custom1 .menu-icon1 {
-    font-size: 1.4rem;
-    color: var(--white-color);
-    cursor: pointer;
-    display: none;
-}
-.home-container1 .navbar-custom1 .menu-icon1:hover {
-    color: var(--green-color);
-}
-.home-container1 .navbar-custom1 .logo-container1 h3 {
-    font-weight: 800;
-    color: var(--white-color);
-}
-.home-container1 .navbar-custom1 .menu-close {
-    display: none;
-}
-.home-container1 .navbar-custom1 .menu-list1 {
-    display: flex;
-    list-style: none;
-}
-.home-container1 .navbar-custom1 .menu-list1 li {
+/* Home Page Styles */
+.home-page {
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    overflow-x: hidden;
+  }
+  
+  /* Hero Banner Section */
+  .hero-banner {
+    height: 100vh;
+    min-height: 600px;
     position: relative;
-    margin: 0 1.5rem;
-    cursor: pointer;
-}
-.home-container1 .navbar-custom1 .menu-list1 li::before {
-    position: absolute;
-    bottom: -3px;
-    content: "";
-    width: 0;
-    height: 3px;
-    border-radius: 5px;
-    background: var(--white-color);
-    transition: .5s;
-}
-.home-container1 .navbar-custom1 .menu-list1 li:hover::before {
-    width: 100%;
-}
-.home-container1 .navbar-custom1 .menu-list1 li a {
-    color: var(--white-color);
-    font-weight: 500;
-}
-.home-container1 .navbar-custom1 .auth-container1 {
     display: flex;
-    align-items: center;
-    column-gap: 1rem;
-}
-.home-container1 .navbar-custom1 .auth-container1 a {
-    color: var(--white-color);
-    padding: .3rem 1rem;
-    border-radius: 2rem;
-    font-weight: 500;
-    border: 2px solid var(--white-color);
-}
-.home-container1 .navbar-custom1 .auth-container1 a:hover {
-    color: var(--green-color);
-    /* background: var(--white-color);
-    color: 'black' */
-}
-
-.home-container1 .content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+  
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    color: var(--white-color);
+    background: rgba(0, 33, 71, 0.6);
+    z-index: 1;
+  }
+  
+  .hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
     text-align: center;
-}
-.home-container1 .content h4 {
+    color: white;
+    padding: 0 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    color: #fff;
+  }
+  
+  .hero-subtitle {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    margin-bottom: 2.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.9;
+  }
+  
+  .cta-button {
+    background: linear-gradient(135deg, #4dabf7, #228be6);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(34, 139, 230, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .cta-button:hover {
+    background: linear-gradient(135deg, #228be6, #1c7ed6);
+    box-shadow: 0 6px 20px rgba(34, 139, 230, 0.6);
+  }
+  
+  .cta-button::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+  }
+  
+  .cta-button:hover::after {
+    left: 100%;
+  }
+  
+  /* About Section */
+  .about-section {
+    padding: 100px 0;
+    background-color: #f8f9fa;
+  }
+  
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 50px;
+    color: #002147;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #4dabf7, #228be6);
+    border-radius: 2px;
+  }
+  
+  .about-content {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+  
+  .about-icon {
+    margin-bottom: 30px;
+    color: #228be6;
+  }
+  
+  .about-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+  }
+  
+  /* Faculties Section */
+  .faculties-section {
+    padding: 100px 0;
+    background-color: white;
+  }
+  
+  .faculties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+  }
+  
+  .faculty-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .faculty-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #f1f3f5, #e9ecef);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #228be6;
+  }
+  
+  .faculty-name {
     font-size: 1.2rem;
     font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-}
-.home-container1 .content h1 {
-    font-size: 3.5rem;
-    max-width: 50rem;
-    font-weight: 800;
-    line-height: 1.1;
-    margin-bottom: 1rem;
-}
-.home-container1 .content p {
-    max-width: 40rem;
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 2rem;
-}
-
-
-
-@media (max-width: 1080px) {
-    html {
-        font-size: 90%;
+    color: #002147;
+    margin-bottom: 0;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.8rem;
     }
-    section {
-        padding: 0 2rem;
+    
+    .hero-subtitle {
+      font-size: 1.2rem;
     }
-    .travel .container {
-        column-gap: 2rem;
+    
+    .section-title {
+      font-size: 2rem;
     }
-    footer .footer {
-        padding: 2rem;
+    
+    .faculties-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
-}
-@media (max-width: 970px) {
-    .home-container .navbar-custom {
-        padding: 1rem;
+  }
+  
+  @media (max-width: 576px) {
+    .hero-banner {
+      min-height: 500px;
     }
-    .home-container .navbar-custom .menu-list li {
-        margin: 0 1rem;
+    
+    .hero-title {
+      font-size: 2.2rem;
     }
-    .destination .container .container-box {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        flex-direction: column;
+    
+    .cta-button {
+      padding: 12px 25px;
+      font-size: 1rem;
     }
-    .heading {
-        font-size: 2rem;
+    
+    .about-section, .faculties-section {
+      padding: 70px 0;
     }
-    footer .footer .container {
-        flex-direction: column;
-    }
-}
-@media (max-width: 885px) {
-    .home-container1 .navbar-custom1 .menu-container1 {
-        display: none;
-    }
-    .home-container1 .navbar-custom1 .menu-icon1 {
-        display: block;
-    }
-    .home-container1 .navbar-custom1 .menu-container1.active {
-        display: block;
-        position: absolute;
-        left: -1.5rem;
-        top: -1.5rem;
-        width: calc(100vw - 1rem);
-        height: calc(100vh - 1rem);
-        background: rgb(0 0 0/90%);
-        display: flex;
-        align-items: center;
-        padding: 0 3rem;
-    }
-    .home-container1 .navbar-custom1 .menu-close {
-        display: block;
-        position: absolute
-    }
-}
+  }

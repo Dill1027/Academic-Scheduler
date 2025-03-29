@@ -8,7 +8,7 @@ const StudentDashboard = ({ studentId }) => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/student/${studentId}`);
+        const response = await axios.get(`http://localhost:5001/api/student/${studentId}`);
         setStudent(response.data);
       } catch (error) {
         console.error("Error fetching student:", error);

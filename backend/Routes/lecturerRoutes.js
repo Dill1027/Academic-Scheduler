@@ -1,24 +1,36 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const Lecturer = require("../Model/lecturerModel");
 
 const router = express.Router();
 
-// Multer setup for file uploads (profile photo)
+// Multer setup for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "uploads/lecturers/"); // Store lecturer profile photos in uploads/lecturers/
+        cb(null, "uploads/lecturers/");
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
+        cb(null, Date.now() + path.extname(file.originalname));
     }
 });
 const upload = multer({ storage });
 
-// ✅ Route to Add a New Lecturer
+// Helper function for error responses
+const errorResponse = (res, status, message, error = null) => {
+    return res.status(status).json({
+        success: false,
+        message,
+        error: error?.message || null
+    });
+};
+
+// Add new lecturer
 router.post("/add", async (req, res) => {
     try {
+        console.log("Request body:", req.body);
+        
         const {
             lecturerId,
             fullName,
@@ -29,141 +41,221 @@ router.post("/add", async (req, res) => {
             gender,
             address,
             nic,
-            faculty,
+            specialization,
             year,
             modules
         } = req.body;
 
-        // ✅ Check if Lecturer already exists (by NIC or Email)
-        const existingLecturer = await Lecturer.findOne({ $or: [{ nic }, { email }] });
-        if (existingLecturer) {
-            return res.status(400).json({ message: "Lecturer with this NIC or Email already exists." });
+        // Validate required fields
+        const requiredFields = [
+            'lecturerId', 'fullName', 'userName', 'email', 
+            'phoneNumber', 'DOB', 'gender', 'address', 
+            'nic', 'specialization', 'year', 'modules'
+        ];
+
+        const missingFields = requiredFields.filter(field => !req.body[field]);
+        if (missingFields.length > 0) {
+            return errorResponse(res, 400, `Missing required fields: ${missingFields.join(', ')}`);
         }
 
-        // ✅ Create a new lecturer
+        // Validate NIC format (Sri Lankan)
+        const nicRegex = /^(\d{9}[vV]|\d{12})$/;
+        if (!nicRegex.test(nic)) {
+            return errorResponse(res, 400, "Invalid NIC format (e.g., 123456789V or 123456789012)");
+        }
+
+        // Validate phone number
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(phoneNumber)) {
+            return errorResponse(res, 400, "Phone number must be 10 digits");
+        }
+
+        // Validate email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return errorResponse(res, 400, "Invalid email format");
+        }
+
+        // Check if lecturer already exists
+        const existingLecturer = await Lecturer.findOne({ 
+            $or: [{ nic }, { email }, { lecturerId }] 
+        });
+        
+        if (existingLecturer) {
+            return errorResponse(res, 400, "Lecturer with this NIC, Email or ID already exists");
+        }
+
+        // Validate modules
+        if (!modules || (Array.isArray(modules) && modules.length === 0)) {
+            return errorResponse(res, 400, "At least one module must be selected");
+        }
+
+        // Create new lecturer
         const newLecturer = new Lecturer({
             lecturerId,
             fullName,
             userName,
             email,
             phoneNumber,
-            DOB,
+            DOB: new Date(DOB),
             gender,
             address,
             nic,
-            faculty,
+            specialization,
             year,
-            modules
+            modules: Array.isArray(modules) ? modules : [modules]
         });
 
-        // ✅ Save to Database
+        // Save to database
         await newLecturer.save();
-        res.status(201).json({ message: "Lecturer added successfully!", lecturer: newLecturer });
+        
+        res.status(201).json({ 
+            success: true,
+            message: "Lecturer added successfully!", 
+            data: newLecturer 
+        });
 
     } catch (error) {
-        console.error("Error adding lecturer:", error);
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        console.error("Full error:", error);
+        if (error.name === 'ValidationError') {
+            return errorResponse(res, 400, "Validation failed", error);
+        }
+        errorResponse(res, 500, "Internal Server Error", error);
     }
 });
 
-
-
-
-// GET all lecturers
+// Get all lecturers
 router.get("/all", async (req, res) => {
     try {
-        const lecturers = await Lecturer.find(); // Fetch all lecturers from MongoDB
-        res.status(200).json(lecturers);
+        const lecturers = await Lecturer.find().sort({ createdAt: -1 });
+        res.status(200).json({ 
+            success: true,
+            message: lecturers.length > 0 ? "Lecturers retrieved successfully" : "No lecturers found",
+            data: lecturers,
+            count: lecturers.length
+        });
     } catch (error) {
         console.error("Error fetching lecturers:", error);
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
+        errorResponse(res, 500, "Internal Server Error", error);
     }
 });
-// GET a single lecturer by lecturerId
-router.get("/:lecturerId", async (req, res) => {
-    try {
-        const { lecturerId } = req.params;
-        const lecturer = await Lecturer.findOne({ lecturerId });
 
-        if (!lecturer) {
-            return res.status(404).json({ message: "Lecturer not found" });
+// Get lecturer by ID
+router.get("/id/:id", async (req, res) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return errorResponse(res, 400, "Invalid lecturer ID format");
         }
 
-        res.status(200).json(lecturer);
-    } catch (error) {
-        console.error("Error fetching lecturer:", error);
-        res.status(500).json({ message: "Internal Server Error", error: error.message });
-    }
-});
-
-// Backend: Fetch lecturer by ID
-router.get("/:id", async (req, res) => {
-    try {
         const lecturer = await Lecturer.findById(req.params.id);
         if (!lecturer) {
-            return res.status(404).json({ msg: "Lecturer not found" });
+            return errorResponse(res, 404, "Lecturer not found");
         }
-        res.json(lecturer); // Send the lecturer data
+
+        res.status(200).json({ 
+            success: true,
+            data: lecturer 
+        });
     } catch (error) {
         console.error("Error fetching lecturer:", error);
-        res.status(500).json({ msg: "Failed to fetch lecturer", error: error.message });
+        errorResponse(res, 500, "Internal Server Error", error);
     }
 });
 
+// Get lecturer by lecturerId
+router.get("/lecturer-id/:lecturerId", async (req, res) => {
+    try {
+        const lecturer = await Lecturer.findOne({ lecturerId: req.params.lecturerId });
+        if (!lecturer) {
+            return errorResponse(res, 404, "Lecturer not found");
+        }
 
+        res.status(200).json({ 
+            success: true,
+            data: lecturer 
+        });
+    } catch (error) {
+        console.error("Error fetching lecturer:", error);
+        errorResponse(res, 500, "Internal Server Error", error);
+    }
+});
+
+// Update lecturer
 router.put("/:id", async (req, res) => {
     try {
-        const lecturerId = req.params.id;
-        const updatedData = req.body;
-
-        // Ensure modules is an array
-        if (typeof updatedData.modules === "string") {
-            updatedData.modules = updatedData.modules.split(",").map((item) => item.trim());
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return errorResponse(res, 400, "Invalid lecturer ID format");
         }
 
-        const updatedLecturer = await Lecturer.findByIdAndUpdate(lecturerId, updatedData, {
-            new: true,
-            runValidators: true,
-        });
+        const updatedData = req.body;
+        
+        // Ensure modules is an array
+        if (updatedData.modules && typeof updatedData.modules === "string") {
+            updatedData.modules = updatedData.modules.split(",").map(item => item.trim());
+        }
+
+        const updatedLecturer = await Lecturer.findByIdAndUpdate(
+            req.params.id,
+            updatedData,
+            { new: true, runValidators: true }
+        );
 
         if (!updatedLecturer) {
-            return res.status(404).json({ message: "Lecturer not found" });
+            return errorResponse(res, 404, "Lecturer not found");
         }
 
-        res.status(200).json(updatedLecturer);
+        res.status(200).json({ 
+            success: true,
+            message: "Lecturer updated successfully",
+            data: updatedLecturer 
+        });
     } catch (error) {
         console.error("Update Error:", error);
-        res.status(500).json({ message: "Server error while updating lecturer" });
-    }
-});
-
-
-// 📌 Get Lecturer by ID (For Update Form)
-router.get("/:id", async (req, res) => {
-    try {
-        const lecturer = await Lecturer.findById(req.params.id);
-        if (!lecturer) {
-            return res.status(404).json({ msg: "Lecturer not found" });
+        if (error.name === 'ValidationError') {
+            return errorResponse(res, 400, "Validation failed", error);
         }
-        res.json(lecturer);
-    } catch (error) {
-        console.error("Error fetching lecturer:", error);
-        res.status(500).json({ msg: "Error fetching lecturer", error: error.message });
+        errorResponse(res, 500, "Server error while updating lecturer", error);
     }
 });
 
-
-// 📌 Delete Lecturer by ID
+// Delete lecturer
 router.delete("/:id", async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return errorResponse(res, 400, "Invalid lecturer ID format");
+        }
+
         const deletedLecturer = await Lecturer.findByIdAndDelete(req.params.id);
         if (!deletedLecturer) {
-            return res.status(404).json({ msg: "Lecturer not found" });
+            return errorResponse(res, 404, "Lecturer not found");
         }
-        res.json({ msg: "Deleted Successfully" });
+
+        res.status(200).json({ 
+            success: true,
+            message: "Lecturer deleted successfully"
+        });
     } catch (error) {
         console.error("Error deleting lecturer:", error);
-        res.status(500).json({ msg: "Cannot be deleted" });
+        errorResponse(res, 500, "Failed to delete lecturer", error);
+    }
+});
+
+// Gender distribution for pie chart
+router.get("/gender-distribution", async (req, res) => {
+    try {
+        const genderCount = await Lecturer.aggregate([
+            { $group: { _id: "$gender", count: { $sum: 1 } } },
+            { $sort: { count: -1 } }
+        ]);
+
+        res.status(200).json({
+            success: true,
+            message: "Gender distribution retrieved",
+            data: genderCount
+        });
+    } catch (error) {
+        console.error("Error fetching gender distribution:", error);
+        errorResponse(res, 500, "Error fetching gender distribution", error);
     }
 });
 

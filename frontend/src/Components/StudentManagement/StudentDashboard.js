@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   // Fetch the data for the student's dashboard
   useEffect(() => {
-    axios.get('http://localhost:5000/api/student/dashboard')
+    axios.get('http://localhost:5001/api/student/dashboard')
       .then(response => {
         setDashboardData(response.data);
       })

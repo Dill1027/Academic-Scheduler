@@ -30,7 +30,7 @@ function Fourth() {
         setError("");
 
         try {
-            const response = await axios.get(`http://localhost:5000/api/docs/year/4th Year`);
+            const response = await axios.get(`http://localhost:5001/api/docs/year/4th Year`);
             // Ensure all arrays exist and are properly initialized
             const processedData = response.data.map(module => ({
                 ...module,
@@ -72,7 +72,7 @@ function Fourth() {
     const handleDownload = (doc, originalName) => {
         if (!doc) return;
         const link = document.createElement("a");
-        link.href = `http://localhost:5000/uploads/${doc}`;
+        link.href = `http://localhost:5001/uploads/${doc}`;
         link.download = originalName || "document";
         link.click();
     };
@@ -80,7 +80,7 @@ function Fourth() {
     const handleDelete = async (id) => {
         if (window.confirm("Are you sure you want to delete this module?")) {
             try {
-                await axios.delete(`http://localhost:5000/api/docs/delete/${id}`);
+                await axios.delete(`http://localhost:5001/api/docs/delete/${id}`);
                 alert("Module deleted successfully!");
                 fetchData();
             } catch (error) {
@@ -160,7 +160,7 @@ function Fourth() {
                 }
             });
 
-            await axios.put(`http://localhost:5000/api/docs/update/${currentModule._id}`, formData, {
+            await axios.put(`http://localhost:5001/api/docs/update/${currentModule._id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -231,7 +231,7 @@ function Fourth() {
                                                         return (
                                                             <div key={idx} className="lec d-flex gap-4">
                                                                 <a
-                                                                    href={`http://localhost:5000/uploads/${doc}`}
+                                                                    href={`http://localhost:5001/uploads/${doc}`}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     className="d-block"
@@ -405,7 +405,7 @@ function Fourth() {
                                         ) : doc ? (
                                             <>
                                                 <a
-                                                    href={`http://localhost:5000/uploads/${doc}`}
+                                                    href={`http://localhost:5001/uploads/${doc}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="me-2"
