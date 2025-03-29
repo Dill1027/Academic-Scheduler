@@ -33,7 +33,7 @@ const Register = () => {
       } else if (formData.role === 'Lecturer') {
         navigate('/lecturer-login');
       } else if (formData.role === 'Admin') {
-        navigate('/userbases');
+        navigate('/admin-login');
       }
     } catch (err) {
       console.error("Error registering", err.response?.data || err.message);

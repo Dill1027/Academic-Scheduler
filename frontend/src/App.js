@@ -9,13 +9,14 @@ import Profile from "./Components/StudentManagement/Profile";
 import StudentRegisterForm from "./Components/StudentManagement/StudentRegisterForm";
 import CurrentStudent from "./Components/Authentication/CurrentStudent";
 import Register from "./Components/Authentication/Register";
-import Login from "./Components/Authentication/Login";
+// import Login from "./Components/Authentication/Login";
 import Dashboard from "./Components/Authentication/Dashboard";
 import UserBaseLogin from "./Components/Authentication/UserBaseLogin";
 import AdminReview from "./Components/Admin/AdminReview";
 import StudentDashboard from "./Components/StudentManagement/StudentDashboard";
 import LecturerRegisterForm from "./Components/Authentication/LectureRegisterForm";
 import StudentList from "./Components/StudentManagement/StudentList";
+import StudentLogin from "./Components/Authentication/StudentLogin";
 
 // Lecturer Management Components
 import AddLecturerForm from "./Components/lecturerManagement/AddLecturerForm";
@@ -126,7 +127,7 @@ function App() {
     <>
       <Routes>
         {/* Authentication Routes */}
-        <Route path="/login" element={<Login/>}/>
+        {/* <Route path="/login" element={<Login/>}/> */}
         <Route path="/" element={<Home />} />
         <Route path="/profile/:id" element={<Profile />} /> 
         <Route path="/form" element={<StudentRegisterForm />} />
@@ -139,6 +140,7 @@ function App() {
         <Route path="/adminReview" element={<AdminReview/>} />
         <Route path="/dashboardd" element={<StudentDashboard/>} />
         <Route path="/adminDashboard" element={<AdminDashboard/>} />
+        <Route path="/studentlogin" element={<StudentLogin />} />
 
         {/* Lecturer Routes*/}
         <Route path="/addLecturer" element={<AddLecturerForm />}/>
