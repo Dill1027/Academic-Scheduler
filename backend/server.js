@@ -5,6 +5,7 @@ const connectDB = require("./Config/db.js");
 const cors = require("cors");
 const path = require("path");
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet'); // Added for security headers
 
 // Import Routes
 const StudentRoutes = require("./Routes/StudentRoutes.js");
@@ -19,26 +20,27 @@ const app = express();
 // Database connection
 connectDB();
 
-// Rate limiting configuration
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-
 // Middleware Configuration
+app.use(helmet()); // Add security headers
 app.use(cors({
   origin: "http://localhost:3000", // Explicitly allow your frontend
   methods: ["GET", "POST", "PUT", "DELETE"], // Allow these HTTP methods
   credentials: true, // If using cookies/sessions
 }));
 
+// Rate limiting configuration
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
 app.use(limiter);
+
 app.use(express.json({ limit: '10mb' })); // Add body size limit
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
-app.use("/api/courses", CourseRoutes); // Changed from "/api/docs" to more meaningful path
+app.use("/api/docs", CourseRoutes);
 app.use("/api/students", StudentRoutes);
 app.use("/api/groups", GroupRoutes);
 app.use("/api/auth", AuthRoutes);
@@ -70,6 +72,15 @@ const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
+// Graceful shutdown
+const shutdown = (signal) => {
+  console.log(`Received ${signal}. Closing server...`);
+  server.close(() => {
+    console.log("Server closed.");
+    process.exit(0);
+  });
+};
+
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
   console.error(`Unhandled Rejection: ${err.message}`);
@@ -81,3 +92,7 @@ process.on('uncaughtException', (err) => {
   console.error(`Uncaught Exception: ${err.message}`);
   process.exit(1);
 });
+
+// Handle termination signals
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));
