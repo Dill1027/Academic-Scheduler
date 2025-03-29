@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import "./LecturerDetails.css"; // Import the CSS file
+
 
 const LecturerDetails = () => {
   const [lecturers, setLecturers] = useState([]);
@@ -30,9 +32,8 @@ const LecturerDetails = () => {
         }
 
         const result = await response.json();
-        console.log("API Response:", result); // Debug log
+        console.log("API Response:", result);
         
-        // Handle both response structures
         const lecturersData = result.data || result;
         
         if (Array.isArray(lecturersData)) {
@@ -55,14 +56,7 @@ const LecturerDetails = () => {
   const TableCell = ({ children, colSpan }) => (
     <td 
       colSpan={colSpan}
-      style={{
-        border: "1px solid #ddd", 
-        padding: "12px", 
-        textAlign: "center", 
-        fontFamily: "Arial, sans-serif", 
-        color: "#333",
-        backgroundColor: "#fafafa"
-      }}
+      className="table-cell"
     >
       {children || '-'}
     </td>
@@ -149,36 +143,25 @@ const LecturerDetails = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <div style={{ maxWidth: "1000px", width: "100%", backgroundColor: "#f9f9f9", padding: "20px", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
-        <h2 style={{ textAlign: "center", color: "#2C3E50", marginBottom: "20px" }}>Lecturer Details</h2>
+    <div className="lecturer-container">
+      <div className="lecturer-card">
+        <h2 className="lecturer-title">Lecturer Details</h2>
         
         {errorMessage && (
-          <div style={{ 
-            color: "red", 
-            textAlign: "center", 
-            padding: "10px", 
-            marginBottom: "20px",
-            backgroundColor: "#ffeeee",
-            borderRadius: "4px"
-          }}>
+          <div className="error-message">
             {errorMessage}
           </div>
         )}
 
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
+        <div className="table-container">
+          <table className="lecturer-table">
             <thead>
-              <tr style={{ backgroundColor: "#3498db", color: "#fff" }}>
+              <tr className="table-header">
                 {['Lecturer ID', 'Full Name', 'Username', 'Email', 'Phone', 'Specialization', 'Year', 
                   'Modules', 'DOB', 'Gender', 'Address', 'NIC', 'Actions'].map(header => (
                   <th 
                     key={header} 
-                    style={{
-                      padding: "12px",
-                      border: "1px solid #ddd",
-                      textAlign: "center"
-                    }}
+                    className="table-header-cell"
                   >
                     {header}
                   </th>
@@ -188,15 +171,20 @@ const LecturerDetails = () => {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <TableCell colSpan="13">Loading lecturers...</TableCell>
+                  <TableCell colSpan="13">
+                    <div className="loading-spinner"></div>
+                    <span>Loading lecturers...</span>
+                  </TableCell>
                 </tr>
               ) : lecturers.length === 0 ? (
                 <tr>
-                  <TableCell colSpan="13">No lecturers available</TableCell>
+                  <TableCell colSpan="13" className="empty-message">
+                    No lecturers available
+                  </TableCell>
                 </tr>
               ) : (
                 lecturers.map((lecturer) => (
-                  <tr key={lecturer._id} style={{ backgroundColor: "#fff" }}>
+                  <tr key={lecturer._id} className="table-row">
                     <TableCell>{lecturer.lecturerId}</TableCell>
                     <TableCell>{lecturer.fullName}</TableCell>
                     <TableCell>{lecturer.userName}</TableCell>
@@ -215,30 +203,16 @@ const LecturerDetails = () => {
                     <TableCell>{lecturer.gender || '-'}</TableCell>
                     <TableCell>{lecturer.address || '-'}</TableCell>
                     <TableCell>{lecturer.nic || '-'}</TableCell>
-                    <TableCell style={{ display: "flex", justifyContent: "center", gap: "8px" }}>
+                    <TableCell className="action-cell">
                       <button
                         onClick={() => handleUpdate(lecturer)}
-                        style={{
-                          padding: "6px 12px",
-                          backgroundColor: "#2ecc71",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer"
-                        }}
+                        className="edit-button"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(lecturer._id)}
-                        style={{
-                          padding: "6px 12px",
-                          backgroundColor: "#e74c3c",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "4px",
-                          cursor: "pointer"
-                        }}
+                        className="delete-button"
                       >
                         Delete
                       </button>
@@ -251,71 +225,60 @@ const LecturerDetails = () => {
         </div>
 
         {editingLecturer && (
-          <div style={{ 
-            marginTop: "30px", 
-            padding: "20px", 
-            backgroundColor: "#fff", 
-            borderRadius: "8px", 
-            boxShadow: "0 2px 4px rgba(0,0,0,0.1)"
-          }}>
-            <h3 style={{ textAlign: "center", marginBottom: "20px" }}>Edit Lecturer</h3>
-            <form onSubmit={handleFormSubmit}>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px" }}>
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Full Name</label>
+          <div className="edit-form-container">
+            <h3 className="edit-form-title">Edit Lecturer</h3>
+            <form onSubmit={handleFormSubmit} className="edit-form">
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>Full Name</label>
                   <input
                     type="text"
                     name="fullName"
                     value={formData.fullName}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   />
                 </div>
                 
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Username</label>
+                <div className="form-group">
+                  <label>Username</label>
                   <input
                     type="text"
                     name="userName"
                     value={formData.userName}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   />
                 </div>
 
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Email</label>
+                <div className="form-group">
+                  <label>Email</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   />
                 </div>
 
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Phone Number</label>
+                <div className="form-group">
+                  <label>Phone Number</label>
                   <input
                     type="text"
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   />
                 </div>
 
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Specialization</label>
+                <div className="form-group">
+                  <label>Specialization</label>
                   <select
                     name="specialization"
                     value={formData.specialization}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   >
                     <option value="">Select Specialization</option>
@@ -327,13 +290,12 @@ const LecturerDetails = () => {
                   </select>
                 </div>
 
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Year</label>
+                <div className="form-group">
+                  <label>Year</label>
                   <select
                     name="year"
                     value={formData.year}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   >
                     <option value="">Select Year</option>
@@ -344,37 +306,34 @@ const LecturerDetails = () => {
                   </select>
                 </div>
 
-                <div style={{ gridColumn: "1 / -1" }}>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Modules (comma separated)</label>
+                <div className="form-group full-width">
+                  <label>Modules (comma separated)</label>
                   <input
                     type="text"
                     name="modules"
                     value={formData.modules}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   />
                 </div>
 
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Date of Birth</label>
+                <div className="form-group">
+                  <label>Date of Birth</label>
                   <input
                     type="date"
                     name="DOB"
                     value={formData.DOB}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   />
                 </div>
 
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Gender</label>
+                <div className="form-group">
+                  <label>Gender</label>
                   <select
                     name="gender"
                     value={formData.gender}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   >
                     <option value="">Select Gender</option>
@@ -384,56 +343,40 @@ const LecturerDetails = () => {
                   </select>
                 </div>
 
-                <div style={{ gridColumn: "1 / -1" }}>
-                  <label style={{ display: "block", marginBottom: "8px" }}>Address</label>
+                <div className="form-group full-width">
+                  <label>Address</label>
                   <input
                     type="text"
                     name="address"
                     value={formData.address}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   />
                 </div>
 
-                <div>
-                  <label style={{ display: "block", marginBottom: "8px" }}>NIC</label>
+                <div className="form-group">
+                  <label>NIC</label>
                   <input
                     type="text"
                     name="nic"
                     value={formData.nic}
                     onChange={handleFormChange}
-                    style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #ddd" }}
                     required
                   />
                 </div>
               </div>
 
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "20px" }}>
+              <div className="form-actions">
                 <button
                   type="button"
                   onClick={() => setEditingLecturer(null)}
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#95a5a6",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer"
-                  }}
+                  className="cancel-button"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  style={{
-                    padding: "8px 16px",
-                    backgroundColor: "#3498db",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: "pointer"
-                  }}
+                  className="save-button"
                 >
                   Save Changes
                 </button>
