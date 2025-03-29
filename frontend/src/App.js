@@ -22,6 +22,10 @@ import AddLecturerForm from "./Components/lecturerManagement/AddLecturerForm";
 import LecturerDetails from "./Components/lecturerManagement/LecturerDetails";
 import UpdateLecturer from "./Components/lecturerManagement/UpdateLecturer";
 import LecturerDashboard from "./Components/lecturerManagement/LecturerDashboard";
+
+
+import './App.css';
+
 import LecturerDetailsView from "./Components/lecturerManagement/LecturerDetailsView";
 
 // Academic Scheduler Components
@@ -34,6 +38,8 @@ import Second from "./Components/CourseManagement/secondYear";
 import Third from "./Components/CourseManagement/ThirdYear";
 import Fourth from "./Components/CourseManagement/fourthYear";
 import AdminDashboard from "./Components/Admin/AdminDashboard";
+import LecturerDetailsView from "./Components/lecturerManagement/LecturerDetailsView";
+
 
 // Timetable Generation Components
 import FilterPanel from './Components/Timetablegenaration/FilterPanel';
@@ -143,6 +149,7 @@ function App() {
         {/* Lecturer Routes*/}
         <Route path="/addLecturer" element={<AddLecturerForm />}/>
         <Route path="/lecturerDetails" element={<LecturerDetails />} />
+        <Route path="/lecturers/update/:id" component={UpdateLecturer} />
         <Route path="/lecturers/update/:id" element={<UpdateLecturer />} />
         <Route path="/lecturerDashbord" element={<LecturerDashboard />} />
         <Route path="/lectureview" element={<LecturerDetailsView />} />
