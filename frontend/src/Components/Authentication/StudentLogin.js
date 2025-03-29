@@ -1,71 +1,43 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // 🚀 Hook to navigate
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("http://localhost:5000/api/auth/logins", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user)); // Store user details
-        alert('Login successful');
-
-        // 🚀 Redirect to Profile Page after login
-        navigate(`/profile/${data.student._id}`); 
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("student", JSON.stringify(data.student)); // Store student details
+        navigate(`/profile/${data.student._id}`); // Redirect to student profile
       } else {
         alert(data.message);
       }
     } catch (error) {
-      console.error('Login error:', error);
-      alert('Something went wrong');
+      console.error("Login error:", error);
     }
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div className="card p-4 shadow-sm" style={{ width: '400px' }}>
-        <h2 className="text-center mb-4">Login</h2>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email:</label>
-            <input 
-              type="email" 
-              id="email" 
-              className="form-control" 
-              placeholder="Enter your email"
-              autoComplete="email"
-              onChange={(e) => setEmail(e.target.value)} 
-              required
-            />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="password" className="form-label">Password:</label>
-            <input 
-              type="password" 
-              id="password" 
-              className="form-control" 
-              placeholder="Enter your password"
-              autoComplete="current-password"
-              onChange={(e) => setPassword(e.target.value)} 
-              required
-            />
-          </div>
-
-          <button type="submit" className="btn btn-primary w-100" onClick={handleLogin}>Login</button>
-        </form>
-      </div>
+    <div className="container">
+      <h2>Student Login</h2>
+      <form onSubmit={handleLogin}>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" required />
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 };

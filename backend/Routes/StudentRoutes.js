@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 const router = express.Router();
 const Student = require("../Model/Student");
 const Group = require("../Model/Groups");
@@ -41,8 +40,6 @@ router.post("/", async (req, res) => {
             }
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         const newStudent = new Student({
             studentName,
             registrationNumber,
@@ -51,13 +48,13 @@ router.post("/", async (req, res) => {
             specialization,
             year,
             group: groupId || null,
-            password: hashedPassword,
+            password, // Store password in plain text
             status: "pending", // Add status field
         });
         const newUser = new User({
             name: studentName,
             email,
-            password: hashedPassword,
+            password, // Store password in plain text
             role: "New Student",
         });
 
@@ -65,7 +62,6 @@ router.post("/", async (req, res) => {
         await newStudent.save();
         await newUser.save();
 
-        
         res.status(201).json({ message: "Student submitted for review." });
     } catch (error) {
         console.error("Error adding student:", error);
@@ -112,14 +108,17 @@ router.post("/login", async (req, res) => {
         const { email, password } = req.body;
         const student = await Student.findOne({ email });
         if (!student) return res.status(400).json({ error: "Invalid email or password." });
-        const isMatch = await bcrypt.compare(password, student.password);
-        if (!isMatch) return res.status(400).json({ error: "Invalid email or password." });
+
+        // Direct password comparison (without bcrypt)
+        if (password !== student.password) {
+            return res.status(400).json({ error: "Invalid email or password." });
+        }
 
         // Check status
         if (student.status !== "Approved") {
             return res.status(403).json({ message: "Your account is not approved yet." });
         }
-        
+
         res.json({ message: "Login successful", student });
     } catch (error) {
         console.error("Login error:", error);
