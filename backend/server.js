@@ -39,7 +39,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Routes
-app.use("/api/courses", CourseRoutes); // Changed from "/api/docs" to more meaningful path
+app.use("/api/docs", CourseRoutes); // Changed from "/api/docs" to more meaningful path
 app.use("/api/students", StudentRoutes); // Pluralized for REST consistency
 app.use("/api/groups", GroupRoutes);
 app.use("/api/auth", AuthRoutes);
