@@ -21,6 +21,8 @@ import StudentList from "./Components/StudentManagement/StudentList";
 import AddLecturerForm from "./Components/lecturerManagement/AddLecturerForm";
 import LecturerDetails from "./Components/lecturerManagement/LecturerDetails";
 import UpdateLecturer from "./Components/lecturerManagement/UpdateLecturer";
+import LecturerDashboard from "./Components/lecturerManagement/LecturerDashboard";
+import LecturerDetailsView from "./Components/lecturerManagement/LecturerDetailsView";
 
 // Academic Scheduler Components
 import Coursed from "./Components/CourseManagement/coursedash";
@@ -92,38 +94,36 @@ function TimetableGenerator() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Container maxWidth="lg">
-        <Box sx={{ my: 4 }}>
-          <Typography variant="h3" component="h1" gutterBottom>
-            University Timetable Generator
-          </Typography>
-          
-          <FilterPanel
-            filters={filters}
-            setFilters={setFilters}
-            applyFilters={applyFilters}
-            resetFilters={resetFilters}
-            generateTimetables={handleGenerateTimetables}
-          />
-          
-          <Typography variant="h5" gutterBottom>
-            {filteredTimetables.length} Timetables Found
-          </Typography>
-          
-          {filteredTimetables.map((timetable, index) => (
-            <TimetableCard key={index} timetable={timetable} />
-          ))}
-        </Box>
-      </Container>
-    </ThemeProvider>
+    <Container maxWidth="lg">
+      <Box sx={{ my: 4 }}>
+        <Typography variant="h3" component="h1" gutterBottom>
+          University Timetable Generator
+        </Typography>
+        
+        <FilterPanel
+          filters={filters}
+          setFilters={setFilters}
+          applyFilters={applyFilters}
+          resetFilters={resetFilters}
+          generateTimetables={handleGenerateTimetables}
+        />
+        
+        <Typography variant="h5" gutterBottom>
+          {filteredTimetables.length} Timetables Found
+        </Typography>
+        
+        {filteredTimetables.map((timetable, index) => (
+          <TimetableCard key={index} timetable={timetable} />
+        ))}
+      </Box>
+    </Container>
   );
 }
 
 function App() {
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Routes>
         {/* Authentication Routes */}
         <Route path="/login" element={<Login/>}/>
@@ -144,6 +144,8 @@ function App() {
         <Route path="/addLecturer" element={<AddLecturerForm />}/>
         <Route path="/lecturerDetails" element={<LecturerDetails />} />
         <Route path="/lecturers/update/:id" element={<UpdateLecturer />} />
+        <Route path="/lecturerDashbord" element={<LecturerDashboard />} />
+        <Route path="/lectureview" element={<LecturerDetailsView />} />
 
         {/* Academic Scheduler Routes */}
         <Route path="/course" element={<Coursed />} />
@@ -158,7 +160,7 @@ function App() {
         {/* Timetable Generator Route */}
         <Route path="/timetable" element={<TimetableGenerator />} />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 }
 
