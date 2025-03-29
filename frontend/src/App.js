@@ -27,7 +27,7 @@ import LecturerDashboard from "./Components/lecturerManagement/LecturerDashboard
 
 import './App.css';
 
-import LecturerDetailsView from "./Components/lecturerManagement/LecturerDetailsView";
+
 
 // Academic Scheduler Components
 import Coursed from "./Components/CourseManagement/coursedash";
