@@ -21,6 +21,8 @@ const Profile = () => {
 
         const data = await response.json();
         setStudent(data);
+        const response = await axios.get(`http://localhost:5001/api/student/${id}`);
+        setStudent(response.data);
       } catch (error) {
         console.error("Error fetching student:", error);
         navigate("/login"); // Redirect to login if error occurs

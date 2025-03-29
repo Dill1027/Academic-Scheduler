@@ -47,7 +47,7 @@ function AddDoc({ onClose }) {
         });
 
         try {
-            const response = await axios.post("http://localhost:5000/api/docs/add", formData, {
+            const response = await axios.post("http://localhost:5001/api/docs/add", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 

@@ -3,61 +3,61 @@ const mongoose = require("mongoose");
 const LecturerSchema = new mongoose.Schema({
     lecturerId: {
         type: String,
-        required: true,
+        required: [true, "Lecturer ID is required"],
         unique: true
     },
     fullName: {
         type: String,
-        required: true
+        required: [true, "Full Name is required"]
     },
     userName: {
         type: String,
-        required: true
+        required: [true, "Username is required"]
     },
     email: {
         type: String,
-        required: true,
+        required: [true, "Email is required"],
         unique: true,
-        match: /.+\@.+\..+/
+        match: [/.+\@.+\..+/, "Invalid email format"]
     },
     phoneNumber: {
         type: String,
-        required: true
+        required: [true, "Phone Number is required"],
+        match: [/^\d{10}$/, "Invalid phone number format"]
     },
     DOB: {
         type: Date,
-        required: true
+        required: [true, "Date of Birth is required"]
     },
     gender: {
         type: String,
-        required: true,
+        required: [true, "Gender is required"],
         enum: ["Male", "Female", "Other"]
     },
     address: {
         type: String,
-        required: true
+        required: [true, "Address is required"]
     },
     nic: {
         type: String,
-        required: true,
+        required: [true, "NIC is required"],
         unique: true,
-        match: [/^(\d{9}[vV]|\d{12})$/, "Invalid NIC format"] // Sri Lankan NIC validation
+        match: [/^(\d{9}[vV]|\d{12})$/, "Invalid NIC format"]
     },
-    faculty: {
+    specialization: {
         type: String,
-        required: true,
-        default: "Computing", // Faculty is always "Computing"
-        enum: ["Computing"] // Only Computing faculty is allowed
+        required: [true, "Specialization is required"],
+        enum: ["Software Engineering", "Information Technology", "Data Science", "Cyber Security", "Interactive Media"]
     },
     year: {
         type: String,
-        required: true,
-        enum: ["1st Year", "2nd Year", "3rd Year", "4th Year"] // Year selection
+        required: [true, "Year is required"],
+        enum: ["1st Year", "2nd Year", "3rd Year", "4th Year"]
     },
     modules: [{
         type: String,
-        required: true
+        required: [true, "At least one module must be selected"]
     }]
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model("lecturers", LecturerSchema);
+module.exports = mongoose.model("Lecturer", LecturerSchema);

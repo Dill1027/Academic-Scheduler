@@ -6,7 +6,7 @@ const StudentList = () => {
   const [specializationFilter, setSpecializationFilter] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/student')
+    axios.get('http://localhost:5001/api/student')
       .then(response => {
         setStudents(response.data);
       })

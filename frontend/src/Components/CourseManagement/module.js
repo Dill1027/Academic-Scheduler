@@ -7,7 +7,7 @@ const module = () => {
   const [newModule, setNewModule] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/student')
+    axios.get('http://localhost:5001/api/student')
       .then(response => {
         // Add empty modules array to each student if not present
         const studentsWithModules = response.data.map(student => ({
