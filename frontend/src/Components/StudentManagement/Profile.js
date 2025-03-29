@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Profile = () => {
   const { id } = useParams(); // Get student ID from URL
@@ -9,23 +10,16 @@ const Profile = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/student/${id}`, {
+        const response = await axios.get(`http://localhost:5001/api/student/${id}`, {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("token")}`
           }
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch student data");
-        }
-
-        const data = await response.json();
-        setStudent(data);
-        const response = await axios.get(`http://localhost:5001/api/student/${id}`);
         setStudent(response.data);
       } catch (error) {
         console.error("Error fetching student:", error);
-        navigate("/login"); // Redirect to login if error occurs
+        navigate("/login"); // Redirect to login if unauthorized
       }
     };
 
@@ -42,7 +36,7 @@ const Profile = () => {
       <p><strong>Specialization:</strong> {student.specialization}</p>
       <p><strong>Registration Number:</strong> {student.registrationNumber}</p>
       <p><strong>Year:</strong> {student.year}</p>
-      <p><strong>Module:</strong> {student.module ? student.module : "Not assigned"}</p>
+      <p><strong>Module:</strong> {student.module || "Not assigned"}</p>
       <p><strong>Status:</strong> {student.status}</p>
     </div>
   );
