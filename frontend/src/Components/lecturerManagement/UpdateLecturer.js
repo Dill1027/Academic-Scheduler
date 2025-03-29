@@ -7,7 +7,7 @@ const UpdateLecturer = () => {
     const [lecturer, setLecturer] = useState(null);
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/lecturers/${id}`)
+        axios.get(`http://localhost:5001/api/lecturers/${id}`)
             .then((res) => {
                 setLecturer(res.data);
             })

@@ -18,7 +18,7 @@ const InsertStudent = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/groups")
+      .get("http://localhost:5001/api/groups")
       .then((response) => setGroups(response.data))
       .catch((error) => console.error("Error fetching groups", error));
   }, []);
@@ -79,7 +79,7 @@ const InsertStudent = () => {
 
     if (validateForm()) {
       try {
-        const response = await axios.post("http://localhost:5000/api/student", {
+        const response = await axios.post("http://localhost:5001/api/student", {
           ...studentData,
           status: "pending",
         });
