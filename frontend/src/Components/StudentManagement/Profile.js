@@ -1,47 +1,45 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const Profile = () => {
-  const { id } = useParams(); // Get student ID from URL
+  const { id } = useParams(); // Get student ID from the URL
   const [student, setStudent] = useState(null);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (!id) {
+      setError("No student ID provided.");
+      setLoading(false);
+      return;
+    }
+
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/student/${id}`, {
-          headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-          }
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch student data");
-        }
-
-        const data = await response.json();
-        setStudent(data);
+        const response = await axios.get(`http://localhost:5001/api/student/${id}`);
+        setStudent(response.data);
       } catch (error) {
         console.error("Error fetching student:", error);
-        navigate("/studentlogin"); // Redirect to login if error occurs
+        setError("Error fetching student data.");
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchStudent();
-  }, [id, navigate]);
+  }, [id]);
 
-  if (!student) return <p>Loading student data...</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+  if (!student) return <p>No student data available.</p>;
 
   return (
     <div>
-      <h2>Student Profile</h2>
-      <p><strong>Name:</strong> {student.studentName}</p>
-      <p><strong>Email:</strong> {student.email}</p>
-      <p><strong>Specialization:</strong> {student.specialization}</p>
-      <p><strong>Registration Number:</strong> {student.registrationNumber}</p>
-      <p><strong>Year:</strong> {student.year}</p>
-      <p><strong>Module:</strong> {student.module ? student.module : "Not assigned"}</p>
-      <p><strong>Status:</strong> {student.status}</p>
+      <h2>Welcome, {student.studentName}!</h2>
+      <p>Specialization: {student.specialization}</p>
+      <p>Year: {student.year}</p>
+      <p>Email: {student.email}</p>
     </div>
   );
 };

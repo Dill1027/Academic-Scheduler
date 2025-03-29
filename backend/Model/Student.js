@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const StudentSchema = new mongoose.Schema({
   studentName: {
@@ -39,13 +40,6 @@ const StudentSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    validate: {
-      validator: function (value) {
-        // Example validation: Password should be at least 6 characters long
-        return value.length >= 6;
-      },
-      message: "Password must be at least 6 characters long",
-    },
   },
   module: {
     type: mongoose.Schema.Types.ObjectId,
@@ -58,30 +52,37 @@ const StudentSchema = new mongoose.Schema({
       startTime: Date,
       endTime: Date,
       instructor: String,
-      location: String,
-    },
+      location: String
+    }
   ],
   assignments: [
     {
       title: String,
       description: String,
-      dueDate: Date,
-    },
+      dueDate: Date
+    }
   ],
   exams: [
     {
       title: String,
       date: Date,
-      location: String,
-    },
+      location: String
+    }
   ],
   announcements: [
     {
       title: String,
       description: String,
-      date: Date,
-    },
-  ],
+      date: Date
+    }
+  ]
 }, { timestamps: true });
+
+// Hash password before saving
+StudentSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
 module.exports = mongoose.model("Student", StudentSchema);
