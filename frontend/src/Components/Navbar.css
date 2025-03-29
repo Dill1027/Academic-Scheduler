@@ -1,0 +1,34 @@
+/* White Login Button */
+.login-btn {
+    background-color: white !important;
+    color: black !important;
+    border: 1px solid #ccc; /* Optional: Light border */
+  }
+  
+  /* Search Button Hover Effect */
+  .search-btn {
+    background-color: rgba(46, 123, 192, 0.849); /* Default */
+    color: black;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .search-btn:hover {
+    background-color: #add8e6; /* Light Blue */
+    color: black;
+  }
+  /* Navbar.css */
+.navbar {
+  height: 100px; /* Adjust this value to increase/decrease the navbar height */
+}
+
+.navbar-nav .nav-link {
+  padding-top: 20px; /* Adjust padding to center text vertically */
+  padding-bottom: 20px; /* Adjust padding to center text vertically */
+}
+
+.navbar-toggler {
+  padding: 10px; /* Optional: Adjust the padding for the toggle button */
+}
+
+  

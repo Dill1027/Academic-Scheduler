@@ -72,13 +72,11 @@ Before running the project, make sure you have the following installed:
 2. Install dependencies for both frontend and backend:
    - **Frontend**:
      ```bash
-     cd client
-     npm install
+     npm i
      ```
    - **Backend**:
      ```bash
-     cd server
-     npm install
+     npm i
      ```
 
 3. Set up environment variables:
@@ -92,7 +90,7 @@ Before running the project, make sure you have the following installed:
      ```
    - **Backend**:
      ```bash
-     npm run dev
+     npm start
      ```
 
 5. Visit `http://localhost:3000` for the frontend and `http://localhost:5001` for the backend.

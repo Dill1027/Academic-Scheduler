@@ -220,3 +220,6 @@
   text-decoration: none;
   border-radius: 3px;
 }
+.text-primary {
+  color: rgb(0, 0, 126) !important;
+}

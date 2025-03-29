@@ -1,0 +1,127 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    background-size: cover;
+    min-height: 100vh;
+    
+}
+
+.left-section{
+    margin: 35px 35px;
+}
+
+.search{
+    margin: 90px 90px;
+}
+
+.upcoming {
+    color: rgb(70, 70, 70);
+}
+
+.main-1 {
+    background-color: #fff;
+    padding: 15px 15px;
+    border-radius: 7px 7px 0px 0px;
+    color: rgba(82, 80, 80, 0.871);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.main-2 {
+    background-color: #fff;
+    padding: 15px 15px;
+    border-radius: 7px 7px 0px 0px;
+    color: rgba(82, 80, 80, 0.871);
+    box-shadow: 5px 5px 15px rgba(84, 39, 39, 0.2);
+}
+
+.mini1 {
+    /* background-color:  #041a70e0; */
+    
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 15px 15px;
+    border-radius: 1px;
+    color: rgb(255, 255, 255);
+    box-shadow: 5px 5px 15px rgba(208, 195, 195, 0.2);
+    cursor: pointer;
+    position: relative;
+}
+
+.notice {
+    background-color: #041a70e0;
+    padding: 1px 13px;
+    color: #fcfcfc;
+}
+
+.noticeContent {
+    padding: 15px 15px;
+}
+
+.mini2 {
+    background-color: #aeaaaa34;
+    padding: 15px 15px;
+    border-radius: 2px;
+    color: rgba(82, 80, 80, 0.871);
+    box-shadow: 5px 5px 15px rgba(208, 195, 195, 0.2);
+    cursor: pointer;
+}
+
+
+
+.action-buttons {
+    margin-top: 10px;
+    margin-left: 790px;
+}
+
+.main{
+    text-align: left;
+    
+}
+
+.des{
+    margin-left: 60px;
+}
+
+.des1{
+    margin-left: 60px;
+    font-size: larger;
+    color: rgb(63, 59, 59);
+}
+
+.edit{
+    margin-left: 80%;
+    margin-top: 10px;
+}
+
+.name{
+    color: rgb(49, 48, 48);
+}
+
+.lec{
+    margin-left: 30px;
+}
+
+
+/* Add hover effect to the card */
+.data-item:hover {
+    background-color: #f8f9fa; /* Light gray background on hover */
+    transition: background-color 0.3s ease;
+}
+
+.firstcard{
+    padding: 10px;
+}
+
+.main-1{
+    padding: 30px;
+}
+
+.course-title{
+    /* background-color: #840608d9; */   
+     background: linear-gradient(135deg, #840608d9, #373434d9);
+    
+    padding: 5px 15px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+}
