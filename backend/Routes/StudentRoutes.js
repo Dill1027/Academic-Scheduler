@@ -70,7 +70,7 @@ router.post("/", async (req, res) => {
 });
 
 // Fetch students (filter by status if provided)
-router.get("/student", async (req, res) => {
+/*router.get("/student", async (req, res) => {
     try {
         const { status } = req.query;
         let query = {};
@@ -81,7 +81,7 @@ router.get("/student", async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "Error fetching students." });
     }
-});
+});*/
 
 // Admin updates student status (approve/decline)
 router.patch("/:id", async (req, res) => {

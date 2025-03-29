@@ -14,15 +14,18 @@ const AdminReview = () => {
   // Handle Accept or Decline
   const handleDecision = async (studentId, decision) => {
     try {
-      const newStatus = decision === "accept" ? "approved" : "declined";
+      if (decision === "accept") {
+        // Update student status to "approved"
+        await axios.patch(`http://localhost:5000/api/student/${studentId}`, { status: "approved" });
+      } else {
+        // Delete student record if declined
+        await axios.delete(`http://localhost:5000/api/student/${studentId}`);
+      }
 
-      // Update the student status
-      await axios.patch(`http://localhost:5000/api/student/${studentId}`, { status: newStatus });
-
-      // Filter out the student from the pending list
+      // Remove the student from the pending list
       setPendingStudents(pendingStudents.filter(student => student._id !== studentId));
     } catch (error) {
-      console.error("Error updating student status:", error);
+      console.error("Error processing student decision:", error);
     }
   };
 
@@ -39,7 +42,7 @@ const AdminReview = () => {
               <div>
                 <p><strong>Name:</strong> {student.studentName}</p>
                 <p><strong>Email:</strong> {student.email}</p>
-                <p><strong>Faculty:</strong> {student.faculty}</p>
+                <p><strong>Specialization:</strong> {student.specialization}</p>
               </div>
               <div>
                 <button

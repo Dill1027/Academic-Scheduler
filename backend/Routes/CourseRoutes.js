@@ -128,4 +128,26 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
+
+// Route to get documents based on student's year and course
+router.get("/documents/:year/:course", async (req, res) => {
+    try {
+        const { year, course } = req.params; // Extract year and course from URL params
+
+        const documents = await Docs.find({ year, course }); // Find matching documents
+
+        if (!documents || documents.length === 0) {
+            return res.status(404).json({ message: "No documents found for the selected year and course." });
+        }
+
+        res.json(documents); // Send documents as response
+    } catch (error) {
+        console.error("Error fetching documents:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+
+
+
 module.exports = router;

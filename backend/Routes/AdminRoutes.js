@@ -14,21 +14,16 @@ router.post("/student", async (req, res) => {
 });
 
 // Fetch students for admin review (filter by status)
+// Fetch only pending students
 router.get("/student", async (req, res) => {
   try {
-    const { status } = req.query;
-    let query = {};
-
-    if (status) {
-      query.status = status;  // Only fetch students with the given status
-    }
-
-    const students = await Student.find(query);
+    const students = await Student.find({ status: "pending" }); // Fetch only pending students
     res.json(students);
   } catch (error) {
     res.status(500).json({ error: "Error fetching students." });
   }
 });
+
 
 // Admin approves or declines registration
 router.patch("/student/:id", async (req, res) => {
@@ -44,6 +39,24 @@ router.patch("/student/:id", async (req, res) => {
     res.json({ message: "Student status updated successfully!" });
   } catch (error) {
     res.status(500).json({ error: "Error updating student status." });
+  }
+});
+// Delete student after decline
+router.delete("/:id", async (req, res) => {
+  try {
+      if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+          return res.status(400).json({ error: "Invalid student ID format." });
+      }
+
+      const deletedStudent = await Student.findByIdAndDelete(req.params.id);
+      if (!deletedStudent) return res.status(404).json({ message: "Student not found" });
+
+      // Also delete the student from the User collection
+      await User.findOneAndDelete({ email: deletedStudent.email });
+
+      res.json({ message: "Student and associated user deleted successfully" });
+  } catch (error) {
+      res.status(500).json({ message: "Cannot delete student" });
   }
 });
 
