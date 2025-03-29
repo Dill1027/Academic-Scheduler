@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const router = express.Router();
 const Student = require("../Model/Student");
 const Group = require("../Model/Groups");
+const User = require("../Model/User");
 
 // Test route
 router.get("/test", (req, res) => res.send("Student routes working"));
@@ -53,8 +54,18 @@ router.post("/", async (req, res) => {
             password: hashedPassword,
             status: "pending", // Add status field
         });
+        const newUser = new User({
+            name: studentName,
+            email,
+            password: hashedPassword,
+            role: "New Student",
+        });
 
+        // Save both student and user
         await newStudent.save();
+        await newUser.save();
+
+        
         res.status(201).json({ message: "Student submitted for review." });
     } catch (error) {
         console.error("Error adding student:", error);
