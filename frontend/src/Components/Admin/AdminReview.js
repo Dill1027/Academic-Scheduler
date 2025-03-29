@@ -6,7 +6,7 @@ const AdminReview = () => {
 
   // Fetch only pending students
   useEffect(() => {
-    axios.get("http://localhost:5000/api/student?status=pending")  // Ensure 'status=pending' is passed correctly
+    axios.get("http://localhost:5001/api/student?status=pending")  // Ensure 'status=pending' is passed correctly
       .then(response => setPendingStudents(response.data))
       .catch(error => console.error("Error fetching pending students:", error));
   }, []);
@@ -17,7 +17,7 @@ const AdminReview = () => {
       const newStatus = decision === "accept" ? "approved" : "declined";
 
       // Update the student status
-      await axios.patch(`http://localhost:5000/api/student/${studentId}`, { status: newStatus });
+      await axios.patch(`http://localhost:5001/api/student/${studentId}`, { status: newStatus });
 
       // Filter out the student from the pending list
       setPendingStudents(pendingStudents.filter(student => student._id !== studentId));

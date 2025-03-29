@@ -11,7 +11,7 @@ const LecturerDetails = () => {
     const fetchLecturers = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("http://localhost:5000/api/lecturers/all");
+        const response = await fetch("http://localhost:5001/api/lecturers/all");
         if (!response.ok) throw new Error("Failed to fetch lecturers");
         const data = await response.json();
         setLecturers(data);
@@ -32,7 +32,7 @@ const LecturerDetails = () => {
 
   const handleDelete = async (lecturerId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/lecturers/${lecturerId}`, {
+      const response = await fetch(`http://localhost:5001/api/lecturers/${lecturerId}`, {
         method: 'DELETE'
       });
       if (!response.ok) throw new Error("Failed to delete lecturer");
@@ -68,7 +68,7 @@ const LecturerDetails = () => {
     };
   
     try {
-      const response = await fetch(`http://localhost:5000/api/lecturers/${editingLecturer._id}`, {
+      const response = await fetch(`http://localhost:5001/api/lecturers/${editingLecturer._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

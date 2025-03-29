@@ -53,7 +53,7 @@ const AddLectureForm = () => {
         setError("");
 
         try {
-            const response = await axios.post("http://localhost:5000/api/lecturers/add", lecturer);
+            const response = await axios.post("http://localhost:5001/api/lecturers/add", lecturer);
             setMessage(response.data.message);
             setLecturer({
                 lecturerId: "",

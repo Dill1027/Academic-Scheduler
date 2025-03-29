@@ -17,7 +17,7 @@ const Profile = () => {
 
     const fetchStudent = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/student/${id}`);
+        const response = await axios.get(`http://localhost:5001/api/student/${id}`);
         setStudent(response.data);
       } catch (error) {
         console.error("Error fetching student:", error);
