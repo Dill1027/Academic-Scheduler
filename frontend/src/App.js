@@ -1,93 +1,98 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const morgan = require('morgan'); // HTTP request logger
 
-import Home from "./Components/Home";
+// Import route files
+const authRoutes = require('./routes/authRoutes');
+const studentRoutes = require('./routes/studentRoutes');
+const lecturerRoutes = require('./routes/lecturerRoutes');
+const courseRoutes = require('./routes/courseRoutes');
+const timetableRoutes = require('./routes/timetableRoutes');
 
-import Profile from "./Components/StudentManagement/Profile";
-import StudentRegisterForm from "./Components/StudentManagement/StudentRegisterForm";
-import CurrentStudent from "./Components/Authentication/CurrentStudent";
-import Register from "./Components/Authentication/Register";
-import Login from "./Components/Authentication/Login";
-import Dashboard from "./Components/Authentication/Dashboard";
-import UserBaseLogin from "./Components/Authentication/UserBaseLogin";
-import AdminReview from "./Components/Admin/AdminReview";
-import StudentDashboard from "./Components/StudentManagement/StudentDashboard";
-import LecturerRegisterForm from "./Components/Authentication/LectureRegisterForm";
-import StudentList from "./Components/StudentManagement/StudentList";
-import StudentLogin from "./Components/Authentication/StudentLogin";
+// Initialize Express app
+const app = express();
 
-//lecturer managmnet 
-import AddLecturerForm from  "./Components/lecturerManagement/AddLecturerForm";
-import LecturerDetails from "./Components/lecturerManagement/LecturerDetails";
-import UpdateLecturer from "./Components/lecturerManagement/UpdateLecturer";
-import LecturerDashboard from "./Components/lecturerManagement/LecturerDashboard";
-import LecturerDetailsView from "./Components/lecturerManagement/LecturerDetailsView";
-import moduleOptions from "./Components/lecturerManagement/moduleOptions";
+// Database connection
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000
+})
+.then(() => console.log('MongoDB connected successfully'))
+.catch(err => console.error('MongoDB connection error:', err));
 
+// Middleware
+app.use(helmet());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 
-import './App.css';
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 
-// Academic Scheduler Components
-import Coursed from "./Components/CourseManagement/coursedash";
-import AddDoc from "./Components/CourseManagement/AddDoc";
-import StudentCourse from "./Components/CourseManagement/studentCourse";
-import FirstYear from "./Components/CourseManagement/firstYear";
-import EditDoc from "./Components/CourseManagement/UpdateCourse";
-import Second from "./Components/CourseManagement/secondYear";
-import Third from "./Components/CourseManagement/ThirdYear";
-import Fourth from "./Components/CourseManagement/fourthYear";
-import AdminDashboard from "./Components/Admin/AdminDashboard";
-import StudentManagement from "./Components/Admin/StudentManagement";
+// Request logging
+app.use(morgan('dev'));
 
+// Body parsing
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Static files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/lecturers', lecturerRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/timetables', timetableRoutes);
 
-function App() {
-  return (
-    <>
-      {/* Navbar should be outside of Routes */}
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date() });
+});
 
-      <Routes>
-        <Route path="/login"element={<Login/>}/>
-        <Route path="/" element={<Home />} />
-        <Route path="/profile/:id" element={<Profile />} /> 
-        <Route path="/form" element={<StudentRegisterForm />} />
-        <Route path="/currentform" element={<CurrentStudent />} />
-        <Route path="/lecturerform" element={<LecturerRegisterForm/>} />
-        <Route path="/studentList" element={<StudentList/>} />
-        <Route path="/register" element={<Register/>} />
-        <Route path="/dashboard" element={<Dashboard/>} />
-        <Route path="/userbase" element={<UserBaseLogin/>} />
-        <Route path="/adminReview" element={<AdminReview/>} />
-        <Route path="/dashboardd" element={<StudentDashboard/>} />
-        <Route path="/adminDashboard" element={<AdminDashboard/>} />
-        <Route path="/studentlogin" element={<StudentLogin />} />
-        <Route path="/studentManagement" element={<StudentManagement/>} />
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
 
-       {/* Lecturer Routes*/}
-        <Route path="/addLecturer" element={<AddLecturerForm />}/>
-        <Route path="/lecturerDetails" element={<LecturerDetails />} />
-        <Route path="/lecturers/update/:id" component={UpdateLecturer} />
-        <Route path="/lecturerDashbord" element={<LecturerDashboard />} />
-        <Route path="/lectureview" element={<LecturerDetailsView />} />
-        <Route path="/moduleOption" element={<moduleOptions/>} />
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(err.statusCode || 500).json({
+    message: err.message || 'Internal Server Error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
+});
 
+// Server configuration
+const PORT = process.env.PORT || 5001;
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
-         {/* Academic Scheduler Routes */}
-        <Route path="/course" element={<Coursed />} />
-        <Route path="/AddDoc" element={<AddDoc />} />
-        <Route path="/StudentCourse" element={<StudentCourse />} />
-        <Route path="/first" element={<FirstYear />} />
-        <Route path="/second" element={<Second />} />
-        <Route path="/Third" element={<Third />} />
-        <Route path="/Fourth" element={<Fourth />} />
-        <Route path="/edit/:id" element={<EditDoc />} />
-      </Routes>
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received. Shutting down gracefully...');
+  server.close(() => {
+    console.log('Server closed');
+    mongoose.connection.close(false, () => {
+      console.log('MongoDB connection closed');
+      process.exit(0);
+    });
+  });
+});
 
-       {/* Footer should also be outside of Routes */}
-    </>
-    
-  );
-}
-
-export default App;
+module.exports = app;
