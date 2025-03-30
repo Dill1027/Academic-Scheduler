@@ -128,46 +128,4 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
-
-// Route to get documents based on student's year and course
-router.get("/documents/:year/:course", async (req, res) => {
-    try {
-        const { year, course } = req.params; // Extract year and course from URL params
-
-        const documents = await Docs.find({ year, course }); // Find matching documents
-
-        if (!documents || documents.length === 0) {
-            return res.status(404).json({ message: "No documents found for the selected year and course." });
-        }
-
-        res.json(documents); // Send documents as response
-    } catch (error) {
-        console.error("Error fetching documents:", error);
-        res.status(500).json({ message: "Server error" });
-    }
-});
-
-
-
-
-// Add this to your course routes (CourseModel.js or wherever your routes are)
-router.get("/available-modules", async (req, res) => {
-  try {
-    const { year, specialization } = req.query;
-    
-    if (!year || !specialization) {
-      return res.status(400).json({ error: "Year and specialization are required" });
-    }
-
-    const modules = await Docs.find({ 
-      year: year,
-      course: specialization 
-    }).select('moduleName _id'); // Only return moduleName and _id
-
-    res.json(modules);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 module.exports = router;

@@ -1,5 +1,8 @@
 const express = require('express');
 
+const bcrypt = require('bcryptjs');  // If using bcryptjs
+
+
 const jwt = require('jsonwebtoken');
 const User = require('../Model/User');
 const Student = require('../Model/Student'); // Ensure the correct path to your Student model

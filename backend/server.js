@@ -1,84 +1,55 @@
-require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const connectDB = require("./Config/db.js");
-const cors = require("cors");
-const path = require("path");
-const rateLimit = require('express-rate-limit');
-
-// Import Routes
 const StudentRoutes = require("./Routes/StudentRoutes.js");
 const AuthRoutes = require("./Routes/AuthRoutes.js");
+
+const dotenv = require("dotenv");
+const cors = require("cors");
+const app = express();
+
+// Import Routes
+const path = require("path");
+
+
+//academic shedular
+
 const CourseRoutes = require("./Routes/CourseRoutes.js");
 const GroupRoutes = require("./Routes/GroupRoutes.js");
-const LecturerRoutes = require("./Routes/lecturerRoutes.js");
-const TimetableRoutes = require("./Routes/timetable.routes");
+const lecturerRoutes = require("./Routes/lecturerRoutes.js");
 
-const app = express();
+dotenv.config();
 
 // Database connection
 connectDB();
 
-// Rate limiting configuration
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
-});
-
-// Middleware Configuration
-app.use(cors({
-  origin: "http://localhost:3000", // Explicitly allow your frontend
-  methods: ["GET", "POST", "PUT", "DELETE"], // Allow these HTTP methods
-  credentials: true, // If using cookies/sessions
-}));
-
-app.use(limiter);
-app.use(express.json({ limit: '10mb' })); // Add body size limit
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Middleware
+app.use(cors()); // You can add custom options if needed
+app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
-app.use("/api/courses", CourseRoutes); // Changed from "/api/docs" to more meaningful path
-app.use("/api/students", StudentRoutes);
+
+
+app.use("/api/docs", CourseRoutes);
+app.use("/api/student", StudentRoutes);
 app.use("/api/groups", GroupRoutes);
-app.use("/api/auth", AuthRoutes);
-app.use("/api/lecturers", LecturerRoutes);
-app.use("/api/timetables", TimetableRoutes);
+app.use("/api/auth",AuthRoutes);
+app.use("/api/lecturers",lecturerRoutes);
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'OK' });
-});
 
-// 404 Handler
-app.use((req, res, next) => {
-  res.status(404).json({ message: "Route not found" });
-});
 
-// Global Error Handling Middleware
+
+
+// Global Error Handling Middleware (optional)
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.statusCode || 500).json({ 
-    message: err.message || "Internal Server Error",
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }) // Only show stack in dev
-  });
+  console.error(err.stack); // Logs error stack to console
+  res.status(500).json({ message: "Something went wrong!" });
 });
 
 // Start the server
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-  console.error(`Unhandled Rejection: ${err.message}`);
-  server.close(() => process.exit(1));
-});
-
-// Handle uncaught exceptions
-process.on('uncaughtException', (err) => {
-  console.error(`Uncaught Exception: ${err.message}`);
-  process.exit(1);
 });

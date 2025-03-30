@@ -14,8 +14,6 @@ const Register = () => {
   });
 
   const navigate = useNavigate();
-  
-
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,11 +29,11 @@ const Register = () => {
 
       // Redirect based on the role after registration
       if (formData.role === 'New Student' || formData.role === 'Current Student') {
-        navigate('/student-login');
+        navigate('/studentlogin');
       } else if (formData.role === 'Lecturer') {
-        navigate('/lecturer-login');
+        navigate('/login');
       } else if (formData.role === 'Admin') {
-        navigate('/userbases');
+        navigate('/login');
       }
     } catch (err) {
       console.error("Error registering", err.response?.data || err.message);

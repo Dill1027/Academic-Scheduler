@@ -16,7 +16,7 @@ const LecturerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchGenderDistribution = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/employees/gender-distribution");
@@ -35,12 +35,12 @@ const LecturerDashboard = () => {
 
     fetchGenderDistribution();
   }, []);
-
+*/
   const pieChartData = {
     labels: Object.keys(genderData).map(gender => gender.charAt(0).toUpperCase() + gender.slice(1)),
     datasets: [
       {
-        label: "Employee Gender Distribution",
+        label: "Lecturers Gender Distribution",
         data: Object.values(genderData),
         backgroundColor: ["#FAD006", "#06402B"],
         hoverOffset: 4,

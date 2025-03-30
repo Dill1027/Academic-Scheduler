@@ -24,7 +24,7 @@ function AdminDashboard() {
 
                 {/* Student Management */}
                 <div className="col-md-4">
-                    <div className="card text-white bg-success mb-3" onClick={() => handleNavigation("/students")}>
+                    <div className="card text-white bg-success mb-3" onClick={() => handleNavigation("/studentManagement")}>
                         <div className="card-body text-center">
                             <h5 className="card-title">Student Management</h5>
                             <p className="card-text">Manage student details, enrollments, and records.</p>
