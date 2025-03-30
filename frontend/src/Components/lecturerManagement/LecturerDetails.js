@@ -25,7 +25,7 @@ const LecturerDetails = () => {
     const fetchLecturers = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("http://localhost:5001/api/lecturers/all");
+        const response = await fetch("http://localhost:5000/api/lecturers/all");
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -64,7 +64,7 @@ const LecturerDetails = () => {
 
   const handleDelete = async (lecturerId) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/lecturers/${lecturerId}`, {
+      const response = await fetch(`http://localhost:5000/api/lecturers/${lecturerId}`, {
         method: 'DELETE'
       });
       
@@ -113,7 +113,7 @@ const LecturerDetails = () => {
         modules: formData.modules.split(",").map(item => item.trim())
       };
 
-      const response = await fetch(`http://localhost:5001/api/lecturers/${editingLecturer._id}`, {
+      const response = await fetch(`http://localhost:5000/api/lecturers/${editingLecturer._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"

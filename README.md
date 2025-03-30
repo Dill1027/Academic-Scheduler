@@ -93,7 +93,7 @@ Before running the project, make sure you have the following installed:
      npm start
      ```
 
-5. Visit `http://localhost:3000` for the frontend and `http://localhost:5001` for the backend.
+5. Visit `http://localhost:3000` for the frontend and `http://localhost:5000` for the backend.
 
 ## Contributing 🤝
 

@@ -19,7 +19,7 @@ const LecturerDashboard = () => {
   useEffect(() => {
     const fetchGenderDistribution = async () => {
       try {
-        const response = await axios.get("http://localhost:5001/api/employees/gender-distribution");
+        const response = await axios.get("http://localhost:5000/api/employees/gender-distribution");
         const genderCount = response.data.reduce((acc, { _id, count }) => {
           acc[_id] = count;
           return acc;

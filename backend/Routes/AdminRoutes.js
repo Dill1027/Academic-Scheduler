@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../Model/Student");
 
+
 // Store new registration as "pending"
 router.post("/student", async (req, res) => {
   try {

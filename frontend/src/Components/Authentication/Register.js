@@ -14,6 +14,8 @@ const Register = () => {
   });
 
   const navigate = useNavigate();
+  
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,7 +24,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/register', formData);
+      const response = await axios.post('http://localhost:5000/api/auth/register', formData);
 
       console.log(response.data.msg);
       window.alert('Registration successful! You can now log in.');

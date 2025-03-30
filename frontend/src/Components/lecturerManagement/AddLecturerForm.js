@@ -100,7 +100,7 @@ const AddLectureForm = ({ closeModal }) => {
             console.log("Submitting lecturer data:", lecturer);
 
             const response = await axios.post(
-                "http://localhost:5001/api/lecturers/add", 
+                "http://localhost:5000/api/lecturers/add", 
                 {
                     ...lecturer,
                     DOB: lecturer.DOB // Keep as string, backend will convert

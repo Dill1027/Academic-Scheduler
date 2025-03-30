@@ -9,7 +9,7 @@ const LecturerDetailsView = () => {
     const fetchLecturers = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("http://localhost:5001/api/lecturers/all");
+        const response = await fetch("http://localhost:5000/api/lecturers/all");
         if (!response.ok) throw new Error("Failed to fetch lecturers");
         const data = await response.json();
         setLecturers(data);
