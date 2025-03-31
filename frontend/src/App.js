@@ -8,11 +8,11 @@ const helmet = require('helmet');
 const morgan = require('morgan'); // HTTP request logger
 
 // Import route files
-const authRoutes = require('./routes/authRoutes');
-const studentRoutes = require('./routes/studentRoutes');
-const lecturerRoutes = require('./routes/lecturerRoutes');
-const courseRoutes = require('./routes/courseRoutes');
-const timetableRoutes = require('./routes/timetableRoutes');
+const authRoutes = require('./Routes/authRoutes');
+const studentRoutes = require('./Routes/studentRoutes');
+const lecturerRoutes = require('./Routes/lecturerRoutes');
+const courseRoutes = require('./Routes/courseRoutes');
+const timetableRoutes = require('./Routes/timetableRoutes');
 
 // Initialize Express app
 const app = express();
@@ -53,7 +53,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/students', studentRoutes);
+app.use('/api/student', studentRoutes);
 app.use('/api/lecturers', lecturerRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/timetables', timetableRoutes);
