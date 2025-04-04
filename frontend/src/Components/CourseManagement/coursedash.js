@@ -40,6 +40,12 @@ function Coursed() {
           </div>
         )}
 
+        <div className="p1 mt-5">
+          <Link to="/coursereport" style={{ textDecoration: 'none', color: 'white' }}>
+            <h3 className="title">Course Report</h3>
+          </Link>
+        </div>
+
         <div className="p1 container mt-5">
           <h3 className="title">Available Courses</h3>
           

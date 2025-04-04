@@ -196,4 +196,40 @@ router.get('/dashboard', async (req, res) => {
     }
 });
 
+
+// Update student modules
+router.put("/:id/modules", async (req, res) => {
+    try {
+      const { modules } = req.body;
+      
+      if (!Array.isArray(modules)) {
+        return res.status(400).json({ error: "Modules should be an array" });
+      }
+  
+      // Validate modules - remove empty strings and limit to 5
+      const modulesToSave = modules
+        .map(module => module.trim())
+        .filter(module => module !== '')
+        .slice(0, 5);
+  
+      const updatedStudent = await Student.findByIdAndUpdate(
+        req.params.id,
+        { modules: modulesToSave },
+        { new: true }
+      );
+  
+      if (!updatedStudent) {
+        return res.status(404).json({ error: "Student not found" });
+      }
+  
+      res.json({ 
+        message: "Modules updated successfully",
+        student: updatedStudent
+      });
+    } catch (error) {
+      console.error("Error updating modules:", error);
+      res.status(500).json({ error: "Error updating modules" });
+    }
+  });
+
 module.exports = router;

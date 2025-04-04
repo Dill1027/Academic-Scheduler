@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Navbar from "../Navbar";
+import Footer from "../Navbar/footer";
 
 const StudentCourse = () => {
   const [students, setStudents] = useState([]);
@@ -10,7 +12,7 @@ const StudentCourse = () => {
   const [newModules, setNewModules] = useState(['', '', '', '', '']);
   const [availableModules, setAvailableModules] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filteredModules, setFilteredModules] = useState([]);
+  const [saveStatus, setSaveStatus] = useState({ success: null, message: '' });
 
   useEffect(() => {
     fetchStudents();
@@ -20,7 +22,7 @@ const StudentCourse = () => {
   const fetchStudents = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/student');
+      const response = await axios.get('http://localhost:5000/api/student/student');
       setStudents(response.data);
     } catch (error) {
       console.error("Error fetching student data", error);
@@ -41,24 +43,21 @@ const StudentCourse = () => {
   const getFilteredModules = (specialization, year) => {
     if (!specialization || !year) return [];
     
-    // Convert year format (e.g., "1" to "1st Year")
     const yearString = `${year}${getOrdinalSuffix(year)} Year`;
     
-    return availableModules.filter(module => 
-      module.course === specialization && module.year === yearString
-    ).map(module => module.moduleName);
+    return availableModules
+      .filter(module => module.course === specialization && module.year === yearString)
+      .map(module => module.moduleName);
   };
 
   const handleAddModuleClick = (student) => {
     setSelectedStudent(student);
-    
-    // Get modules relevant to this student's specialization and year
-    const relevantModules = getFilteredModules(student.specialization, student.year);
-    setFilteredModules(relevantModules);
+    setSaveStatus({ success: null, message: '' });
     
     // Initialize with existing modules plus empty slots up to 5
-    const existingModules = student.modules || [];
-    const initialModules = [...existingModules, ...Array(5 - existingModules.length).fill('')].slice(0, 5);
+    const initialModules = student.modules 
+      ? [...student.modules, ...Array(5 - student.modules.length).fill('')].slice(0, 5)
+      : ['', '', '', '', ''];
     
     setNewModules(initialModules);
     setShowAddModuleModal(true);
@@ -76,18 +75,29 @@ const StudentCourse = () => {
     if (!selectedStudent || !selectedStudent._id) return;
     
     try {
+      // Filter out empty modules
       const modulesToSave = newModules
         .map(module => module.trim())
         .filter(module => module !== '');
       
-      await axios.put(`http://localhost:5000/api/student/${selectedStudent._id}/modules`, { 
-        modules: modulesToSave 
-      });
+      await axios.put(
+        `http://localhost:5000/api/student/${selectedStudent._id}/modules`,
+        { modules: modulesToSave }
+      );
       
-      fetchStudents();
-      setShowAddModuleModal(false);
+      setSaveStatus({ success: true, message: 'Modules saved successfully!' });
+      
+      // Refresh student data after a short delay
+      setTimeout(() => {
+        fetchStudents();
+        setShowAddModuleModal(false);
+      }, 1000);
     } catch (error) {
       console.error("Error saving modules", error);
+      setSaveStatus({ 
+        success: false, 
+        message: error.response?.data?.error || "Failed to save modules. Please try again." 
+      });
     }
   };
 
@@ -112,19 +122,24 @@ const StudentCourse = () => {
   });
 
   if (isLoading) {
-    return <div className="container mt-5 text-center">Loading...</div>;
+    return <div className="student-course__loading">Loading...</div>;
   }
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Student List</h2>
+
+    <div>
+
+       <Navbar />
+
+    <div className="student-course__container">
+      <h2 className="student-course__title">Module Allocation For Students</h2>
       
-      <div className="d-flex justify-content-between mb-4">
-        <div className="d-flex gap-3">
+      <div className="student-course__filters">
+        <div className="student-course__filter-group">
           <select 
             onChange={(e) => setSpecializationFilter(e.target.value)} 
             value={specializationFilter} 
-            className="form-select"
+            className="student-course__filter-select"
           >
             <option value="">All Specializations</option>
             <option value="Information Technology">Information Technology</option>
@@ -137,7 +152,7 @@ const StudentCourse = () => {
           <select 
             onChange={(e) => setYearFilter(e.target.value)} 
             value={yearFilter} 
-            className="form-select"
+            className="student-course__filter-select"
           >
             <option value="">All Years</option>
             <option value="1">1st Year</option>
@@ -148,9 +163,9 @@ const StudentCourse = () => {
         </div>
       </div>
 
-      <div className="table-responsive">
-        <table className="table table-striped table-bordered">
-          <thead className="table-dark">
+      <div className="student-course__table-container">
+        <table className="student-course__table">
+          <thead className="student-course__table-header">
             <tr>
               <th>Student Name</th>
               <th>Year</th>
@@ -162,24 +177,25 @@ const StudentCourse = () => {
           <tbody>
             {filteredStudents.length > 0 ? (
               filteredStudents.map((student) => (
-                <tr key={student._id}>
-                  <td>{student.studentName}</td>
-                  <td>{student.year ? `${student.year}${getOrdinalSuffix(student.year)} Year` : 'N/A'}</td>
-                  <td>{student.specialization}</td>
-                  <td>
+                <tr key={student._id} className="student-course__table-row">
+                  <td className="student-course__student-name">{student.studentName}</td>
+                  <td className="student-course__student-year">
+                    {student.year ? `${student.year}${getOrdinalSuffix(student.year)} Year` : 'N/A'}
+                  </td>
+                  <td className="student-course__student-specialization">{student.specialization}</td>
+                  <td className="student-course__student-modules">
                     {student.modules?.length > 0 ? (
-                      <ul>
+                      <ul className="student-course__module-list">
                         {student.modules.map((module, idx) => (
-                          <li key={idx}>{module}</li>
+                          <li key={idx} className="student-course__module-item">{module}</li>
                         ))}
                       </ul>
-                    ) : 'No modules assigned'}
+                    ) : <span className="student-course__no-modules">No modules assigned</span>}
                   </td>
-                  <td>
+                  <td className="student-course__actions">
                     <button 
-                      className="btn btn-primary btn-sm"
+                      className="student-course__edit-btn"
                       onClick={() => handleAddModuleClick(student)}
-                      disabled={student.modules?.length >= 5}
                     >
                       {student.modules?.length > 0 ? 'Edit Modules' : 'Add Modules'}
                     </button>
@@ -187,8 +203,8 @@ const StudentCourse = () => {
                 </tr>
               ))
             ) : (
-              <tr>
-                <td colSpan="5" className="text-center">No students found</td>
+              <tr className="student-course__no-data-row">
+                <td colSpan="5" className="student-course__no-data">No students found</td>
               </tr>
             )}
           </tbody>
@@ -197,77 +213,89 @@ const StudentCourse = () => {
 
       {/* Add Module Modal */}
       {showAddModuleModal && selectedStudent && (
-        <div className="modal fade show" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">
-                  Add Modules for {selectedStudent.studentName} 
+        <div className="student-course__modal-overlay">
+          <div className="student-course__modal">
+            <div className="student-course__modal-content">
+              <div className="student-course__modal-header">
+                <h5 className="student-course__modal-title">
+                  {selectedStudent.modules?.length > 0 ? 'Edit' : 'Add'} Modules for {selectedStudent.studentName} 
                   ({selectedStudent.specialization}, {selectedStudent.year}{getOrdinalSuffix(selectedStudent.year)} Year)
                 </h5>
                 <button 
                   type="button" 
-                  className="btn-close" 
+                  className="student-course__modal-close" 
                   onClick={() => setShowAddModuleModal(false)}
-                ></button>
+                >×</button>
               </div>
-              <div className="modal-body">
-                <div className="mb-4">
-                  <h6>Available Modules:</h6>
-                  {filteredModules.length > 0 ? (
-                    <div className="d-flex flex-wrap gap-2 mb-3">
-                      {filteredModules.map((module, idx) => (
+              <div className="student-course__modal-body">
+                {saveStatus.message && (
+                  <div className={`student-course__status-message student-course__status-message--${saveStatus.success ? 'success' : 'error'}`}>
+                    {saveStatus.message}
+                  </div>
+                )}
+                
+                <div className="student-course__available-modules">
+                  <h6 className="student-course__available-modules-title">Available Modules:</h6>
+                  {getFilteredModules(selectedStudent.specialization, selectedStudent.year).length > 0 ? (
+                    <div className="student-course__module-buttons">
+                      {getFilteredModules(selectedStudent.specialization, selectedStudent.year).map((module, idx) => (
                         <button
                           key={idx}
-                          className="btn btn-outline-primary btn-sm"
+                          className="student-course__module-btn"
                           onClick={() => {
-                            // Find first empty slot or replace the last one
                             const emptyIndex = newModules.findIndex(m => m === '');
                             const indexToUpdate = emptyIndex !== -1 ? emptyIndex : newModules.length - 1;
                             handleModuleChange(indexToUpdate, module);
                           }}
+                          disabled={newModules.includes(module)}
                         >
                           {module}
                         </button>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-muted">No modules available for this specialization/year combination</p>
+                    <p className="student-course__no-available-modules">No modules available for this specialization/year combination</p>
                   )}
                 </div>
 
-                <div className="mb-3">
-                  <h6>Selected Modules (max 5):</h6>
+                <div className="student-course__selected-modules">
+                  <h6 className="student-course__selected-modules-title">Selected Modules (max 5):</h6>
                   {newModules.map((module, index) => (
-                    <div className="mb-3" key={index}>
-                      <label className="form-label">Module {index + 1}</label>
+                    <div className="student-course__module-select-container" key={index}>
+                      <label className="student-course__module-label">Module {index + 1}</label>
                       <select
-                        className="form-select"
+                        className="student-course__module-select"
                         value={module}
                         onChange={(e) => handleModuleChange(index, e.target.value)}
                       >
                         <option value="">Select a module</option>
-                        {filteredModules.map((mod, idx) => (
-                          <option key={idx} value={mod}>{mod}</option>
+                        {getFilteredModules(selectedStudent.specialization, selectedStudent.year).map((mod, idx) => (
+                          <option 
+                            key={idx} 
+                            value={mod}
+                            disabled={newModules.includes(mod) && mod !== module}
+                          >
+                            {mod}
+                          </option>
                         ))}
                       </select>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="modal-footer">
+              <div className="student-course__modal-footer">
                 <button 
                   type="button" 
-                  className="btn btn-secondary" 
+                  className="student-course__modal-cancel" 
                   onClick={() => setShowAddModuleModal(false)}
                 >
                   Cancel
                 </button>
                 <button 
                   type="button" 
-                  className="btn btn-primary" 
+                  className="student-course__modal-save" 
                   onClick={saveModules}
-                  disabled={!newModules.some(module => module.trim() !== '')}
+                  disabled={newModules.every(module => module.trim() === '')}
                 >
                   Save Modules
                 </button>
@@ -276,6 +304,375 @@ const StudentCourse = () => {
           </div>
         </div>
       )}
+
+      <style jsx>{`
+        .student-course__container {
+          max-width: 1200px;
+          margin: 2rem auto;
+          padding: 0 1rem;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .student-course__title {
+          text-align: center;
+          color: #2c3e50;
+          margin-bottom: 2rem;
+          font-size: 2rem;
+          font-weight: 600;
+        }
+
+        .student-course__filters {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 2rem;
+        }
+
+        .student-course__filter-group {
+          display: flex;
+          gap: 1rem;
+          width: 100%;
+        }
+
+        .student-course__filter-select {
+          flex: 1;
+          padding: 0.5rem 1rem;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          background-color: white;
+          font-size: 1rem;
+          color: #333;
+          transition: border-color 0.3s;
+        }
+
+        .student-course__filter-select:focus {
+          outline: none;
+          border-color: #3498db;
+          box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .student-course__table-container {
+          overflow-x: auto;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+        }
+
+        .student-course__table {
+          width: 100%;
+          border-collapse: collapse;
+          background-color: white;
+        }
+
+        .student-course__table-header {
+          background-color: #2c3e50;
+          color: white;
+        }
+
+        .student-course__table-header th {
+          padding: 1rem;
+          text-align: left;
+          font-weight: 500;
+        }
+
+        .student-course__table-row {
+          border-bottom: 1px solid #eee;
+          transition: background-color 0.2s;
+        }
+
+        .student-course__table-row:hover {
+          background-color: #f8f9fa;
+        }
+
+        .student-course__table-row td {
+          padding: 1rem;
+          vertical-align: top;
+        }
+
+        .student-course__student-name {
+          font-weight: 500;
+          color: #2c3e50;
+        }
+
+        .student-course__module-list {
+          margin: 0;
+          list-style: none;
+          padding-left: 1.2rem;
+        }
+
+        .student-course__module-item {
+          margin-bottom: 0.3rem;
+        }
+
+        .student-course__no-modules {
+          color: #7f8c8d;
+          font-style: italic;
+        }
+
+        .student-course__edit-btn {
+          padding: 0.5rem 1rem;
+          background-color: #3498db;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: background-color 0.2s;
+        }
+
+        .student-course__edit-btn:hover {
+          background-color: #2980b9;
+        }
+
+        .student-course__no-data-row {
+          background-color: white;
+        }
+
+        .student-course__no-data {
+          text-align: center;
+          padding: 2rem;
+          color: #7f8c8d;
+        }
+
+        .student-course__loading {
+          text-align: center;
+          padding: 2rem;
+          color: #3498db;
+          font-size: 1.2rem;
+        }
+
+        /* Modal Styles */
+        .student-course__modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+
+        .student-course__modal {
+          width: 90%;
+          max-width: 800px;
+          max-height: 90vh;
+          overflow-y: auto;
+          background-color: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .student-course__modal-content {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+
+        .student-course__modal-header {
+          padding: 1.5rem;
+          border-bottom: 1px solid #eee;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .student-course__modal-title {
+          margin: 0;
+          color: #2c3e50;
+          font-size: 1.3rem;
+        }
+
+        .student-course__modal-close {
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          color: #7f8c8d;
+          transition: color 0.2s;
+        }
+
+        .student-course__modal-close:hover {
+          color: #e74c3c;
+        }
+
+        .student-course__modal-body {
+          padding: 1.5rem;
+          flex-grow: 1;
+          overflow-y: auto;
+        }
+
+        .student-course__status-message {
+          padding: 0.8rem 1rem;
+          margin-bottom: 1.5rem;
+          border-radius: 4px;
+        }
+
+        .student-course__status-message--success {
+          background-color: #d4edda;
+          color: #155724;
+          border: 1px solid #c3e6cb;
+        }
+
+        .student-course__status-message--error {
+          background-color: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+        }
+
+        .student-course__available-modules {
+          margin-bottom: 2rem;
+        }
+
+        .student-course__available-modules-title {
+          margin-top: 0;
+          margin-bottom: 1rem;
+          color: #2c3e50;
+          font-size: 1.1rem;
+        }
+
+        .student-course__module-buttons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .student-course__module-btn {
+          padding: 0.5rem 1rem;
+          background-color: transparent;
+          border: 1px solid #3498db;
+          color: #3498db;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: all 0.2s;
+        }
+
+        .student-course__module-btn:hover:not(:disabled) {
+          background-color: #3498db;
+          color: white;
+        }
+
+        .student-course__module-btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          background-color: #3498db;
+          color: white;
+        }
+
+        .student-course__no-available-modules {
+          color: #7f8c8d;
+          font-style: italic;
+        }
+
+        .student-course__selected-modules-title {
+          margin-top: 0;
+          margin-bottom: 1rem;
+          color: #2c3e50;
+          font-size: 1.1rem;
+        }
+
+        .student-course__module-select-container {
+          margin-bottom: 1rem;
+        }
+
+        .student-course__module-label {
+          display: block;
+          margin-bottom: 0.5rem;
+          color: #34495e;
+          font-size: 0.9rem;
+        }
+
+        .student-course__module-select {
+          width: 100%;
+          padding: 0.7rem;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          background-color: white;
+          font-size: 1rem;
+          color: #333;
+          transition: border-color 0.3s;
+        }
+
+        .student-course__module-select:focus {
+          outline: none;
+          border-color: #3498db;
+          box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .student-course__modal-footer {
+          padding: 1.5rem;
+          border-top: 1px solid #eee;
+          display: flex;
+          justify-content: flex-end;
+          gap: 1rem;
+        }
+
+        .student-course__modal-cancel {
+          padding: 0.7rem 1.5rem;
+          background-color: #f8f9fa;
+          color: #2c3e50;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: all 0.2s;
+        }
+
+        .student-course__modal-cancel:hover {
+          background-color: #e9ecef;
+        }
+
+        .student-course__modal-save {
+          padding: 0.7rem 1.5rem;
+          background-color: #3498db;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background-color 0.2s;
+        }
+
+        .student-course__modal-save:hover:not(:disabled) {
+          background-color: #2980b9;
+        }
+
+        .student-course__modal-save:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+          .student-course__filter-group {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+
+          .student-course__table-header th {
+            padding: 0.8rem 0.5rem;
+            font-size: 0.9rem;
+          }
+
+          .student-course__table-row td {
+            padding: 0.8rem 0.5rem;
+            font-size: 0.9rem;
+          }
+
+          .student-course__edit-btn {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+          }
+
+          .student-course__modal {
+            width: 95%;
+          }
+        }
+      `}</style>
+    </div>
+    <Footer />
+
     </div>
   );
 };

@@ -38,7 +38,7 @@ import Third from "./Components/CourseManagement/ThirdYear";
 import Fourth from "./Components/CourseManagement/fourthYear";
 import AdminDashboard from "./Components/Admin/AdminDashboard";
 import StudentManagement from "./Components/Admin/StudentManagement";
-
+import Coursereport from "./Components/CourseManagement/report";
 
 
 
@@ -81,6 +81,7 @@ function App() {
         <Route path="/second" element={<Second />} />
         <Route path="/Third" element={<Third />} />
         <Route path="/Fourth" element={<Fourth />} />
+        <Route path="/coursereport" element={<Coursereport />} />
         <Route path="/edit/:id" element={<EditDoc />} />
       </Routes>
 
