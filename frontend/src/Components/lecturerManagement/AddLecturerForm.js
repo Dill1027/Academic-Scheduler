@@ -19,12 +19,15 @@ const AddLectureForm = ({ closeModal }) => {
         nic: "",
         specialization: "",
         year: "",
-        modules: []
+        modules: [],
+        password: "",
+        confirmPassword: ""
     });
 
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -62,11 +65,21 @@ const AddLectureForm = ({ closeModal }) => {
             return "Invalid email format";
         }
 
+        // Password validation
+        if (lecturer.password.length < 8) {
+            return "Password must be at least 8 characters";
+        }
+        
+        if (lecturer.password !== lecturer.confirmPassword) {
+            return "Passwords do not match";
+        }
+
         // Required fields
         const requiredFields = [
             'lecturerId', 'fullName', 'userName', 'email', 
             'phoneNumber', 'DOB', 'gender', 'address', 
-            'nic', 'specialization', 'year'
+            'nic', 'specialization', 'year', 'password',
+            'confirmPassword'
         ];
         
         for (const field of requiredFields) {
@@ -113,7 +126,7 @@ const AddLectureForm = ({ closeModal }) => {
             );
 
             if (response.data.success) {
-                setMessage("Lecturer added successfully!");
+                setShowSuccessPopup(true);
                 setLecturer({
                     lecturerId: "",
                     fullName: "",
@@ -126,13 +139,16 @@ const AddLectureForm = ({ closeModal }) => {
                     nic: "",
                     specialization: "",
                     year: "",
-                    modules: []
+                    modules: [],
+                    password: "",
+                    confirmPassword: ""
                 });
 
                 setTimeout(() => {
+                    setShowSuccessPopup(false);
                     if (closeModal) closeModal();
                     navigate("/lecturerDetails");
-                }, 1500);
+                }, 2000);
             } else {
                 setError(response.data.message || "Failed to add lecturer");
             }
@@ -148,6 +164,12 @@ const AddLectureForm = ({ closeModal }) => {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const closeSuccessPopup = () => {
+        setShowSuccessPopup(false);
+        if (closeModal) closeModal();
+        navigate("/lecturerDetails");
     };
 
     return (
@@ -246,6 +268,26 @@ const AddLectureForm = ({ closeModal }) => {
                     title="Enter valid NIC (e.g., 123456789V or 123456789012)"
                 />
 
+                <label>Password:</label>
+                <input
+                    type="password"
+                    name="password"
+                    value={lecturer.password}
+                    onChange={handleChange}
+                    required
+                    minLength="8"
+                />
+
+                <label>Confirm Password:</label>
+                <input
+                    type="password"
+                    name="confirmPassword"
+                    value={lecturer.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    minLength="8"
+                />
+
                 <label>Specialization:</label>
                 <select
                     name="specialization"
@@ -303,6 +345,18 @@ const AddLectureForm = ({ closeModal }) => {
                     {isSubmitting ? "Adding..." : "Add Lecturer"}
                 </button>
             </form>
+
+            {/* Success Popup */}
+            {showSuccessPopup && (
+                <div className="success-popup-overlay">
+                    <div className="success-popup">
+                        <div className="success-icon">✓</div>
+                        <h3>Success!</h3>
+                        <p>Lecturer added successfully!</p>
+                        <button onClick={closeSuccessPopup}>OK</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

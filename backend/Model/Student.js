@@ -47,10 +47,9 @@ const StudentSchema = new mongoose.Schema({
       message: "Password must be at least 6 characters long",
     },
   },
-  module: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "docs",
-    required: false,
+  modules: {  
+    type: [String],
+    default: [],
   },
   schedule: [
     {
