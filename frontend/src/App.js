@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import Home from "./Components/Home";
-import footer from "./Components/Navbar/footer";
+
 import Profile from "./Components/StudentManagement/Profile";
 import StudentRegisterForm from "./Components/StudentManagement/StudentRegisterForm";
 import CurrentStudent from "./Components/Authentication/CurrentStudent";
@@ -15,7 +15,7 @@ import StudentDashboard from "./Components/StudentManagement/StudentDashboard";
 import LecturerRegisterForm from "./Components/Authentication/LectureRegisterForm";
 import StudentList from "./Components/StudentManagement/StudentList";
 import StudentLogin from "./Components/Authentication/StudentLogin";
-
+import ProfileUpdate from "./Components/StudentManagement/ProfileUpdate";
 //lecturer managmnet 
 import AddLecturerForm from  "./Components/lecturerManagement/AddLecturerForm";
 import LecturerDetails from "./Components/lecturerManagement/LecturerDetails";
@@ -38,7 +38,6 @@ import Third from "./Components/CourseManagement/ThirdYear";
 import Fourth from "./Components/CourseManagement/fourthYear";
 import AdminDashboard from "./Components/Admin/AdminDashboard";
 import StudentManagement from "./Components/Admin/StudentManagement";
-import ProfileUpdate from "./Components/StudentManagement/ProfileUpdate";
 import Coursereport from "./Components/CourseManagement/report";
 
 
@@ -64,8 +63,7 @@ function App() {
         <Route path="/adminDashboard" element={<AdminDashboard/>} />
         <Route path="/studentlogin" element={<StudentLogin />} />
         <Route path="/studentManagement" element={<StudentManagement/>} />
-        <Route path="/profileUpdate/:id" element={<ProfileUpdate/>} />
-        <Route path="/footer" element={<footer />} />
+        <Route path="/profileUpdate/:id" element={<ProfileUpdate />} />
 
        {/* Lecturer Routes*/}
         <Route path="/addLecturer" element={<AddLecturerForm />}/>
@@ -84,8 +82,8 @@ function App() {
         <Route path="/second" element={<Second />} />
         <Route path="/Third" element={<Third />} />
         <Route path="/Fourth" element={<Fourth />} />
-        <Route path="/edit/:id" element={<EditDoc />} />
         <Route path="/coursereport" element={<Coursereport />} />
+        <Route path="/edit/:id" element={<EditDoc />} />
       </Routes>
 
        {/* Footer should also be outside of Routes */}
