@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"; // <-- SweetAlert2 import
 
 const InsertStudent = () => {
   const [studentData, setStudentData] = useState({
@@ -31,7 +32,6 @@ const InsertStudent = () => {
       ...studentData,
       [name]: value,
     });
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -89,15 +89,23 @@ const InsertStudent = () => {
         });
 
         if (response.data.message) {
-          // Show success message and redirect after delay
+          Swal.fire({
+            icon: "success",
+            title: "Registration Successful!",
+            text: "The student has been registered successfully.",
+            showConfirmButton: false,
+            timer: 2000,
+          });
           setTimeout(() => {
-            navigate("/students");
-          }, 1500);
+            navigate("/userbase");
+          }, 2100);
         }
       } catch (error) {
         console.error("Registration error:", error.response?.data || error.message);
-        setErrors({
-          submit: error.response?.data?.error || "Registration failed. Please try again.",
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed!",
+          text: error.response?.data?.error || "Registration failed. Please try again.",
         });
       } finally {
         setIsSubmitting(false);
@@ -118,20 +126,10 @@ const InsertStudent = () => {
                 Student Registration
               </h4>
             </div>
-            
-            <div className="card-body">
-              {errors.submit && (
-                <div className="alert alert-danger alert-dismissible fade show">
-                  {errors.submit}
-                  <button 
-                    type="button" 
-                    className="btn-close" 
-                    onClick={() => setErrors({...errors, submit: null})}
-                  ></button>
-                </div>
-              )}
 
+            <div className="card-body">
               <form onSubmit={handleSubmit}>
+                {/* Full Name */}
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="studentName" className="form-label">
@@ -148,13 +146,11 @@ const InsertStudent = () => {
                       value={studentData.studentName}
                     />
                     {errors.studentName && (
-                      <div className="invalid-feedback d-block">
-                        <i className="bi bi-exclamation-circle me-1"></i>
-                        {errors.studentName}
-                      </div>
+                      <div className="invalid-feedback d-block">{errors.studentName}</div>
                     )}
                   </div>
 
+                  {/* Registration Number */}
                   <div className="col-md-6 mb-3">
                     <label htmlFor="registrationNumber" className="form-label">
                       <i className="bi bi-card-heading me-2"></i>
@@ -170,14 +166,12 @@ const InsertStudent = () => {
                       value={studentData.registrationNumber}
                     />
                     {errors.registrationNumber && (
-                      <div className="invalid-feedback d-block">
-                        <i className="bi bi-exclamation-circle me-1"></i>
-                        {errors.registrationNumber}
-                      </div>
+                      <div className="invalid-feedback d-block">{errors.registrationNumber}</div>
                     )}
                   </div>
                 </div>
 
+                {/* Email and Phone */}
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="email" className="form-label">
@@ -194,10 +188,7 @@ const InsertStudent = () => {
                       value={studentData.email}
                     />
                     {errors.email && (
-                      <div className="invalid-feedback d-block">
-                        <i className="bi bi-exclamation-circle me-1"></i>
-                        {errors.email}
-                      </div>
+                      <div className="invalid-feedback d-block">{errors.email}</div>
                     )}
                   </div>
 
@@ -216,14 +207,12 @@ const InsertStudent = () => {
                       value={studentData.phoneNumber}
                     />
                     {errors.phoneNumber && (
-                      <div className="invalid-feedback d-block">
-                        <i className="bi bi-exclamation-circle me-1"></i>
-                        {errors.phoneNumber}
-                      </div>
+                      <div className="invalid-feedback d-block">{errors.phoneNumber}</div>
                     )}
                   </div>
                 </div>
 
+                {/* Password and Specialization */}
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label htmlFor="password" className="form-label">
@@ -240,12 +229,8 @@ const InsertStudent = () => {
                       value={studentData.password}
                     />
                     {errors.password && (
-                      <div className="invalid-feedback d-block">
-                        <i className="bi bi-exclamation-circle me-1"></i>
-                        {errors.password}
-                      </div>
+                      <div className="invalid-feedback d-block">{errors.password}</div>
                     )}
-                    <small className="text-muted">Minimum 6 characters</small>
                   </div>
 
                   <div className="col-md-6 mb-3">
@@ -268,14 +253,12 @@ const InsertStudent = () => {
                       <option value="Data Science">Data Science</option>
                     </select>
                     {errors.specialization && (
-                      <div className="invalid-feedback d-block">
-                        <i className="bi bi-exclamation-circle me-1"></i>
-                        {errors.specialization}
-                      </div>
+                      <div className="invalid-feedback d-block">{errors.specialization}</div>
                     )}
                   </div>
                 </div>
 
+                {/* Group Assignment */}
                 <div className="mb-4">
                   <label htmlFor="groupId" className="form-label">
                     <i className="bi bi-people-fill me-2"></i>
@@ -297,9 +280,10 @@ const InsertStudent = () => {
                   </select>
                 </div>
 
+                {/* Submit Button */}
                 <div className="d-grid gap-2">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="btn btn-primary py-2"
                     disabled={isSubmitting}
                   >
