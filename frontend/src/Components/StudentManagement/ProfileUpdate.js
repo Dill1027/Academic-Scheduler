@@ -70,7 +70,7 @@ const ProfileUpdate = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update student");
+        throw new Error("Failed to update students");
       }
 
       navigate(`/profile/${id}`);
