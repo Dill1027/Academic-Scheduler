@@ -1,5 +1,9 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import theme from './theme';
 
 import Home from "./Components/Home";
 
@@ -22,7 +26,7 @@ import LecturerDetails from "./Components/lecturerManagement/LecturerDetails";
 import UpdateLecturer from "./Components/lecturerManagement/UpdateLecturer";
 import LecturerDashboard from "./Components/lecturerManagement/LecturerDashboard";
 import LecturerDetailsView from "./Components/lecturerManagement/LecturerDetailsView";
-import moduleOptions from "./Components/lecturerManagement/moduleOptions";
+import ModuleOptions from "./Components/lecturerManagement/moduleOptions";
 
 
 import './App.css';
@@ -40,55 +44,60 @@ import AdminDashboard from "./Components/Admin/AdminDashboard";
 import StudentManagement from "./Components/Admin/StudentManagement";
 import Coursereport from "./Components/CourseManagement/report";
 
-
+// Timetable Components
+import YearSelection from './Components/timetable/YearSelection';
+import SpecializationSelection from './Components/timetable/SpecializationSelection';
+import TimetableOptions from './Components/timetable/TimetableOptions';
 
 function App() {
   return (
-    <>
-      {/* Navbar should be outside of Routes */}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Routes>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/" element={<Home />} />
+          <Route path="/profile/:id" element={<Profile />} /> 
+          <Route path="/form" element={<StudentRegisterForm />} />
+          <Route path="/currentform" element={<CurrentStudent />} />
+          <Route path="/lecturerform" element={<LecturerRegisterForm/>} />
+          <Route path="/studentList" element={<StudentList/>} />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/dashboard" element={<Dashboard/>} />
+          <Route path="/userbase" element={<UserBaseLogin/>} />
+          <Route path="/adminReview" element={<AdminReview/>} />
+          <Route path="/dashboardd" element={<StudentDashboard/>} />
+          <Route path="/adminDashboard" element={<AdminDashboard/>} />
+          <Route path="/studentlogin" element={<StudentLogin />} />
+          <Route path="/studentManagement" element={<StudentManagement/>} />
+          <Route path="/profileUpdate/:id" element={<ProfileUpdate />} />
 
-      <Routes>
-        <Route path="/login"element={<Login/>}/>
-        <Route path="/" element={<Home />} />
-        <Route path="/profile/:id" element={<Profile />} /> 
-        <Route path="/form" element={<StudentRegisterForm />} />
-        <Route path="/currentform" element={<CurrentStudent />} />
-        <Route path="/lecturerform" element={<LecturerRegisterForm/>} />
-        <Route path="/studentList" element={<StudentList/>} />
-        <Route path="/register" element={<Register/>} />
-        <Route path="/dashboard" element={<Dashboard/>} />
-        <Route path="/userbase" element={<UserBaseLogin/>} />
-        <Route path="/adminReview" element={<AdminReview/>} />
-        <Route path="/dashboardd" element={<StudentDashboard/>} />
-        <Route path="/adminDashboard" element={<AdminDashboard/>} />
-        <Route path="/studentlogin" element={<StudentLogin />} />
-        <Route path="/studentManagement" element={<StudentManagement/>} />
-        <Route path="/profileUpdate/:id" element={<ProfileUpdate />} />
+          {/* Lecturer Routes*/}
+          <Route path="/addLecturer" element={<AddLecturerForm />}/>
+          <Route path="/lecturerDetails" element={<LecturerDetails />} />
+          <Route path="/lecturers/update/:id" element={<UpdateLecturer />} />
+          <Route path="/lecturerDashbord" element={<LecturerDashboard />} />
+          <Route path="/lectureview" element={<LecturerDetailsView />} />
+          <Route path="/moduleOption" element={<ModuleOptions />} />
 
-       {/* Lecturer Routes*/}
-        <Route path="/addLecturer" element={<AddLecturerForm />}/>
-        <Route path="/lecturerDetails" element={<LecturerDetails />} />
-        <Route path="/lecturers/update/:id" component={UpdateLecturer} />
-        <Route path="/lecturerDashbord" element={<LecturerDashboard />} />
-        <Route path="/lectureview" element={<LecturerDetailsView />} />
-        <Route path="/moduleOption" element={<moduleOptions/>} />
+          {/* Academic Scheduler Routes */}
+          <Route path="/course" element={<Coursed />} />
+          <Route path="/AddDoc" element={<AddDoc />} />
+          <Route path="/StudentCourse" element={<StudentCourse />} />
+          <Route path="/first" element={<FirstYear />} />
+          <Route path="/second" element={<Second />} />
+          <Route path="/Third" element={<Third />} />
+          <Route path="/Fourth" element={<Fourth />} />
+          <Route path="/coursereport" element={<Coursereport />} />
+          <Route path="/edit/:id" element={<EditDoc />} />
 
-
-         {/* Academic Scheduler Routes */}
-        <Route path="/course" element={<Coursed />} />
-        <Route path="/AddDoc" element={<AddDoc />} />
-        <Route path="/StudentCourse" element={<StudentCourse />} />
-        <Route path="/first" element={<FirstYear />} />
-        <Route path="/second" element={<Second />} />
-        <Route path="/Third" element={<Third />} />
-        <Route path="/Fourth" element={<Fourth />} />
-        <Route path="/coursereport" element={<Coursereport />} />
-        <Route path="/edit/:id" element={<EditDoc />} />
-      </Routes>
-
-       {/* Footer should also be outside of Routes */}
-    </>
-    
+          {/* Timetable Routes */}
+          <Route path="/timetable" element={<YearSelection />} />
+          <Route path="/specializations/:yearId" element={<SpecializationSelection />} />
+          <Route path="/timetable-options/:yearId/:specializationId" element={<TimetableOptions />} />
+        </Routes>
+      </Container>
+    </ThemeProvider>
   );
 }
 

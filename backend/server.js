@@ -11,12 +11,20 @@ const app = express();
 // Import Routes
 const path = require("path");
 
-
 //academic shedular
-
 const CourseRoutes = require("./Routes/CourseRoutes.js");
 const GroupRoutes = require("./Routes/GroupRoutes.js");
 const lecturerRoutes = require("./Routes/lecturerRoutes.js");
+
+// Try to import timetable routes, if not available use empty router
+let timetableRoutes;
+try {
+    timetableRoutes = require("./Routes/timetable.routes.js");
+} catch (err) {
+    timetableRoutes = express.Router(); // Create empty router if module not found
+}
+
+const errorHandler = require('./Middleware/ErrorMiddleware');
 
 dotenv.config();
 
@@ -24,29 +32,39 @@ dotenv.config();
 connectDB();
 
 // Middleware
-app.use(cors()); // You can add custom options if needed
+app.use(cors({
+  origin: ['http://localhost:3001', 'http://localhost:3000'], // Allow both ports
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true, // Enable credentials
+  preflightContinue: false, // Updated value
+  optionsSuccessStatus: 204
+}));
+
+// Add CorsMiddleware before routes
+app.use(require('./Middleware/CorsMiddleware'));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 
-
 app.use("/api/docs", CourseRoutes);
 app.use("/api/student", StudentRoutes);
 app.use("/api/groups", GroupRoutes);
-app.use("/api/auth",AuthRoutes);
-app.use("/api/lecturers",lecturerRoutes);
-
-
-
-
+app.use("/api/auth", AuthRoutes);
+app.use("/api/lecturers", lecturerRoutes);
+app.use("/api/timetables", timetableRoutes);
 
 // Global Error Handling Middleware (optional)
 app.use((err, req, res, next) => {
   console.error(err.stack); // Logs error stack to console
   res.status(500).json({ message: "Something went wrong!" });
 });
+
+// Add this after all your routes
+app.use(errorHandler);
 
 // Start the server
 const PORT = process.env.PORT || 5000;

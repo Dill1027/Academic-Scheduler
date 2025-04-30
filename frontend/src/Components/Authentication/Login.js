@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa';
 import { ClipLoader } from 'react-spinners';
+import { loadFull } from "tsparticles";
+import Particles from "react-tsparticles";
+import { particlesConfig } from '../../config/particlesConfig';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,6 +12,14 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  const particlesInit = useCallback(async (engine) => {
+    await loadFull(engine);
+  }, []);
+
+  const particlesLoaded = useCallback(async (container) => {
+    // Optional: Add any initialization after particles are loaded
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -41,6 +52,12 @@ const Login = () => {
 
   return (
     <div style={containerStyle}>
+      <Particles
+        id="tsparticles"
+        init={particlesInit}
+        loaded={particlesLoaded}
+        options={particlesConfig}
+      />
       <div style={cardStyle}>
         <div style={headerStyle}>
           <h2 style={titleStyle}>
