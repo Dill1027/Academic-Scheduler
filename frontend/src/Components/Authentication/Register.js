@@ -29,7 +29,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "http://localhost:6001/api/auth/register",
         formData
       );
 

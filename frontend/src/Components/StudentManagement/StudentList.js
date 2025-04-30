@@ -15,12 +15,11 @@ const StudentList = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/student');
+        const response = await axios.get('http://localhost:6001/api/student');
         setStudents(response.data);
         setIsLoading(false);
-      } catch (err) {
-        console.error("Error fetching student data", err);
-        setError("Failed to load student data. Please try again.");
+      } catch (error) {
+        setError(error.message);
         setIsLoading(false);
       }
     };

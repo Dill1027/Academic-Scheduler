@@ -1,31 +1,23 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from 'sweetalert2';
+import { useNavigate } from "react-router-dom";
 
-const AdminReview = () => {
+function AdminReview() {
   const [pendingStudents, setPendingStudents] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Fetch only pending students
   useEffect(() => {
     const fetchPendingStudents = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/api/student", {
-          params: { status: "pending" }
-        });
-        
-        // Ensure we only get students with pending status
-        const filteredStudents = response.data.filter(student => 
-          student.status && student.status.toLowerCase() === "pending"
-        );
-        
-        setPendingStudents(filteredStudents);
-        setError(null);
+        const response = await axios.get("http://localhost:6001/api/docs/pending");
+        setPendingStudents(response.data);
       } catch (err) {
-        console.error("Error fetching pending students:", err);
-        setError("Failed to load pending students. Please try again.");
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -164,6 +156,6 @@ const AdminReview = () => {
       </div>
     </div>
   );
-};
+}
 
 export default AdminReview;

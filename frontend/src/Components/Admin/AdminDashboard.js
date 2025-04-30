@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaChalkboardTeacher, FaUserGraduate, FaBook, FaCog } from "react-icons/fa";
+import { FaUserGraduate, FaChalkboardTeacher, FaBook, FaCog } from "react-icons/fa";
 
 function AdminDashboard() {
     const navigate = useNavigate();
@@ -14,29 +14,29 @@ function AdminDashboard() {
             title: "Lecturer Management",
             description: "Manage lecturer details, subjects, and schedules",
             icon: <FaChalkboardTeacher size={40} />,
-            color: "linear-gradient(135deg, #3f51b5, #2196f3)",
+            color: "linear-gradient(135deg, #3498db, #2c3e50)",
             path: "/lecturerDashbord"
         },
         {
             title: "Student Management",
             description: "Manage student details, enrollments, and records",
             icon: <FaUserGraduate size={40} />,
-            color: "linear-gradient(135deg, #4caf50, #8bc34a)",
+            color: "linear-gradient(135deg, #2ecc71, #27ae60)",
             path: "/studentManagement"
         },
         {
             title: "Module Management",
             description: "Manage subjects, schedules, and curriculum",
             icon: <FaBook size={40} />,
-            color: "linear-gradient(135deg, #ff9800, #ffc107)",
+            color: "linear-gradient(135deg, #f39c12, #e74c3c)",
             path: "/course"
         },
         {
-            title: "System Settings",
-            description: "Configure system preferences and settings",
+            title: "Timetable Management",
+            description: "Create and manage class schedules and timetables",
             icon: <FaCog size={40} />,
-            color: "linear-gradient(135deg, #9c27b0, #e91e63)",
-            path: "/settings"
+            color: "linear-gradient(135deg, #9b59b6, #8e44ad)",
+            path: "/timetable"
         }
     ];
 
@@ -62,6 +62,26 @@ function AdminDashboard() {
                     </div>
                 ))}
             </div>
+
+            {/* For animations to work, we need to inject the keyframes */}
+            <style>
+                {`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(20px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                
+                @media (max-width: 768px) {
+                    .dashboard-grid {
+                        grid-template-columns: 1fr;
+                    }
+                    
+                    .dashboard-title {
+                        font-size: 2rem;
+                    }
+                }
+                `}
+            </style>
         </div>
     );
 }

@@ -22,7 +22,7 @@ The **Academic Scheduler** is a web application designed to manage and create co
 ## Features 🚀
 
 - **Admin Panel**: Admins can manage courses, faculties, students, lecturers, and timetables. 🧑‍💼
-- **Timetable Generation**: Conflict-free scheduling for students, lecturers, and rooms. 🏫
+- **Timetable Generation**: Conflict-free scheduling for students, lecturers, and venus. 🏫
 - **User Management**: Admins can add, edit, and delete users (students and lecturers). 👨‍💻👩‍💻
 - **Role-based Access Control**: Different access rights for Admin and Managers. 🔑
 
@@ -50,7 +50,7 @@ The 2nd Manager focuses on the management of students and lecturers:
 The 3rd Manager is responsible for timetable management:
 - Creating and editing timetables for both students and lecturers. 🗓️
 - Ensuring that there are no conflicts in scheduling. ❌
-- Managing room allocations and ensuring that each event has an appropriate location. 🏫📍
+- Managing venu allocations and ensuring that each event has an appropriate location. 🏫📍
 
 ## Installation 🛠️
 
@@ -93,7 +93,7 @@ Before running the project, make sure you have the following installed:
      npm start
      ```
 
-5. Visit `http://localhost:3000` for the frontend and `http://localhost:5000` for the backend.
+5. Visit `http://localhost:3000` for the frontend and `http://localhost:6001` for the backend.
 
 ## Contributing 🤝
 

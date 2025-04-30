@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+<<<<<<< Updated upstream
 const Timetable = require('../models/Timetable');
 
 // Create a new timetable entry
@@ -64,3 +65,16 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
+=======
+const {
+  generateTimetables,
+  getAllTimetables,
+  getFilteredTimetables
+} = require('../Controllers/timetable.controller');
+
+router.post('/generate', generateTimetables);
+router.get('/', getAllTimetables);
+router.get('/filter', getFilteredTimetables);
+
+module.exports = router;
+>>>>>>> Stashed changes

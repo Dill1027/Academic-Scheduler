@@ -68,7 +68,8 @@ function Fourth() {
         setError("");
 
         try {
-            const response = await axios.get(`http://localhost:5000/api/docs/year/4th Year`);
+            const response = await axios.get(`http://localhost:6001/api/docs/year/4th Year`);
+            // Ensure all arrays exist and are properly initialized
             const processedData = response.data.map(module => ({
                 ...module,
                 lectures: module.lectures || [],
@@ -111,7 +112,7 @@ function Fourth() {
         e.stopPropagation();
         if (!doc) return;
         const link = document.createElement("a");
-        link.href = `http://localhost:5000/uploads/${doc}`;
+        link.href = `http://localhost:6001/uploads/${doc}`;
         link.download = originalName || "document";
         link.click();
         showAlert('success', 'Download Started', 'Your file download has started.');
@@ -127,7 +128,7 @@ function Fourth() {
         
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:5000/api/docs/delete/${id}`);
+                await axios.delete(`http://localhost:6001/api/docs/delete/${id}`);
                 showAlert('success', 'Deleted!', 'Module has been deleted.');
                 fetchData();
             } catch (error) {
@@ -204,7 +205,7 @@ function Fourth() {
                 }
             });
 
-            await axios.put(`http://localhost:5000/api/docs/update/${currentModule._id}`, formData, {
+            await axios.put(`http://localhost:6001/api/docs/update/${currentModule._id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -300,7 +301,6 @@ function Fourth() {
                                                         </strong>
                                                         {(item.lectures || []).map((lecture, idx) => (
                                                             <div className="lec" key={idx}>
-                                                                {/* <i className="bi bi-person me-2"></i> */}
                                                                 {lecture}
                                                             </div>
                                                         ))}
@@ -326,7 +326,6 @@ function Fourth() {
                                                                         rel="noopener noreferrer"
                                                                         className="d-block"
                                                                     >
-                                                                        {/* <i className="bi bi-file-earmark me-2"></i> */}
                                                                         {originalName}
                                                                     </a>
                                                                     <button

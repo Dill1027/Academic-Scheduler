@@ -1,12 +1,11 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import Container from "@mui/material/Container";
-import theme from './theme';
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
+import { ThemeProvider, createTheme, useTheme } from "@mui/material/styles";
+import { CssBaseline, Typography, Box, Button, Paper } from "@mui/material";
+import { ArrowBack, CloudDownload } from "@mui/icons-material";
 
+// Authentication Components
 import Home from "./Components/Home";
-
 import Profile from "./Components/StudentManagement/Profile";
 import StudentRegisterForm from "./Components/StudentManagement/StudentRegisterForm";
 import CurrentStudent from "./Components/Authentication/CurrentStudent";
@@ -20,16 +19,13 @@ import LecturerRegisterForm from "./Components/Authentication/LectureRegisterFor
 import StudentList from "./Components/StudentManagement/StudentList";
 import StudentLogin from "./Components/Authentication/StudentLogin";
 import ProfileUpdate from "./Components/StudentManagement/ProfileUpdate";
-//lecturer managmnet 
-import AddLecturerForm from  "./Components/lecturerManagement/AddLecturerForm";
+
+// Lecturer Management Components 
+import AddLecturerForm from "./Components/lecturerManagement/AddLecturerForm";
 import LecturerDetails from "./Components/lecturerManagement/LecturerDetails";
 import UpdateLecturer from "./Components/lecturerManagement/UpdateLecturer";
 import LecturerDashboard from "./Components/lecturerManagement/LecturerDashboard";
 import LecturerDetailsView from "./Components/lecturerManagement/LecturerDetailsView";
-import ModuleOptions from "./Components/lecturerManagement/moduleOptions";
-
-
-import './App.css';
 
 // Academic Scheduler Components
 import Coursed from "./Components/CourseManagement/coursedash";
@@ -49,54 +45,54 @@ import YearSelection from './Components/timetable/YearSelection';
 import SpecializationSelection from './Components/timetable/SpecializationSelection';
 import TimetableOptions from './Components/timetable/TimetableOptions';
 
+const theme = createTheme();
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Routes>
-          <Route path="/login" element={<Login/>}/>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile/:id" element={<Profile />} /> 
-          <Route path="/form" element={<StudentRegisterForm />} />
-          <Route path="/currentform" element={<CurrentStudent />} />
-          <Route path="/lecturerform" element={<LecturerRegisterForm/>} />
-          <Route path="/studentList" element={<StudentList/>} />
-          <Route path="/register" element={<Register/>} />
-          <Route path="/dashboard" element={<Dashboard/>} />
-          <Route path="/userbase" element={<UserBaseLogin/>} />
-          <Route path="/adminReview" element={<AdminReview/>} />
-          <Route path="/dashboardd" element={<StudentDashboard/>} />
-          <Route path="/adminDashboard" element={<AdminDashboard/>} />
-          <Route path="/studentlogin" element={<StudentLogin />} />
-          <Route path="/studentManagement" element={<StudentManagement/>} />
-          <Route path="/profileUpdate/:id" element={<ProfileUpdate />} />
+      <Routes>
+        {/* Authentication Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/form" element={<StudentRegisterForm />} />
+        <Route path="/currentform" element={<CurrentStudent />} />
+        <Route path="/lecturerform" element={<LecturerRegisterForm />} />
+        <Route path="/studentList" element={<StudentList />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/userbase" element={<UserBaseLogin />} />
+        <Route path="/adminReview" element={<AdminReview />} />
+        <Route path="/dashboardd" element={<StudentDashboard />} />
+        <Route path="/adminDashboard" element={<AdminDashboard />} />
+        <Route path="/studentlogin" element={<StudentLogin />} />
+        <Route path="/studentManagement" element={<StudentManagement />} />
+        <Route path="/profileUpdate/:id" element={<ProfileUpdate />} />
 
-          {/* Lecturer Routes*/}
-          <Route path="/addLecturer" element={<AddLecturerForm />}/>
-          <Route path="/lecturerDetails" element={<LecturerDetails />} />
-          <Route path="/lecturers/update/:id" element={<UpdateLecturer />} />
-          <Route path="/lecturerDashbord" element={<LecturerDashboard />} />
-          <Route path="/lectureview" element={<LecturerDetailsView />} />
-          <Route path="/moduleOption" element={<ModuleOptions />} />
+        {/* Lecturer Routes */}
+        <Route path="/addLecturer" element={<AddLecturerForm />} />
+        <Route path="/lecturerDetails" element={<LecturerDetails />} />
+        <Route path="/lecturers/update/:id" element={<UpdateLecturer />} />
+        <Route path="/lecturerDashbord" element={<LecturerDashboard />} />
+        <Route path="/lectureview" element={<LecturerDetailsView />} />
 
-          {/* Academic Scheduler Routes */}
-          <Route path="/course" element={<Coursed />} />
-          <Route path="/AddDoc" element={<AddDoc />} />
-          <Route path="/StudentCourse" element={<StudentCourse />} />
-          <Route path="/first" element={<FirstYear />} />
-          <Route path="/second" element={<Second />} />
-          <Route path="/Third" element={<Third />} />
-          <Route path="/Fourth" element={<Fourth />} />
-          <Route path="/coursereport" element={<Coursereport />} />
-          <Route path="/edit/:id" element={<EditDoc />} />
+        {/* Academic Scheduler Routes */}
+        <Route path="/course" element={<Coursed />} />
+        <Route path="/AddDoc" element={<AddDoc />} />
+        <Route path="/StudentCourse" element={<StudentCourse />} />
+        <Route path="/first" element={<FirstYear />} />
+        <Route path="/second" element={<Second />} />
+        <Route path="/Third" element={<Third />} />
+        <Route path="/Fourth" element={<Fourth />} />
+        <Route path="/coursereport" element={<Coursereport />} />
+        <Route path="/edit/:id" element={<EditDoc />} />
 
-          {/* Timetable Routes */}
-          <Route path="/timetable" element={<YearSelection />} />
-          <Route path="/specializations/:yearId" element={<SpecializationSelection />} />
-          <Route path="/timetable-options/:yearId/:specializationId" element={<TimetableOptions />} />
-        </Routes>
-      </Container>
+        {/* Timetable Routes */}
+        <Route path="/timetable" element={<YearSelection />} />
+        <Route path="/timetable/year/:year" element={<SpecializationSelection />} />
+        <Route path="/timetable/view/:year/:specialization" element={<TimetableOptions />} />
+      </Routes>
     </ThemeProvider>
   );
 }

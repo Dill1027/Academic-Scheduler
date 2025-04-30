@@ -69,6 +69,7 @@ function Third() {
 
         try {
             const response = await axios.get(`http://localhost:5000/api/docs/year/3rd Year`);
+            // Ensure all arrays exist and are properly initialized
             const processedData = response.data.map(module => ({
                 ...module,
                 lectures: module.lectures || [],
@@ -111,7 +112,7 @@ function Third() {
         e.stopPropagation();
         if (!doc) return;
         const link = document.createElement("a");
-        link.href = `http://localhost:5000/uploads/${doc}`;
+        link.href = `http://localhost:6001/uploads/${doc}`;
         link.download = originalName || "document";
         link.click();
         showAlert('success', 'Download Started', 'Your file download has started.');
@@ -128,7 +129,7 @@ function Third() {
         if (result.isConfirmed) {
             try {
                 await axios.delete(`http://localhost:5000/api/docs/delete/${id}`);
-                showAlert('success', 'Deleted!', 'Module has been deleted.');
+                alert("Module deleted successfully!");
                 fetchData();
             } catch (error) {
                 console.error("Error deleting module:", error);
@@ -204,7 +205,7 @@ function Third() {
                 }
             });
 
-            await axios.put(`http://localhost:5000/api/docs/update/${currentModule._id}`, formData, {
+            await axios.put(`http://localhost:6001/api/docs/update/${currentModule._id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -282,65 +283,45 @@ function Third() {
                                             style={{ cursor: "pointer" }}
                                         >
                                             <div className="main card-body">
-                                                <h5 className="mini1 card-title">
-                                                    <i className="bi bi-file-earmark-text me-2"></i>
-                                                    {item.moduleName}
-                                                </h5>
-                                                {item.description && (
-                                                    <p className="des1 card-text mt-3">
-                                                        <i className="bi bi-card-text me-2"></i>
-                                                        {item.description}
-                                                    </p>
-                                                )}
-                                                {(item.lectures || []).length > 0 && (
-                                                    <p className="des card-text">
-                                                        <strong className="name">
-                                                            <i className="bi bi-person-video3 me-2"></i>
-                                                            Lecturers:
-                                                        </strong>
-                                                        {(item.lectures || []).map((lecture, idx) => (
-                                                            <div className="lec" key={idx}>
-                                                                {/* <i className="bi bi-person me-2"></i> */}
-                                                                {lecture}
+                                                <h5 className="mini1 card-title">{item.moduleName}</h5>
+                                                <p className="des1 card-text mt-3">{item.description}</p>
+                                                <p className="des card-text">
+                                                    <strong className="name">Lecturers:</strong>
+                                                    {(item.lectures || []).map((lecture, idx) => (
+                                                        <div className="lec" key={idx}>{lecture}</div>
+                                                    ))}
+                                                </p>
+                                                <p className="des card-text">
+                                                    <strong className="name">Documents:</strong>
+                                                    {(item.documents || []).map((doc, idx) => {
+                                                        if (!doc) return null;
+                                                        const originalName = typeof doc === 'string' 
+                                                            ? doc.split("-").slice(1).join("-") 
+                                                            : doc.name || "Document";
+                                                        
+                                                        return (
+                                                            <div key={idx} className="lec d-flex gap-4">
+                                                                <a
+                                                                    href={`http://localhost:5000/uploads/${doc}`}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="d-block"
+                                                                >
+                                                                    {originalName}
+                                                                </a>
+                                                                <button
+                                                                    className="btn btn-link"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleDownload(doc, originalName);
+                                                                    }}
+                                                                >
+                                                                    Download
+                                                                </button>
                                                             </div>
-                                                        ))}
-                                                    </p>
-                                                )}
-                                                {(item.documents || []).length > 0 && (
-                                                    <p className="des card-text">
-                                                        <strong className="name">
-                                                            <i className="bi bi-file-earmark-arrow-down me-2"></i>
-                                                            Documents:
-                                                        </strong>
-                                                        {(item.documents || []).map((doc, idx) => {
-                                                            if (!doc) return null;
-                                                            const originalName = typeof doc === 'string' 
-                                                                ? doc.split("-").slice(1).join("-") 
-                                                                : doc.name || "Document";
-                                                            
-                                                            return (
-                                                                <div key={idx} className="lec d-flex gap-4 align-items-center">
-                                                                    <a
-                                                                        href={`http://localhost:5000/uploads/${doc}`}
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                        className="d-block"
-                                                                    >
-                                                                        {/* <i className="bi bi-file-earmark me-2"></i> */}
-                                                                        {originalName}
-                                                                    </a>
-                                                                    <button
-                                                                        className="btn btn-sm btn-outline-primary"
-                                                                        onClick={(e) => handleDownload(doc, originalName, e)}
-                                                                    >
-                                                                        <i className="bi bi-download me-1"></i>
-                                                                        Download
-                                                                    </button>
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </p>
-                                                )}
+                                                        );
+                                                    })}
+                                                </p>
                                                 {activeCard === item._id && (
                                                     <div className="edit mt-3 d-flex gap-2">
                                                         <button 
@@ -511,47 +492,47 @@ function Third() {
                                     Documents
                                 </Form.Label>
                                 {(currentModule.documents || []).map((doc, index) => (
-                                    <div key={index} className="mb-3">
-                                        <div className="d-flex align-items-center mb-2">
-                                            {doc instanceof File ? (
-                                                <>
-                                                    <i className="bi bi-file-earmark me-2"></i>
-                                                    <span>{doc.name}</span>
-                                                </>
-                                            ) : doc ? (
-                                                <>
-                                                    <a
-                                                        href={`http://localhost:5000/uploads/${doc}`}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="me-2"
-                                                    >
-                                                        <i className="bi bi-file-earmark me-2"></i>
-                                                        {typeof doc === 'string' ? doc.split("-").slice(1).join("-") : "Document"}
-                                                    </a>
-                                                </>
-                                            ) : null}
-                                        </div>
-                                        <div className="d-flex gap-2">
-                                            <Form.Control
-                                                type="file"
-                                                className="flex-grow-1"
-                                                accept=".pdf,.doc,.docx,image/*"
-                                                onChange={(e) => handleDocumentChange(index, e.target.files[0])}
-                                            />
-                                            <Button
-                                                variant="outline-danger"
-                                                onClick={() => {
-                                                    const updatedDocuments = (currentModule.documents || []).filter((_, i) => i !== index);
-                                                    setCurrentModule(prev => ({
-                                                        ...prev,
-                                                        documents: updatedDocuments
-                                                    }));
-                                                }}
-                                            >
-                                                <i className="bi bi-trash"></i>
-                                            </Button>
-                                        </div>
+                                    <div key={index} className="d-flex align-items-center mb-2">
+                                        {doc instanceof File ? (
+                                            <>
+                                                <Form.Control
+                                                    type="file"
+                                                    className="me-2"
+                                                    accept=".pdf,.doc,.docx,image/*"
+                                                    onChange={(e) => handleDocumentChange(index, e.target.files[0])}
+                                                />
+                                                <span>{doc.name}</span>
+                                            </>
+                                        ) : doc ? (
+                                            <>
+                                                <a
+                                                    href={`http://localhost:5000/uploads/${doc}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="me-2"
+                                                >
+                                                    {typeof doc === 'string' ? doc.split("-").slice(1).join("-") : "Document"}
+                                                </a>
+                                                <Form.Control
+                                                    type="file"
+                                                    className="me-2"
+                                                    accept=".pdf,.doc,.docx,image/*"
+                                                    onChange={(e) => handleDocumentChange(index, e.target.files[0])}
+                                                />
+                                            </>
+                                        ) : null}
+                                        <Button
+                                            variant="danger"
+                                            onClick={() => {
+                                                const updatedDocuments = (currentModule.documents || []).filter((_, i) => i !== index);
+                                                setCurrentModule(prev => ({
+                                                    ...prev,
+                                                    documents: updatedDocuments
+                                                }));
+                                            }}
+                                        >
+                                            Remove
+                                        </Button>
                                     </div>
                                 ))}
                                 <Button

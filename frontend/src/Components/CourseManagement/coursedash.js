@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Header from "../Navbar/Header";
-import Footer from "../Navbar/footer";
+import Footer from "../Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './coursed.css';
 import AddDoc from "../CourseManagement/AddDoc"; // Import your AddDoc component

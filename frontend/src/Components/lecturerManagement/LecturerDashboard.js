@@ -19,10 +19,9 @@ const LecturerDashboard = () => {
   useEffect(() => {
     const fetchGenderDistribution = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/lecturers/gender-distribution");
-        
+        const response = await axios.get("http://localhost:6001/api/lecturers/gender-distribution");
         // Transform the array into an object with gender as key and count as value
-        const genderCount = response.data.data.reduce((acc, { _id, count }) => {
+        const genderCount = response.data.reduce((acc, { _id, count }) => {
           acc[_id] = count;
           return acc;
         }, {});
@@ -157,6 +156,7 @@ const LecturerDashboard = () => {
         <div style={{ display: "flex", gap: "20px" }}>
           <button onClick={() => navigate("/home")} style={navButtonStyle}>Home</button>
           <button onClick={() => navigate("/lectureview")} style={navButtonStyle}>Lecturers</button>
+          <button onClick={() => navigate("/students")} style={navButtonStyle}>Student List</button>
           <button onClick={handleDownloadReport} style={navButtonStyle}>Lecture Details Report</button>
           <button onClick={() => navigate("/reviews")} style={navButtonStyle}>Student Reviews</button>
           <button onClick={() => navigate("/userbase")} style={{ ...navButtonStyle, backgroundColor: "#dc3545" }}>Logout</button>
