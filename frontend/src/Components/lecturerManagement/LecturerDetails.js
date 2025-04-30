@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./LecturerDetails.css"; // Import the CSS file
 
-
 const LecturerDetails = () => {
   const [lecturers, setLecturers] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,6 +19,8 @@ const LecturerDetails = () => {
     address: "",
     nic: ""
   });
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchLecturers = async () => {
@@ -53,6 +54,15 @@ const LecturerDetails = () => {
     fetchLecturers();
   }, []);
 
+  // Function to show success popup
+  const showSuccess = (message) => {
+    setSuccessMessage(message);
+    setShowSuccessPopup(true);
+    setTimeout(() => {
+      setShowSuccessPopup(false);
+    }, 3000);
+  };
+
   const TableCell = ({ children, colSpan }) => (
     <td 
       colSpan={colSpan}
@@ -73,6 +83,7 @@ const LecturerDetails = () => {
       }
       
       setLecturers(prev => prev.filter(lecturer => lecturer._id !== lecturerId));
+      showSuccess("Lecturer deleted successfully!");
     } catch (error) {
       setErrorMessage("Error deleting lecturer: " + error.message);
       console.error(error);
@@ -136,6 +147,7 @@ const LecturerDetails = () => {
       
       setEditingLecturer(null);
       setErrorMessage("");
+      showSuccess("Lecturer updated successfully!");
     } catch (error) {
       setErrorMessage("Error updating lecturer: " + error.message);
       console.error(error);
@@ -150,6 +162,16 @@ const LecturerDetails = () => {
         {errorMessage && (
           <div className="error-message">
             {errorMessage}
+          </div>
+        )}
+
+        {/* Success Popup */}
+        {showSuccessPopup && (
+          <div className="success-popup">
+            <div className="success-popup-content">
+              <span className="success-popup-icon">✓</span>
+              <span className="success-popup-message">{successMessage}</span>
+            </div>
           </div>
         )}
 

@@ -15,7 +15,7 @@ import StudentDashboard from "./Components/StudentManagement/StudentDashboard";
 import LecturerRegisterForm from "./Components/Authentication/LectureRegisterForm";
 import StudentList from "./Components/StudentManagement/StudentList";
 import StudentLogin from "./Components/Authentication/StudentLogin";
-
+import ProfileUpdate from "./Components/StudentManagement/ProfileUpdate";
 //lecturer managmnet 
 import AddLecturerForm from  "./Components/lecturerManagement/AddLecturerForm";
 import LecturerDetails from "./Components/lecturerManagement/LecturerDetails";
@@ -63,6 +63,7 @@ function App() {
         <Route path="/adminDashboard" element={<AdminDashboard/>} />
         <Route path="/studentlogin" element={<StudentLogin />} />
         <Route path="/studentManagement" element={<StudentManagement/>} />
+        <Route path="/profileUpdate/:id" element={<ProfileUpdate />} />
 
        {/* Lecturer Routes*/}
         <Route path="/addLecturer" element={<AddLecturerForm />}/>

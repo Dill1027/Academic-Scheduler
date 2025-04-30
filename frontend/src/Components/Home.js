@@ -283,7 +283,7 @@ const Home = () => {
               fontWeight: 700,
               marginBottom: "40px",
               color: "#2c3e50"
-            }}>Our Faculties</h2>
+            }}>Our Specializations</h2>
             <div style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
