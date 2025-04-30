@@ -31,9 +31,14 @@
     "react-spinners": "^0.13.8",
     "react-tsparticles": "^2.9.3",
     "sweetalert": "^2.1.2",
+<<<<<<< HEAD
     "sweetalert2": "^11.10.5",
     "sweetalert2-react-content": "^5.0.7",
     "tsparticles": "^2.9.3",
+=======
+    "sweetalert2": "^11.19.1",
+    "sweetalert2-react-content": "^5.1.0",
+>>>>>>> origin/new-main
     "web-vitals": "^2.1.4",
     "yup": "^1.6.1"
   },
