@@ -1,0 +1,40 @@
+.modules-section {
+    margin: 20px 0;
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.module-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.module-checkbox:hover {
+    background: #e9ecef;
+}
+
+.module-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+}

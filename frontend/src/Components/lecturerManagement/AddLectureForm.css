@@ -147,3 +147,45 @@
         opacity: 1;
     }
 }
+
+.modules-section {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.module-checkbox {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    gap: 8px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.module-checkbox:hover {
+    background: #e9ecef;
+}
+
+.module-checkbox input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.module-checkbox span {
+    font-size: 14px;
+    color: #495057;
+}

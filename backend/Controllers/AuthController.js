@@ -11,13 +11,19 @@ exports.register = async (req, res) => {
     // Check if user already exists
     let user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ msg: "User already exists" });
+      return res.status(400).json({ 
+        success: false,
+        message: "User already exists" 
+      });
     }
 
     // Validate role
     const allowedRoles = ["NewStudent", "CurrentStudent", "Lecturer", "Admin"];
     if (!allowedRoles.includes(role)) {
-      return res.status(400).json({ msg: "Invalid role specified" });
+      return res.status(400).json({ 
+        success: false,
+        message: "Invalid role specified" 
+      });
     }
 
     // Hash the password
@@ -25,13 +31,26 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create new user
-    user = new User({ name, email, password: hashedPassword, role });
+    user = new User({ 
+      name, 
+      email, 
+      password: hashedPassword, 
+      role 
+    });
+
     await user.save();
 
-    res.status(201).json({ msg: "User registered successfully" });
+    res.status(201).json({ 
+      success: true,
+      message: "User registered successfully" 
+    });
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error");
+    console.error("Registration error:", err);
+    res.status(500).json({ 
+      success: false,
+      message: "Server error during registration",
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 };
 
