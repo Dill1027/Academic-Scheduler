@@ -4,9 +4,9 @@ import {
   Button, IconButton, Typography, Box, CircularProgress, Alert 
 } from '@mui/material';
 import { Delete, Edit, Refresh } from '@mui/icons-material';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+import { getTimetableList, deleteTimetableEntry } from '../../services/api';
 
 const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
   borderRadius: '12px',
@@ -62,15 +62,11 @@ const TimetableList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchTimetable();
-  }, []);
-
   const fetchTimetable = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8081/api/timetable');
-      setTimetable(response.data);
+      const response = await getTimetableList();
+      setTimetable(response.data || []);
       setError(null);
     } catch (error) {
       console.error('Error fetching timetable:', error);
@@ -80,9 +76,13 @@ const TimetableList = () => {
     }
   };
 
+  useEffect(() => {
+    fetchTimetable();
+  }, []);
+
   const deleteEntry = async (id) => {
     try {
-      await axios.delete(`http://localhost:8081/api/timetable/${id}`);
+      await deleteTimetableEntry(id);
       fetchTimetable();
     } catch (error) {
       console.error('Error deleting entry:', error);

@@ -19,3 +19,15 @@ export const getFilteredTimetables = async (year, specialization) => {
 
   return await api.get("/timetables/filter", { params });
 };
+
+export const getTimetableList = async () => {
+  return await api.get("/timetables/list");
+};
+
+export const deleteTimetableEntry = async (id) => {
+  return await api.delete(`/timetables/${id}`);
+};
+
+export const editTimetableEntry = async (id, data) => {
+  return await api.put(`/timetables/${id}`, data);
+};

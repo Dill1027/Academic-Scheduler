@@ -42,8 +42,8 @@ import Coursereport from "./Components/CourseManagement/report";
 
 // Timetable Components
 import YearSelection from './Components/timetable/YearSelection';
-import SpecializationSelection from './Components/timetable/SpecializationSelection';
 import TimetableOptions from './Components/timetable/TimetableOptions';
+import Specialization from './Components/timetable/Specialization';
 
 const theme = createTheme();
 
@@ -90,8 +90,10 @@ function App() {
 
         {/* Timetable Routes */}
         <Route path="/timetable" element={<YearSelection />} />
-        <Route path="/timetable/year/:year" element={<SpecializationSelection />} />
         <Route path="/timetable/view/:year/:specialization" element={<TimetableOptions />} />
+
+        {/* Specialization Route */}
+        <Route path="/specializations/:id" element={<Specialization />} />
       </Routes>
     </ThemeProvider>
   );
