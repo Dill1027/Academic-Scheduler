@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaArrowRight, FaUniversity, FaGraduationCap, FaBook, FaLaptopCode } from "react-icons/fa";
 import { motion } from "framer-motion";
 import Navbar from "./Navbar";
-import Footer from "./Footer";
+import Footer from "./Navbar/footer";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -34,10 +34,13 @@ const Home = () => {
 
   const faculties = [
     { name: "Information Technology", icon: <FaLaptopCode size={32} /> },
+    { name: "Software Engineering", icon: <FaLaptopCode size={32} /> },
+    { name: "Interactive Media", icon: <FaLaptopCode size={32} /> },
     { name: "Cyber Security", icon: <FaLaptopCode size={32} /> },
     { name: "Data Science", icon: <FaLaptopCode size={32} /> },
-    { name: "Software Engineering", icon: <FaLaptopCode size={32} /> },
-    { name: "Interactive Media", icon: <FaLaptopCode size={32} /> }
+    { name: "Information Systems Engineering", icon: <FaLaptopCode size={32} /> },
+    { name: "Computer Systems & Network Engineering", icon: <FaLaptopCode size={32} /> },
+    { name: "Artificial Intelligence", icon: <FaLaptopCode size={32} /> }
   ];
 
   const stats = [
@@ -238,6 +241,7 @@ const Home = () => {
               whileTap={{ 
                 transform: "scale(0.98)"
               }}
+              onClick={() => navigate("/blog")}
             >
               Learn More
             </motion.button>
@@ -953,7 +957,9 @@ const Home = () => {
               gap: "10px",
               transition: "all 0.3s ease",
               boxShadow: "0 10px 20px rgba(0,0,0,0.1)"
-            }}>
+            }}
+            onClick={() => navigate("/login")}
+            >
               Apply Now
             </button>
             

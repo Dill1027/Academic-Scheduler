@@ -48,6 +48,7 @@ import StudentReview from './Components/StudentManagement/StudentReview';
 
 // About Contact Components
 import TeamContact from "./Components/AboutContact/TeamContact";
+import Blog from './Components/Blog/Blog';  // Update import path
 
 const theme = createTheme();
 
@@ -106,6 +107,7 @@ function App() {
 
         {/* About Contact Route */}
         <Route path="/team-contact" element={<TeamContact />} />
+        <Route path="/blog" element={<Blog />} />
       </Routes>
     </ThemeProvider>
   );
