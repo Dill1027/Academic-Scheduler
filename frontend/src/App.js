@@ -46,6 +46,9 @@ import TimetableOptions from './Components/timetable/TimetableOptions';
 import Specialization from './Components/timetable/Specialization';
 import StudentReview from './Components/StudentManagement/StudentReview';
 
+// About Contact Components
+import TeamContact from "./Components/AboutContact/TeamContact";
+
 const theme = createTheme();
 
 function App() {
@@ -100,6 +103,9 @@ function App() {
 
         {/* Specialization Route */}
         <Route path="/specializations/:id" element={<Specialization />} />
+
+        {/* About Contact Route */}
+        <Route path="/team-contact" element={<TeamContact />} />
       </Routes>
     </ThemeProvider>
   );
