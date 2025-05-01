@@ -239,25 +239,25 @@ describe('Timetable Conflict Detection', () => {
    - User experience testing
 
 ### Support Channels
-- **Discord Community**
-- **Stack Overflow Tag**
-- **Monthly Office Hours**
-- **Priority Support** for enterprise
+- **GitHub Discussions** for community engagement
+- **Dedicated Support Portal** for bug reporting
+- **Bi-weekly Webinars** for training
+- **Email Support** for registered users
 
 ## License & Governance 📜
 
-### Open Core Model
-- MIT License for core system
-- Commercial extensions available
-- Contributor License Agreement
+### Licensing
+- Open Source under MIT License
+- Code freely available on GitHub
+- Documentation under CC BY 4.0
 
-### Steering Committee
-- Elected maintainers
-- Institutional partners
-- Community representatives
+### Project Leadership
+- Core development team
+- Academic advisory board
+- Technical steering committee
 
 ---
 
-🚀 **Ready to transform academic scheduling?** Visit our [demo site](https://demo.academicscheduler.com) or [contact sales](mailto:sales@academicscheduler.com) for enterprise solutions.
+🎓 **Experience efficient academic scheduling!** Check out our [GitHub repository](https://github.com/academic-scheduler) or reach out through [GitHub Discussions](https://github.com/academic-scheduler/discussions).
 
-Built with ❤️ by the Academic Scheduler Team | [Contribute](https://github.com/academic-scheduler/.github/blob/main/CONTRIBUTING.md) | [Sponsor](https://github.com/sponsors/academic-scheduler)
+Built with passion by students, for students | [Report Issues](https://github.com/academic-scheduler/issues) | [Fork on GitHub](https://github.com/academic-scheduler/fork)
