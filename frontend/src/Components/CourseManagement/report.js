@@ -68,7 +68,9 @@ const OrganizedCoursesTable = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:5000/api/docs');
+      const response = await axios.get('http://localhost:6001/api/docs', {
+        withCredentials: true
+      });
       setCourses(response.data);
       showSuccessToast('Courses loaded successfully');
     } catch (err) {
@@ -312,8 +314,10 @@ const OrganizedCoursesTable = () => {
             </table>
           </div>
         )}
+      </div>
 
-        <style jsx>{`
+      <style>
+        {`
           .organized-courses-container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -547,8 +551,8 @@ const OrganizedCoursesTable = () => {
               width: 80px;
             }
           }
-        `}</style>
-      </div>
+        `}
+      </style>
       <Footer />
     </div>
   );
