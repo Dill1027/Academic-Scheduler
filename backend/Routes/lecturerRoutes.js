@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const Lecturer = require("../Model/lecturerModel");
-const  User = require("../Model/User");
+const User = require("../Model/User");
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
@@ -33,6 +33,7 @@ const errorResponse = (res, status, message, error = null) => {
 // Add new lecturer
 router.post("/add", upload.none(), async (req, res) => {
     try {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         console.log("Request body:", req.body);
         
         const {
@@ -161,6 +162,7 @@ router.post("/add", upload.none(), async (req, res) => {
 // Get all lecturers (without passwords)
 router.get("/all", async (req, res) => {
     try {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         const lecturers = await Lecturer.find().select('-password').sort({ createdAt: -1 });
         res.status(200).json({ 
             success: true,
@@ -177,6 +179,7 @@ router.get("/all", async (req, res) => {
 // Get lecturer by ID (without password)
 router.get("/id/:id", async (req, res) => {
     try {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return errorResponse(res, 400, "Invalid lecturer ID format");
         }
@@ -199,6 +202,7 @@ router.get("/id/:id", async (req, res) => {
 // Get lecturer by lecturerId (without password)
 router.get("/lecturer-id/:lecturerId", async (req, res) => {
     try {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         const lecturer = await Lecturer.findOne({ lecturerId: req.params.lecturerId }).select('-password');
         if (!lecturer) {
             return errorResponse(res, 404, "Lecturer not found");
@@ -217,6 +221,7 @@ router.get("/lecturer-id/:lecturerId", async (req, res) => {
 // Update lecturer
 router.put("/:id", upload.none(), async (req, res) => {
     try {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return errorResponse(res, 400, "Invalid lecturer ID format");
         }
@@ -266,6 +271,7 @@ router.put("/:id", upload.none(), async (req, res) => {
 // Delete lecturer
 router.delete("/:id", async (req, res) => {
     try {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return errorResponse(res, 400, "Invalid lecturer ID format");
         }
@@ -288,6 +294,7 @@ router.delete("/:id", async (req, res) => {
 // Gender distribution for pie chart
 router.get("/gender-distribution", async (req, res) => {
     try {
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         const genderCount = await Lecturer.aggregate([
             { $group: { _id: "$gender", count: { $sum: 1 } } },
             { $sort: { count: -1 } }
@@ -307,15 +314,17 @@ router.get("/gender-distribution", async (req, res) => {
 // Generate and download lecturer report
 router.get("/download-report", async (req, res) => {
     try {
+        // Set CORS headers explicitly for this route
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=lecturers-report.pdf');
+        
         // Fetch all lecturers from database (without passwords)
         const lecturers = await Lecturer.find().select('-password').sort({ createdAt: -1 });
         
         // Create a new PDF document
         const doc = new PDFDocument({ margin: 50 });
-        
-        // Set response headers for PDF download
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=lecturers-report.pdf');
         
         // Pipe the PDF to the response
         doc.pipe(res);

@@ -15,11 +15,14 @@ const StudentList = () => {
   useEffect(() => {
     const fetchStudents = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/student');
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/student`, {
+          withCredentials: true
+        });
         setStudents(response.data);
         setIsLoading(false);
       } catch (error) {
-        setError(error.message);
+        console.error("Error fetching students:", error);
+        setError("Failed to fetch students");
         setIsLoading(false);
       }
     };

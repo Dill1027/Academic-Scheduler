@@ -83,13 +83,13 @@ router.get("/student", async (req, res) => {
     }
 });
 
-// Add this new route for pending students
-router.get("/pending", async (req, res) => {
+// Get pending students
+router.get('/pending', async (req, res) => {
     try {
-        const pendingStudents = await Student.find({ status: "pending" });
+        const pendingStudents = await Student.find({ status: 'pending' });
         res.json(pendingStudents);
     } catch (error) {
-        res.status(500).json({ error: "Error fetching pending students." });
+        res.status(500).json({ message: error.message });
     }
 });
 

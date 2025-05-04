@@ -23,10 +23,43 @@ const Register = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    if (!formData.name.trim()) {
+      setError("Name is required");
+      return false;
+    }
+    if (!formData.email.trim()) {
+      setError("Email is required");
+      return false;
+    }
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      setError("Please enter a valid email address");
+      return false;
+    }
+    if (!formData.password) {
+      setError("Password is required");
+      return false;
+    }
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return false;
+    }
+    if (formData.role === "Admin" && !formData.adminCode) {
+      setError("Admin code is required for admin registration");
+      return false;
+    }
+    return true;
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setError("");
+
+    if (!validateForm()) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -35,12 +68,11 @@ const Register = () => {
         {
           headers: {
             'Content-Type': 'application/json'
-          },
-          validateStatus: status => status < 500 // Prevent axios from throwing for 4xx errors
+          }
         }
       );
 
-      if (response.status === 201) {
+      if (response.status === 201 || response.status === 200) {
         Swal.fire({
           icon: 'success',
           title: 'Registration Successful!',
@@ -54,14 +86,13 @@ const Register = () => {
             navigate("/login");
           }
         });
-      } else {
-        setError(response.data.message || "Registration failed. Please try again.");
       }
     } catch (err) {
       console.error("Registration error:", err);
       setError(
         err.response?.data?.message || 
-        "Network error occurred. Please check your connection and try again."
+        err.response?.data?.error ||
+        "Registration failed. Please check your details and try again."
       );
     } finally {
       setIsLoading(false);

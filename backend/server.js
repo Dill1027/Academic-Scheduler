@@ -33,11 +33,12 @@ connectDB();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000', // Frontend URL
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range', 'Content-Disposition'],
     credentials: true,
-    exposedHeaders: ['Content-Disposition']
+    optionsSuccessStatus: 200
 }));
 
 // Rate limiting configuration

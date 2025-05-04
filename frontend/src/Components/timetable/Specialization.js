@@ -9,11 +9,13 @@ import { styled, alpha } from '@mui/material/styles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Particles from 'react-tsparticles';
 import { loadFull } from 'tsparticles';
-import { motion } from 'framer-motion';
+import { motion, isValidMotionProp } from 'framer-motion';
 import Navbar from '../Navbar';
 import Footer from '../Navbar/footer';
 
-const AnimatedCard = motion(styled(Card)(({ theme }) => ({
+const AnimatedCard = motion(styled(Card, {
+  shouldComponentUpdate: (props) => !isValidMotionProp(props)
+})(({ theme }) => ({
   height: '220px',
   borderRadius: '16px',
   transition: 'all 0.3s ease',

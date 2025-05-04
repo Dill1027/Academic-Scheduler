@@ -14,7 +14,12 @@ function AdminReview() {
     const fetchPendingStudents = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:5000/api/student/pending");
+        const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/student/pending`, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
         setPendingStudents(response.data);
       } catch (err) {
         setError(err.message);
@@ -42,7 +47,7 @@ function AdminReview() {
     if (result.isConfirmed) {
       try {
         if (decision === "accept") {
-          await axios.patch(`http://localhost:5000/api/student/${studentId}`, { 
+          await axios.patch(`${process.env.REACT_APP_API_BASE_URL}/student/${studentId}`, { 
             status: "approved" 
           });
           Swal.fire(
@@ -51,7 +56,7 @@ function AdminReview() {
             'success'
           );
         } else {
-          await axios.delete(`http://localhost:5000/api/student/${studentId}`);
+          await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/student/${studentId}`);
           Swal.fire(
             'Deleted!',
             'Student registration has been declined and removed.',

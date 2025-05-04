@@ -13,7 +13,12 @@ const StudentReview = () => {
 
   const fetchPendingStudents = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/student/pending');
+      const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/student/pending`, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      });
       setPendingStudents(response.data);
     } catch (error) {
       console.error('Error fetching pending students:', error);
@@ -31,7 +36,7 @@ const StudentReview = () => {
 
   const handleStatusUpdate = async (studentId, status) => {
     try {
-      await axios.patch(`http://localhost:6001/api/student/${studentId}`, { status });
+      await axios.patch(`${process.env.REACT_APP_API_BASE_URL}/student/${studentId}`, { status });
       fetchPendingStudents(); // Refresh list after update
     } catch (error) {
       console.error('Error updating student status:', error);

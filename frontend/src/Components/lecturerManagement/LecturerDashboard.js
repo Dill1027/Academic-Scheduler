@@ -19,7 +19,7 @@ const LecturerDashboard = () => {
   useEffect(() => {
     const fetchGenderDistribution = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/lecturers/gender-distribution");
+        const response = await axios.get("http://localhost:6001/api/lecturers/gender-distribution");
         if (response.data && response.data.data) {
           const genderCount = response.data.data.reduce((acc, { _id, count }) => {
             acc[_id || 'Unknown'] = count;
@@ -48,7 +48,7 @@ const LecturerDashboard = () => {
 
   const handleDownloadReport = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/lecturers/download-report', {
+      const response = await axios.get('http://localhost:6001/api/lecturers/download-report', {
         responseType: 'blob',
         withCredentials: true,
         headers: {
