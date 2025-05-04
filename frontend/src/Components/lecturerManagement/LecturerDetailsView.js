@@ -14,7 +14,7 @@ const LecturerDetailsView = () => {
         setIsLoading(true);
         setErrorMessage("");
         
-        const response = await fetch("http://localhost:6001/api/lecturers/all");
+        const response = await fetch("http://localhost:5000/api/lecturers/all");
         if (!response.ok) throw new Error("Failed to fetch lecturers");
 
         const result = await response.json();

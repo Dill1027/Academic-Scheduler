@@ -13,10 +13,17 @@ const StudentReview = () => {
 
   const fetchPendingStudents = async () => {
     try {
-      const response = await axios.get('http://localhost:6001/api/student/pending');
+      const response = await axios.get('http://localhost:5000/api/student/pending');
       setPendingStudents(response.data);
     } catch (error) {
       console.error('Error fetching pending students:', error);
+      if (error.response) {
+        console.error('Server Error:', error.response.data);
+      } else if (error.request) {
+        console.error('Network Error - No response received');
+      } else {
+        console.error('Error:', error.message);
+      }
     } finally {
       setLoading(false);
     }
