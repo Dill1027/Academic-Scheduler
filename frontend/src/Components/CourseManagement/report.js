@@ -68,7 +68,7 @@ const OrganizedCoursesTable = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:6001/api/docs', {
+      const response = await axios.get('http://localhost:5000/api/docs', {
         withCredentials: true
       });
       setCourses(response.data);
