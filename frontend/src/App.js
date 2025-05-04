@@ -44,6 +44,11 @@ import Coursereport from "./Components/CourseManagement/report";
 import YearSelection from './Components/timetable/YearSelection';
 import TimetableOptions from './Components/timetable/TimetableOptions';
 import Specialization from './Components/timetable/Specialization';
+import StudentReview from './Components/StudentManagement/StudentReview';
+
+// About Contact Components
+import TeamContact from "./Components/AboutContact/TeamContact";
+import Blog from './Components/Blog/Blog';  // Update import path
 
 const theme = createTheme();
 
@@ -54,6 +59,7 @@ function App() {
       <Routes>
         {/* Authentication Routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/form" element={<StudentRegisterForm />} />
@@ -69,6 +75,10 @@ function App() {
         <Route path="/studentlogin" element={<StudentLogin />} />
         <Route path="/studentManagement" element={<StudentManagement />} />
         <Route path="/profileUpdate/:id" element={<ProfileUpdate />} />
+
+        {/* Student Management Routes */}
+        <Route path="/students" element={<StudentList />} />
+        <Route path="/reviews" element={<StudentReview />} />
 
         {/* Lecturer Routes */}
         <Route path="/addLecturer" element={<AddLecturerForm />} />
@@ -94,6 +104,10 @@ function App() {
 
         {/* Specialization Route */}
         <Route path="/specializations/:id" element={<Specialization />} />
+
+        {/* About Contact Route */}
+        <Route path="/team-contact" element={<TeamContact />} />
+        <Route path="/blog" element={<Blog />} />
       </Routes>
     </ThemeProvider>
   );
