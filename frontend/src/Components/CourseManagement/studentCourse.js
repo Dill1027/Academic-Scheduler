@@ -23,7 +23,7 @@ const StudentCourse = () => {
   const fetchStudents = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://localhost:6001/api/student', { withCredentials: true });
+      const response = await axios.get('http://localhost:5000/api/student');
       setStudents(response.data);
     } catch (error) {
       console.error("Error fetching student data", error);
@@ -35,7 +35,7 @@ const StudentCourse = () => {
 
   const fetchAllModules = async () => {
     try {
-      const response = await axios.get('http://localhost:6001/api/docs', { withCredentials: true });
+      const response = await axios.get('http://localhost:5000/api/docs');
       setAvailableModules(response.data);
     } catch (error) {
       console.error("Error fetching modules data", error);
@@ -53,7 +53,6 @@ const StudentCourse = () => {
 
   const handleAddModuleClick = (student) => {
     setSelectedStudent(student);
-    // Initialize with existing modules plus empty slots up to 5
     const initialModules = student.modules 
       ? [...student.modules, ...Array(5 - student.modules.length).fill('')].slice(0, 5)
       : ['', '', '', '', ''];
@@ -74,7 +73,6 @@ const StudentCourse = () => {
     if (!selectedStudent || !selectedStudent._id) return;
     
     try {
-      // Filter out empty modules
       const modulesToSave = newModules
         .map(module => module.trim())
         .filter(module => module !== '');
@@ -203,7 +201,6 @@ const StudentCourse = () => {
           </table>
         </div>
 
-        {/* Add Module Modal */}
         {showAddModuleModal && selectedStudent && (
           <div className="student-course__modal-overlay">
             <div className="student-course__modal">
@@ -292,8 +289,10 @@ const StudentCourse = () => {
             </div>
           </div>
         )}
-
-        <style jsx>{`
+      </div>
+      <Footer />
+      <style>
+        {`
           .student-course__container {
             max-width: 1200px;
             margin: 2rem auto;
@@ -412,7 +411,6 @@ const StudentCourse = () => {
             color: #3498db;
             font-size: 1.2rem;
           }
-          /* Modal Styles */
           .student-course__modal-overlay {
             position: fixed;
             top: 0;
@@ -603,9 +601,8 @@ const StudentCourse = () => {
               width: 95%;
             }
           }
-        `}</style>
-      </div>
-      <Footer />
+        `}
+      </style>
     </div>
   );
 };
