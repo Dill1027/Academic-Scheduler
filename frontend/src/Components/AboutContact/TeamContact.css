@@ -34,6 +34,7 @@
     margin-bottom: 15px;
     background: linear-gradient(90deg, #64ffda, #a8ff78);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 2px 10px rgba(0,0,0,0.2);
     animation: textGlow 3s ease-in-out infinite alternate;
