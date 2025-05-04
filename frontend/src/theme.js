@@ -3,18 +3,18 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#4a6baf',
-      light: '#7797e0',
-      dark: '#1a4380'
+      main: '#1976d2',
+      light: '#42a5f5',
+      dark: '#1565c0'
     },
     secondary: {
-      main: '#2a4a8a',
-      light: '#5674b7',
-      dark: '#00235f'
+      main: '#9c27b0',
+      light: '#ba68c8',
+      dark: '#7b1fa2'
     }
   },
   typography: {
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+    fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
   }
 });
 
