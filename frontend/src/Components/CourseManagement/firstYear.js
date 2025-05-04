@@ -321,7 +321,7 @@ function First() {
                                                             return (
                                                                 <div key={idx} className="lec d-flex gap-4 align-items-center">
                                                                     <a
-                                                                        href={`http://localhost:6001/uploads/${doc}`}
+                                                                        href={`http://localhost:5000/uploads/${doc}`}
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         className="d-block"
@@ -520,7 +520,7 @@ function First() {
                                             ) : doc ? (
                                                 <>
                                                     <a
-                                                        href={`http://localhost:6001/uploads/${doc}`}
+                                                        href={`http://localhost:5000/uploads/${doc}`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="me-2"

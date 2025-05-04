@@ -19,16 +19,25 @@ const LecturerDashboard = () => {
   useEffect(() => {
     const fetchGenderDistribution = async () => {
       try {
-        const response = await axios.get("http://localhost:6001/api/lecturers/gender-distribution");
-        // Access the data property of the response and transform it
-        const genderCount = response.data.data.reduce((acc, { _id, count }) => {
-          acc[_id] = count;
-          return acc;
-        }, {});
-
-        setGenderData(genderCount);
+        const response = await axios.get("http://localhost:5000/api/lecturers/gender-distribution");
+        if (response.data && response.data.data) {
+          const genderCount = response.data.data.reduce((acc, { _id, count }) => {
+            acc[_id || 'Unknown'] = count;
+            return acc;
+          }, {});
+          setGenderData(genderCount);
+        } else {
+          console.error("Invalid data format received:", response.data);
+          setGenderData({});
+        }
       } catch (error) {
         console.error("Error fetching gender distribution:", error);
+        if (error.response) {
+          console.error("Server responded with:", error.response.data);
+        } else if (error.request) {
+          console.error("No response received from server");
+        }
+        setGenderData({});
       } finally {
         setLoading(false);
       }
@@ -39,7 +48,7 @@ const LecturerDashboard = () => {
 
   const handleDownloadReport = async () => {
     try {
-      const response = await axios.get('http://localhost:6001/api/lecturers/download-report', {
+      const response = await axios.get('http://localhost:5000/api/lecturers/download-report', {
         responseType: 'blob',
         withCredentials: true,
         headers: {
