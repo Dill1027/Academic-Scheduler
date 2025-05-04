@@ -28,10 +28,10 @@ function Navbar() {
               <Link className="nav-link text-white" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/students">Student</Link>
+              <Link className="nav-link text-white" to="/studentManagement">Student</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/lecturers">Lecturer</Link>
+              <Link className="nav-link text-white" to="/lecturerDashbord">Lecturer</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link text-white" to="/course">Course</Link>

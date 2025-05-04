@@ -14,7 +14,7 @@ function AdminReview() {
     const fetchPendingStudents = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("http://localhost:6001/api/docs/pending");
+        const response = await axios.get("http://localhost:6001/api/student/pending");
         setPendingStudents(response.data);
       } catch (err) {
         setError(err.message);

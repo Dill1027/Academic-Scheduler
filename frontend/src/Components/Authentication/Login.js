@@ -4,7 +4,6 @@ import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa';
 import { ClipLoader } from 'react-spinners';
 import { loadFull } from "tsparticles";
 import Particles from "react-tsparticles";
-import { particlesConfig } from '../../config/particlesConfig';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,9 +16,62 @@ const Login = () => {
     await loadFull(engine);
   }, []);
 
-  const particlesLoaded = useCallback(async (container) => {
-    // Optional: Add any initialization after particles are loaded
-  }, []);
+  const particlesConfig = {
+    particles: {
+      number: {
+        value: 80,
+        density: {
+          enable: true,
+          value_area: 800
+        }
+      },
+      color: {
+        value: "#3498db"
+      },
+      shape: {
+        type: "circle"
+      },
+      opacity: {
+        value: 0.5,
+        random: false
+      },
+      size: {
+        value: 3,
+        random: true
+      },
+      line_linked: {
+        enable: true,
+        distance: 150,
+        color: "#3498db",
+        opacity: 0.4,
+        width: 1
+      },
+      move: {
+        enable: true,
+        speed: 2,
+        direction: "none",
+        random: false,
+        straight: false,
+        out_mode: "out",
+        bounce: false,
+      }
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: {
+        onhover: {
+          enable: true,
+          mode: "repulse"
+        },
+        onclick: {
+          enable: true,
+          mode: "push"
+        },
+        resize: true
+      }
+    },
+    retina_detect: true
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -55,10 +107,17 @@ const Login = () => {
       <Particles
         id="tsparticles"
         init={particlesInit}
-        loaded={particlesLoaded}
         options={particlesConfig}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0
+        }}
       />
-      <div style={cardStyle}>
+      <div style={{...cardStyle, position: 'relative', zIndex: 1}}>
         <div style={headerStyle}>
           <h2 style={titleStyle}>
             <FaSignInAlt style={{ marginRight: '10px' }} />
@@ -150,17 +209,24 @@ const containerStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: '100vh',
-  backgroundColor: '#f8f9fa',
+  backgroundColor: '#1a1a2e',
   padding: '20px',
+  position: 'relative',
+  overflow: 'hidden'
 };
 
 const cardStyle = {
   width: '100%',
   maxWidth: '450px',
-  backgroundColor: '#ffffff',
-  borderRadius: '10px',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+  borderRadius: '15px',
+  boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+  backdropFilter: 'blur(8px)',
   padding: '40px',
+  transition: 'transform 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)'
+  }
 };
 
 const headerStyle = {

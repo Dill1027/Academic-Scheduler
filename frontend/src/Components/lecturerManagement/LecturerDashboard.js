@@ -20,8 +20,8 @@ const LecturerDashboard = () => {
     const fetchGenderDistribution = async () => {
       try {
         const response = await axios.get("http://localhost:6001/api/lecturers/gender-distribution");
-        // Transform the array into an object with gender as key and count as value
-        const genderCount = response.data.reduce((acc, { _id, count }) => {
+        // Access the data property of the response and transform it
+        const genderCount = response.data.data.reduce((acc, { _id, count }) => {
           acc[_id] = count;
           return acc;
         }, {});
@@ -39,8 +39,12 @@ const LecturerDashboard = () => {
 
   const handleDownloadReport = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/lecturers/download-report', {
-        responseType: 'blob'
+      const response = await axios.get('http://localhost:6001/api/lecturers/download-report', {
+        responseType: 'blob',
+        withCredentials: true,
+        headers: {
+          'Accept': 'application/pdf'
+        }
       });
       
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -49,7 +53,6 @@ const LecturerDashboard = () => {
       link.setAttribute('download', 'lecturers-report.pdf');
       document.body.appendChild(link);
       link.click();
-      
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
     } catch (error) {

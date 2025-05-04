@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Zoom } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Navbar from '../Navbar';
+import Footer from '../Navbar/footer';
 import './YearSelection.css';
 
 const YearSelection = () => {
@@ -41,88 +43,92 @@ const YearSelection = () => {
   ];
 
   return (
-    <div className="year-selection-container">
-      <Zoom in={true} timeout={500}>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          variant="contained"
-          color="secondary"
-          sx={{
-            mb: 4,
-            borderRadius: '50px',
-            boxShadow: theme.shadows[4],
-            color: 'rgba(255, 255, 255, 0.9)',
-            width: '200px',
-            height: '48px',
-            fontSize: '1rem',
-            '&:hover': {
-              transform: 'translateY(-2px)',
-              boxShadow: theme.shadows[8],
-              color: '#e0e0e0',
-            },
-            transition: 'all 0.3s ease',
-            position: 'relative',
-            zIndex: 1
-          }}
-        >
-          Back
-        </Button>
-      </Zoom>
+    <>
+      <Navbar />
+      <div className="year-selection-container">
+        <Zoom in={true} timeout={500}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)}
+            variant="contained"
+            color="secondary"
+            sx={{
+              mb: 4,
+              borderRadius: '50px',
+              boxShadow: theme.shadows[4],
+              color: 'rgba(255, 255, 255, 0.9)',
+              width: '200px',
+              height: '48px',
+              fontSize: '1rem',
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                boxShadow: theme.shadows[8],
+                color: '#e0e0e0',
+              },
+              transition: 'all 0.3s ease',
+              position: 'relative',
+              zIndex: 1
+            }}
+          >
+            Back
+          </Button>
+        </Zoom>
 
-      <div className="header-wrapper">
-        <h1 className="selection-title">
-          <span className="title-gradient">Select Academic Year</span>
-          <span className="title-shadow" aria-hidden="true">Select Academic Year</span>
-        </h1>
-        <div className="title-decoration"></div>
-      </div>
-      
-      <div className="year-grid">
-        {years.map((year) => (
-          <div key={year.id} className="year-card-wrapper" tabIndex="0">
-            <button
-              className="year-card glass-morphism"
-              style={{ 
-                '--card-bg-image': year.image,
-                '--card-overlay': year.color,
-                '--card-gradient': year.gradient
-              }}
-              onClick={() => navigate(`/specializations/${year.id}`)}
-              aria-label={`Select ${year.name}`}
-            >
-              <div className="year-overlay"></div>
-              <div className="year-glow"></div>
-              <div className="year-content">
-                <h3 className="year-title">{year.name}</h3>
-                <div className="year-hover-content">
-                  <span className="hover-text">View Specializations</span>
-                  <span className="hover-arrow">→</span>
+        <div className="header-wrapper">
+          <h1 className="selection-title">
+            <span className="title-gradient">Select Academic Year</span>
+            <span className="title-shadow" aria-hidden="true">Select Academic Year</span>
+          </h1>
+          <div className="title-decoration"></div>
+        </div>
+        
+        <div className="year-grid">
+          {years.map((year) => (
+            <div key={year.id} className="year-card-wrapper" tabIndex="0">
+              <button
+                className="year-card glass-morphism"
+                style={{ 
+                  '--card-bg-image': year.image,
+                  '--card-overlay': year.color,
+                  '--card-gradient': year.gradient
+                }}
+                onClick={() => navigate(`/specializations/${year.id}`)}
+                aria-label={`Select ${year.name}`}
+              >
+                <div className="year-overlay"></div>
+                <div className="year-glow"></div>
+                <div className="year-content">
+                  <h3 className="year-title">{year.name}</h3>
+                  <div className="year-hover-content">
+                    <span className="hover-text">View Specializations</span>
+                    <span className="hover-arrow">→</span>
+                  </div>
                 </div>
-              </div>
-              <div className="year-corner year-corner-tl"></div>
-              <div className="year-corner year-corner-tr"></div>
-              <div className="year-corner year-corner-bl"></div>
-              <div className="year-corner year-corner-br"></div>
-            </button>
-          </div>
-        ))}
+                <div className="year-corner year-corner-tl"></div>
+                <div className="year-corner year-corner-tr"></div>
+                <div className="year-corner year-corner-bl"></div>
+                <div className="year-corner year-corner-br"></div>
+              </button>
+            </div>
+          ))}
+        </div>
+        
+        <div className="particles">
+          {[...Array(20)].map((_, i) => (
+            <div key={i} className="particle" style={{
+              '--size': `${Math.random() * 0.5 + 0.5}rem`,
+              '--delay': `${Math.random() * 5}s`,
+              '--duration': `${Math.random() * 15 + 10}s`,
+              '--x-start': `${Math.random() * 100}%`,
+              '--x-end': `${Math.random() * 100}%`,
+              '--y': `${Math.random() * 100}%`,
+              '--opacity': Math.random() * 0.3 + 0.1
+            }}></div>
+          ))}
+        </div>
       </div>
-      
-      <div className="particles">
-        {[...Array(20)].map((_, i) => (
-          <div key={i} className="particle" style={{
-            '--size': `${Math.random() * 0.5 + 0.5}rem`,
-            '--delay': `${Math.random() * 5}s`,
-            '--duration': `${Math.random() * 15 + 10}s`,
-            '--x-start': `${Math.random() * 100}%`,
-            '--x-end': `${Math.random() * 100}%`,
-            '--y': `${Math.random() * 100}%`,
-            '--opacity': Math.random() * 0.3 + 0.1
-          }}></div>
-        ))}
-      </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

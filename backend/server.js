@@ -33,16 +33,11 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:3000", "http://localhost:3001"],
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-  preflightContinue: false,
-  optionsSuccessStatus: 204
+  credentials: true
 }));
-
-// Add CorsMiddleware 
-app.use(require('./Middleware/CorsMiddleware'));
 
 // Rate limiting configuration
 const limiter = rateLimit({

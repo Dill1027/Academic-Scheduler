@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaEnvelope, FaLock, FaChalkboardTeacher, FaUserShield, FaUserGraduate, FaSignInAlt } from "react-icons/fa";
 import { ClipLoader } from "react-spinners";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -30,19 +31,38 @@ const Register = () => {
     try {
       const response = await axios.post(
         "http://localhost:6001/api/auth/register",
-        formData
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          validateStatus: status => status < 500 // Prevent axios from throwing for 4xx errors
+        }
       );
 
-      window.alert("Registration successful! You can now log in.");
-      
-      if (formData.role === "New Student" || formData.role === "Current Student") {
-        navigate("/studentlogin");
+      if (response.status === 201) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Registration Successful!',
+          text: 'You can now login to your account',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          if (formData.role === "New Student" || formData.role === "Current Student") {
+            navigate("/studentlogin");
+          } else {
+            navigate("/login");
+          }
+        });
       } else {
-        navigate("/login");
+        setError(response.data.message || "Registration failed. Please try again.");
       }
     } catch (err) {
-      console.error("Error registering", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Registration failed. Please try again.");
+      console.error("Registration error:", err);
+      setError(
+        err.response?.data?.message || 
+        "Network error occurred. Please check your connection and try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -68,9 +88,7 @@ const Register = () => {
         </div>
 
         {error && (
-          <div style={errorStyle}>
-            {error}
-          </div>
+          <div style={errorStyle}>{error}</div>
         )}
 
         <form onSubmit={handleRegister} style={formStyle}>
@@ -141,12 +159,11 @@ const Register = () => {
             </select>
           </div>
 
+          {/* Conditional rendering for lecturer fields */}
           {formData.role === "Lecturer" && (
             <>
               <div style={inputGroupStyle}>
-                <label htmlFor="department" style={labelStyle}>
-                  Department
-                </label>
+                <label htmlFor="department" style={labelStyle}>Department</label>
                 <input
                   type="text"
                   name="department"
@@ -157,9 +174,7 @@ const Register = () => {
                 />
               </div>
               <div style={inputGroupStyle}>
-                <label htmlFor="subject" style={labelStyle}>
-                  Subject
-                </label>
+                <label htmlFor="subject" style={labelStyle}>Subject</label>
                 <input
                   type="text"
                   name="subject"
@@ -172,11 +187,10 @@ const Register = () => {
             </>
           )}
 
+          {/* Admin code field */}
           {formData.role === "Admin" && (
             <div style={inputGroupStyle}>
-              <label htmlFor="adminCode" style={labelStyle}>
-                Admin Code
-              </label>
+              <label htmlFor="adminCode" style={labelStyle}>Admin Code</label>
               <input
                 type="text"
                 name="adminCode"

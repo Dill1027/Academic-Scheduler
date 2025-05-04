@@ -1,6 +1,4 @@
-import React from 'react';
-
-const moduleOptionsData = {
+const moduleOptions = {
   "Software Engineering": {
     "1st Year": ["Programming Fundamentals", "Mathematics", "Computer Systems", "Web Development"],
     "2nd Year": ["Data Structures", "Algorithms", "Software Design", "Database Systems"],
@@ -33,31 +31,4 @@ const moduleOptionsData = {
   }
 };
 
-const ModuleOptions = () => {
-  return (
-    <div className="container mt-4">
-      <h2 className="text-center mb-4">Available Module Options</h2>
-      {Object.entries(moduleOptionsData).map(([specialization, years]) => (
-        <div key={specialization} className="mb-4">
-          <h3 className="text-primary">{specialization}</h3>
-          {Object.entries(years).map(([year, modules]) => (
-            <div key={year} className="ms-4 mb-3">
-              <h4 className="text-secondary">{year}</h4>
-              <ul className="list-group">
-                {modules.map((module) => (
-                  <li key={module} className="list-group-item">{module}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-};
-
-// Named export for the data
-export const moduleOptions = moduleOptionsData;
-
-// Default export for the component
-export default ModuleOptions;
+export default moduleOptions;
