@@ -15,6 +15,8 @@ function AddDoc({ onClose }) {
     const [documents, setDocuments] = useState([null, null, null]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const BASE_URL = 'http://localhost:5000';
+
     const handleLectureChange = (index, value) => {
         const updatedLectures = [...lectures];
         updatedLectures[index] = value;
@@ -86,7 +88,7 @@ function AddDoc({ onClose }) {
                 if (doc) formData.append("documents", doc);
             });
 
-            const response = await axios.post("http://localhost:6001/api/docs/add", formData, {
+            const response = await axios.post(`${BASE_URL}/api/docs/add`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 

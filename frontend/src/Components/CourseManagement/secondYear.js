@@ -24,6 +24,9 @@ function Second() {
     const [currentModule, setCurrentModule] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Base URL
+    const BASE_URL = 'http://localhost:5000';
+
     // SweetAlert configuration
     const showAlert = (icon, title, text) => {
         const icons = {
@@ -68,7 +71,7 @@ function Second() {
         setError("");
 
         try {
-            const response = await axios.get(`http://localhost:6001/api/docs/year/2nd Year`);
+            const response = await axios.get(`${BASE_URL}/api/docs/year/2nd Year`);
             // Ensure all arrays exist and are properly initialized
             const processedData = response.data.map(module => ({
                 ...module,
@@ -112,7 +115,7 @@ function Second() {
         e.stopPropagation();
         if (!doc) return;
         const link = document.createElement("a");
-        link.href = `http://localhost:6001/uploads/${doc}`;
+        link.href = `${BASE_URL}/uploads/${doc}`;
         link.download = originalName || "document";
         link.click();
         showAlert('success', 'Download Started', 'Your file download has started.');
@@ -128,7 +131,7 @@ function Second() {
         
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:6001/api/docs/delete/${id}`);
+                await axios.delete(`${BASE_URL}/api/docs/delete/${id}`);
                 showAlert('success', 'Deleted!', 'Module has been deleted.');
                 fetchData();
             } catch (error) {
@@ -205,7 +208,7 @@ function Second() {
                 }
             });
 
-            await axios.put(`http://localhost:6001/api/docs/update/${currentModule._id}`, formData, {
+            await axios.put(`${BASE_URL}/api/docs/update/${currentModule._id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -288,13 +291,13 @@ function Second() {
                                                     {item.moduleName}
                                                 </h5>
                                                 {item.description && (
-                                                    <p className="des1 card-text mt-3">
+                                                    <div className="des1 mt-3">
                                                         <i className="bi bi-card-text me-2"></i>
                                                         {item.description}
-                                                    </p>
+                                                    </div>
                                                 )}
                                                 {(item.lectures || []).length > 0 && (
-                                                    <p className="des card-text">
+                                                    <div className="des">
                                                         <strong className="name">
                                                             <i className="bi bi-person-video3 me-2"></i>
                                                             Lecturers:
@@ -304,41 +307,43 @@ function Second() {
                                                                 {lecture}
                                                             </div>
                                                         ))}
-                                                    </p>
+                                                    </div>
                                                 )}
                                                 {(item.documents || []).length > 0 && (
-                                                    <p className="des card-text">
+                                                    <div className="des">
                                                         <strong className="name">
                                                             <i className="bi bi-file-earmark-arrow-down me-2"></i>
                                                             Documents:
                                                         </strong>
-                                                        {(item.documents || []).map((doc, idx) => {
-                                                            if (!doc) return null;
-                                                            const originalName = typeof doc === 'string' 
-                                                                ? doc.split("-").slice(1).join("-") 
-                                                                : doc.name || "Document";
-                                                            
-                                                            return (
-                                                                <div key={idx} className="lec d-flex gap-4 align-items-center">
-                                                                    <a
-                                                                        href={`http://localhost:6001/uploads/${doc}`}
-                                                                        target="_blank"
-                                                                        rel="noopener noreferrer"
-                                                                        className="d-block"
-                                                                    >
-                                                                        {originalName}
-                                                                    </a>
-                                                                    <button
-                                                                        className="btn btn-sm btn-outline-primary"
-                                                                        onClick={(e) => handleDownload(doc, originalName, e)}
-                                                                    >
-                                                                        <i className="bi bi-download me-1"></i>
-                                                                        Download
-                                                                    </button>
-                                                                </div>
-                                                            );
-                                                        })}
-                                                    </p>
+                                                        <div className="documents-list">
+                                                            {(item.documents || []).map((doc, idx) => {
+                                                                if (!doc) return null;
+                                                                const originalName = typeof doc === 'string' 
+                                                                    ? doc.split("-").slice(1).join("-") 
+                                                                    : doc.name || "Document";
+                                                                
+                                                                return (
+                                                                    <div key={idx} className="lec d-flex gap-4 align-items-center">
+                                                                        <a
+                                                                            href={`${BASE_URL}/uploads/${doc}`}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            className="d-block"
+                                                                        >
+                                                                            {originalName}
+                                                                        </a>
+                                                                        <button
+                                                                            className="btn btn-sm btn-outline-primary"
+                                                                            onClick={(e) => handleDownload(doc, originalName, e)}
+                                                                        >
+                                                                            <i className="bi bi-download me-1"></i>
+                                                                            Download
+                                                                        </button>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    </div>
                                                 )}
                                                 {activeCard === item._id && (
                                                     <div className="edit mt-3 d-flex gap-2">
@@ -520,7 +525,7 @@ function Second() {
                                             ) : doc ? (
                                                 <>
                                                     <a
-                                                        href={`http://localhost:6001/uploads/${doc}`}
+                                                        href={`${BASE_URL}/uploads/${doc}`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="me-2"
