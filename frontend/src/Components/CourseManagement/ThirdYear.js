@@ -58,7 +58,10 @@ function Third() {
         });
     };
 
-    // Fetch 1st Year data when the component mounts
+    // Update the base URL
+    const BASE_URL = 'http://localhost:6001';
+
+    // Fetch 3rd Year data when the component mounts
     useEffect(() => {
         fetchData();
     }, []);
@@ -68,7 +71,7 @@ function Third() {
         setError("");
 
         try {
-            const response = await axios.get(`http://localhost:5000/api/docs/year/3rd Year`);
+            const response = await axios.get(`${BASE_URL}/api/docs/year/3rd Year`);
             // Ensure all arrays exist and are properly initialized
             const processedData = response.data.map(module => ({
                 ...module,
@@ -112,7 +115,7 @@ function Third() {
         e.stopPropagation();
         if (!doc) return;
         const link = document.createElement("a");
-        link.href = `http://localhost:6001/uploads/${doc}`;
+        link.href = `${BASE_URL}/uploads/${doc}`;
         link.download = originalName || "document";
         link.click();
         showAlert('success', 'Download Started', 'Your file download has started.');
@@ -128,7 +131,7 @@ function Third() {
         
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:5000/api/docs/delete/${id}`);
+                await axios.delete(`${BASE_URL}/api/docs/delete/${id}`);
                 alert("Module deleted successfully!");
                 fetchData();
             } catch (error) {
@@ -205,7 +208,7 @@ function Third() {
                 }
             });
 
-            await axios.put(`http://localhost:6001/api/docs/update/${currentModule._id}`, formData, {
+            await axios.put(`${BASE_URL}/api/docs/update/${currentModule._id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -291,37 +294,39 @@ function Third() {
                                                         <div className="lec" key={idx}>{lecture}</div>
                                                     ))}
                                                 </p>
-                                                <p className="des card-text">
-                                                    <strong className="name">Documents:</strong>
-                                                    {(item.documents || []).map((doc, idx) => {
-                                                        if (!doc) return null;
-                                                        const originalName = typeof doc === 'string' 
-                                                            ? doc.split("-").slice(1).join("-") 
-                                                            : doc.name || "Document";
-                                                        
-                                                        return (
-                                                            <div key={idx} className="lec d-flex gap-4">
-                                                                <a
-                                                                    href={`http://localhost:5000/uploads/${doc}`}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className="d-block"
-                                                                >
-                                                                    {originalName}
-                                                                </a>
-                                                                <button
-                                                                    className="btn btn-link"
-                                                                    onClick={(e) => {
-                                                                        e.stopPropagation();
-                                                                        handleDownload(doc, originalName);
-                                                                    }}
-                                                                >
-                                                                    Download
-                                                                </button>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </p>
+                                                {(item.documents || []).length > 0 && (
+                                                    <div className="des card-text">
+                                                        <strong className="name">Documents:</strong>
+                                                        {(item.documents || []).map((doc, idx) => {
+                                                            if (!doc) return null;
+                                                            const originalName = typeof doc === 'string' 
+                                                                ? doc.split("-").slice(1).join("-") 
+                                                                : doc.name || "Document";
+                                                            
+                                                            return (
+                                                                <div key={idx} className="lec d-flex gap-4">
+                                                                    <a
+                                                                        href={`${BASE_URL}/uploads/${doc}`}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className="d-block"
+                                                                    >
+                                                                        {originalName}
+                                                                    </a>
+                                                                    <button
+                                                                        className="btn btn-link"
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            handleDownload(doc, originalName);
+                                                                        }}
+                                                                    >
+                                                                        Download
+                                                                    </button>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
                                                 {activeCard === item._id && (
                                                     <div className="edit mt-3 d-flex gap-2">
                                                         <button 
@@ -506,7 +511,7 @@ function Third() {
                                         ) : doc ? (
                                             <>
                                                 <a
-                                                    href={`http://localhost:5000/uploads/${doc}`}
+                                                    href={`${BASE_URL}/uploads/${doc}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="me-2"

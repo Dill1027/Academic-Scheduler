@@ -23,7 +23,7 @@ const StudentCourse = () => {
   const fetchStudents = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get('http://localhost:5000/api/student/student');
+      const response = await axios.get('http://localhost:6001/api/student', { withCredentials: true });
       setStudents(response.data);
     } catch (error) {
       console.error("Error fetching student data", error);
@@ -35,7 +35,7 @@ const StudentCourse = () => {
 
   const fetchAllModules = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/docs');
+      const response = await axios.get('http://localhost:6001/api/docs', { withCredentials: true });
       setAvailableModules(response.data);
     } catch (error) {
       console.error("Error fetching modules data", error);

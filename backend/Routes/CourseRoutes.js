@@ -3,6 +3,16 @@ const router = express.Router();
 const { Docs, upload } = require('../Model/CourseModel'); // Import the Docs model and upload middleware
 const { body, validationResult } = require('express-validator');
 
+// Get all courses
+router.get('/docs', async (req, res) => {
+  try {
+    const courses = await Docs.find();
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Add document
 router.post('/add', 
   upload.array('documents', 3), // Allow up to 3 files to be uploaded
