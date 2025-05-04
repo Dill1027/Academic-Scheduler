@@ -3,53 +3,19 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#4361ee',
+      main: '#1976d2',
+      light: '#42a5f5',
+      dark: '#1565c0'
     },
     secondary: {
-      main: '#3f37c9',
-    },
-    error: {
-      main: '#f72585',
-    },
-    background: {
-      default: '#f5f7fa',
-    },
+      main: '#9c27b0',
+      light: '#ba68c8',
+      dark: '#7b1fa2'
+    }
   },
   typography: {
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    h4: {
-      fontWeight: 600,
-      color: '#212529',
-    },
-    h5: {
-      fontWeight: 600,
-      color: '#212529',
-    },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          textTransform: 'none',
-          borderRadius: '8px',
-          padding: '8px 16px',
-          transition: 'all 0.3s ease',
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-          },
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          borderRadius: '8px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-        },
-      },
-    },
-  },
+    fontFamily: "'Inter', system-ui, -apple-system, sans-serif"
+  }
 });
 
 export default theme;
