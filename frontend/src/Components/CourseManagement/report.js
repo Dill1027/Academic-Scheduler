@@ -2,23 +2,40 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
-import Navbar from '../Navbar';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import { FiDownload, FiRotateCw, FiAlertTriangle } from 'react-icons/fi';
-import { FaGraduationCap } from 'react-icons/fa';
+import { FiDownload, FiRotateCw, FiAlertTriangle, FiInfo } from 'react-icons/fi';
+import { FaGraduationCap, FaChalkboardTeacher } from 'react-icons/fa';
+import Navbar from "../Navbar";
+import Footer from "../Navbar/footer";
 
 const MySwal = withReactContent(Swal);
 
-const Coursereport = () => {
+const OrganizedCoursesTable = () => {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [error, setError] = useState(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   useEffect(() => {
     fetchAllCourses();
   }, []);
+
+  const showErrorToast = (message) => {
+    MySwal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: message,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      background: '#f8d7da',
+      color: '#721c24',
+      iconColor: '#dc3545'
+    });
+  };
 
   const showSuccessToast = (message) => {
     MySwal.fire({
@@ -33,22 +50,6 @@ const Coursereport = () => {
       background: '#d4edda',
       color: '#155724',
       iconColor: '#28a745'
-    });
-  };
-
-  const showErrorToast = (message) => {
-    MySwal.fire({
-      icon: 'error',
-      title: 'Error!',
-      text: message,
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      background: '#f8d7da',
-      color: '#721c24',
-      iconColor: '#dc3545'
     });
   };
 
@@ -243,10 +244,318 @@ const Coursereport = () => {
     <div>
       <Navbar />
       <div className="organized-courses-container">
-        {/* Add your report UI here */}
+        <div className="header-section">
+          <div className="title-wrapper">
+            <FaGraduationCap className="header-icon" />
+            <h2>Course Report</h2>
+          </div>
+          <button 
+            onClick={generatePDFReport}
+            className="generate-report-btn"
+            disabled={isLoading || courses.length === 0 || isGeneratingPDF}
+          >
+            {isGeneratingPDF ? (
+              <>
+                <FiRotateCw className="spin-animation" />
+                <span>Generating...</span>
+              </>
+            ) : (
+              <>
+                <FiDownload />
+                <span>Generate Report</span>
+              </>
+            )}
+          </button>
+        </div>
+        
+        {isLoading ? (
+          <div className="status-message loading">
+            <FiRotateCw className="spin-animation" />
+            <span>Loading courses...</span>
+          </div>
+        ) : error ? (
+          <div className="status-message error">
+            <FiAlertTriangle />
+            <span>{error}</span>
+          </div>
+        ) : courses.length === 0 ? (
+          <div className="status-message no-data">
+            <FiInfo />
+            <span>No courses found</span>
+          </div>
+        ) : (
+          <div className="table-wrapper">
+            <table className="courses-table">
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Course</th>
+                  <th>Modules</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(groupedCourses).map(([year, coursesData]) => (
+                  Object.entries(coursesData).map(([courseName, modules], index) => (
+                    <tr key={`${year}-${courseName}`} className="hover-animation">
+                      {index === 0 && (
+                        <td rowSpan={Object.keys(coursesData).length} className="year-cell">
+                          <FaChalkboardTeacher className="year-icon" />
+                          {year}
+                        </td>
+                      )}
+                      <td className="course-cell">{courseName}</td>
+                      <td className="modules-cell">
+                        {modules.join(', ')}
+                      </td>
+                    </tr>
+                  ))
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
+
+      <style>
+        {`
+          .organized-courses-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          }
+
+          .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          }
+
+          .title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+          }
+
+          .header-icon {
+            font-size: 2rem;
+            color: rgba(94, 112, 85, 0.87);
+          }
+
+          h2 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+          }
+
+          .generate-report-btn {
+            background: linear-gradient(to right, rgba(94, 112, 85, 0.87), #5e7055);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+          }
+
+          .generate-report-btn:hover:not(:disabled) {
+            background: linear-gradient(to right, #5e7055, rgba(94, 112, 85, 0.87));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+          }
+
+          .generate-report-btn:active:not(:disabled) {
+            transform: translateY(0);
+          }
+
+          .generate-report-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            opacity: 0.7;
+          }
+
+          .spin-animation {
+            animation: spin 1s linear infinite;
+          }
+
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+
+          .status-message {
+            text-align: center;
+            padding: 2rem;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          }
+
+          .loading {
+            color: #3498db;
+            background-color: rgba(52, 152, 219, 0.1);
+            border: 1px dashed #3498db;
+          }
+
+          .error {
+            color: #e74c3c;
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 1px dashed #e74c3c;
+          }
+
+          .no-data {
+            color: #7f8c8d;
+            background-color: rgba(127, 140, 141, 0.1);
+            border: 1px dashed #7f8c8d;
+          }
+
+          .table-wrapper {
+            overflow-x: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            background-color: white;
+            margin: 1.5rem 0;
+            border: 1px solid #e0e0e0;
+          }
+
+          .courses-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+          }
+
+          .courses-table th {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1rem;
+            position: sticky;
+            top: 0;
+          }
+
+          .courses-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+            vertical-align: top;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+          }
+
+          .courses-table tr:last-child td {
+            border-bottom: none;
+          }
+
+          .hover-animation:hover {
+            transform: translateX(5px);
+            box-shadow: 5px 0 15px -5px rgba(0,0,0,0.1);
+          }
+
+          .year-cell {
+            width: 120px;
+            font-weight: 600;
+            color: #3498db;
+            background-color: #f8fbff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          .year-icon {
+            color: #5e7055;
+          }
+
+          .course-cell {
+            width: 200px;
+            font-weight: 500;
+            color: #2c3e50;
+          }
+
+          .modules-cell {
+            min-width: 300px;
+            color: #34495e;
+          }
+
+          /* Zebra striping */
+          .courses-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+          }
+
+          /* Responsive adjustments */
+          @media (max-width: 768px) {
+            .header-section {
+              flex-direction: column;
+              align-items: flex-start;
+              padding: 1rem;
+            }
+
+            h2 {
+              font-size: 1.5rem;
+            }
+
+            .generate-report-btn {
+              width: 100%;
+              justify-content: center;
+            }
+
+            .courses-table th,
+            .courses-table td {
+              padding: 0.8rem;
+            }
+
+            .year-cell {
+              width: 90px;
+            }
+
+            .course-cell {
+              width: 150px;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .organized-courses-container {
+              padding: 0 0.5rem;
+            }
+
+            .courses-table th,
+            .courses-table td {
+              padding: 0.6rem;
+              font-size: 0.85rem;
+            }
+
+            .year-cell {
+              width: 80px;
+            }
+          }
+        `}
+      </style>
+      <Footer />
     </div>
   );
 };
 
-export default Coursereport;
+export default OrganizedCoursesTable;
