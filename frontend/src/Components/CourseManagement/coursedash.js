@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Header from "../Navbar/Header";
-import Footer from "../Navbar/footer";
+import Footer from "../Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './coursed.css';
 import AddDoc from "../CourseManagement/AddDoc"; // Import your AddDoc component
@@ -39,6 +39,12 @@ function Coursed() {
             </div>
           </div>
         )}
+
+        <div className="p1 mt-5">
+          <Link to="/coursereport" style={{ textDecoration: 'none', color: 'white' }}>
+            <h3 className="title">Course Report</h3>
+          </Link>
+        </div>
 
         <div className="p1 container mt-5">
           <h3 className="title">Available Courses</h3>

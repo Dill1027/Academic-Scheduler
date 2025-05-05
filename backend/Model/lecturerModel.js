@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const LecturerSchema = new mongoose.Schema({
     lecturerId: {
@@ -50,8 +50,14 @@ const LecturerSchema = new mongoose.Schema({
         required: [true, "Date of Birth is required"],
         validate: {
             validator: function (value) {
-                const ageDiff = new Date().getFullYear() - value.getFullYear();
-                return ageDiff >= 18;
+                const today = new Date();
+                const birthDate = new Date(value);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                return age >= 18;
             },
             message: "Lecturer must be at least 18 years old"
         }
@@ -95,7 +101,7 @@ const LecturerSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Hash password before saving
-/*LecturerSchema.pre("save", async function(next) {
+LecturerSchema.pre("save", async function(next) {
     if (!this.isModified("password")) return next();
     this.password = await bcrypt.hash(this.password, 10);
     next();
@@ -104,6 +110,6 @@ const LecturerSchema = new mongoose.Schema({
 // Method to compare passwords
 LecturerSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
-};*/
+};
 
 module.exports = mongoose.model("Lecturer", LecturerSchema);

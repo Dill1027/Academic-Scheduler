@@ -83,6 +83,16 @@ router.get("/student", async (req, res) => {
     }
 });
 
+// Add this new route for pending students
+router.get("/pending", async (req, res) => {
+    try {
+        const pendingStudents = await Student.find({ status: "pending" });
+        res.json(pendingStudents);
+    } catch (error) {
+        res.status(500).json({ error: "Error fetching pending students." });
+    }
+});
+
 // Admin updates student status (approve/decline)
 router.patch("/:id", async (req, res) => {
     try {
@@ -150,17 +160,33 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// Update student details
 router.put("/:id", async (req, res) => {
     try {
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        const { id } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ error: "Invalid student ID format." });
         }
-        const updatedStudent = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedStudent) return res.status(404).json({ message: "Student not found" });
-        res.json({ message: "Update successful", updatedStudent });
+
+        // Get the existing student first
+        const existingStudent = await Student.findById(id);
+        if (!existingStudent) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        // Prevent updating certain fields
+        const { registrationNumber, year, status, group, password, ...updateData } = req.body;
+
+        // Only update allowed fields
+        const updatedStudent = await Student.findByIdAndUpdate(
+            id, 
+            updateData, 
+            { new: true }
+        );
+
+        res.json(updatedStudent);
     } catch (error) {
-        res.status(400).json({ message: "Update failed" });
+        console.error("Error updating student:", error);
+        res.status(500).json({ error: "Error updating student details." });
     }
 });
 
@@ -193,6 +219,40 @@ router.get('/dashboard', async (req, res) => {
         });
     } catch (err) {
         res.status(500).json({ message: "Error fetching dashboard data" });
+    }
+});
+
+// Update student modules
+router.put("/:id/modules", async (req, res) => {
+    try {
+        const { modules } = req.body;
+      
+        if (!Array.isArray(modules)) {
+            return res.status(400).json({ error: "Modules should be an array" });
+        }
+    
+        const modulesToSave = modules
+            .map(module => module.trim())
+            .filter(module => module !== '')
+            .slice(0, 5);
+    
+        const updatedStudent = await Student.findByIdAndUpdate(
+            req.params.id,
+            { modules: modulesToSave },
+            { new: true }
+        );
+    
+        if (!updatedStudent) {
+            return res.status(404).json({ error: "Student not found" });
+        }
+    
+        res.json({ 
+            message: "Modules updated successfully",
+            student: updatedStudent
+        });
+    } catch (error) {
+        console.error("Error updating modules:", error);
+        res.status(500).json({ error: "Error updating modules" });
     }
 });
 

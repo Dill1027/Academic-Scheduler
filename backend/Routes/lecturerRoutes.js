@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const Lecturer = require("../Model/lecturerModel");
-const  User = require("../Model/User");
+const User = require("../Model/User");
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
@@ -121,16 +121,11 @@ router.post("/add", upload.none(), async (req, res) => {
             password: hashedPassword
         });
         const newUser = new User({
-                    name: userName,
-                    email,
-                    password, // Store password in plain text
-                    role: "Lecturer",
-                });
-        
-                // Save both student and user
-                
-                
-        
+            name: userName,
+            email,
+            password, // Store password in plain text
+            role: "Lecturer",
+        });
 
         // Save to database
         await newLecturer.save();
@@ -304,6 +299,7 @@ router.get("/gender-distribution", async (req, res) => {
     }
 });
 
+// Generate and download lecturer report
 router.get("/download-report", async (req, res) => {
     try {
         const lecturers = await Lecturer.find().select('-password').sort({ createdAt: -1 });
@@ -344,6 +340,7 @@ router.get("/download-report", async (req, res) => {
             .text(`Total Lecturers: ${lecturers.length}`)
             .moveDown(0.5);
 
+        // Gender Distribution
         const genderCount = await Lecturer.aggregate([
             { $group: { _id: "$gender", count: { $sum: 1 } } }
         ]);
@@ -353,46 +350,67 @@ router.get("/download-report", async (req, res) => {
         genderCount.forEach(gender => {
             doc.text(`${gender._id}: ${gender.count} (${Math.round((gender.count / lecturers.length) * 100)}%)`);
         });
-
         doc.moveDown(1.5);
 
-        // === Lecturer Full Details Section ===
+        // === Lecturer Details Table ===
+        const tableHeaders = ['No.', 'ID', 'Name', 'Email', 'Phone', 'Specialization'];
+        const columnWidths = [30, 60, 120, 150, 80, 100];
+        
+        doc.addPage();
+        
+        // Draw table headers
+        let y = doc.y;
+        doc.font('Helvetica-Bold');
+        tableHeaders.forEach((header, i) => {
+            doc.text(header, 50 + columnWidths.slice(0, i).reduce((a, b) => a + b, 0), y, {
+                width: columnWidths[i],
+                align: 'left'
+            });
+        });
+        doc.font('Helvetica');
+
+        // Draw horizontal line
+        y += 20;
+        doc.moveTo(50, y).lineTo(50 + columnWidths.reduce((a, b) => a + b, 0), y).stroke();
+        y += 10;
+
+        // Add lecturer rows
         lecturers.forEach((lecturer, index) => {
-            if (doc.y > 650) {
+            if (y > 700) {
                 doc.addPage();
+                y = 50;
+                
+                // Redraw headers on new page
+                doc.font('Helvetica-Bold');
+                tableHeaders.forEach((header, i) => {
+                    doc.text(header, 50 + columnWidths.slice(0, i).reduce((a, b) => a + b, 0), y, {
+                        width: columnWidths[i],
+                        align: 'left'
+                    });
+                });
+                doc.font('Helvetica');
+                y += 30;
             }
 
-            doc
-                .fontSize(12)
-                .fillColor('#1F4E79')
-                .font('Helvetica-Bold')
-                .text(`Lecturer ${index + 1}:`, { underline: true })
-                .moveDown(0.5);
-
-            doc.fillColor('black').font('Helvetica');
-
-            const fields = [
-                { label: "Lecturer ID", value: lecturer.lecturerId },
-                { label: "Full Name", value: lecturer.fullName },
-                { label: "Username", value: lecturer.userName },
-                { label: "Email", value: lecturer.email },
-                { label: "Phone Number", value: lecturer.phoneNumber },
-                { label: "Date of Birth", value: new Date(lecturer.DOB).toLocaleDateString() },
-                { label: "Gender", value: lecturer.gender },
-                { label: "Address", value: lecturer.address },
-                { label: "NIC", value: lecturer.nic },
-                { label: "Specialization", value: lecturer.specialization },
-                { label: "Year", value: lecturer.year },
-                { label: "Modules", value: Array.isArray(lecturer.modules) ? lecturer.modules.join(', ') : lecturer.modules }
+            const rowData = [
+                (index + 1).toString(),
+                lecturer.lecturerId,
+                lecturer.fullName,
+                lecturer.email,
+                lecturer.phoneNumber,
+                lecturer.specialization
             ];
 
-            fields.forEach(({ label, value }) => {
-                doc
-                    .font('Helvetica-Bold').text(`${label}: `, { continued: true })
-                    .font('Helvetica').text(value || 'N/A');
+            rowData.forEach((data, i) => {
+                doc.text(data, 50 + columnWidths.slice(0, i).reduce((a, b) => a + b, 0), y, {
+                    width: columnWidths[i],
+                    align: 'left'
+                });
             });
 
-            doc.moveDown(1.2);
+            y += 20;
+            doc.moveTo(50, y).lineTo(50 + columnWidths.reduce((a, b) => a + b, 0), y).stroke();
+            y += 10;
         });
 
         doc.end();
@@ -402,6 +420,5 @@ router.get("/download-report", async (req, res) => {
         errorResponse(res, 500, "Error generating report", error);
     }
 });
-
 
 module.exports = router;

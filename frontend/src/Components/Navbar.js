@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Navbar.css";
 
+
 function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg" style={{ backgroundColor: "#002147" }}>
@@ -27,10 +28,10 @@ function Navbar() {
               <Link className="nav-link text-white" to="/">Home</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/students">Student</Link>
+              <Link className="nav-link text-white" to="/studentManagement">Student</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/lecturers">Lecturer</Link>
+              <Link className="nav-link text-white" to="/lecturerDashbord">Lecturer</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link text-white" to="/course">Course</Link>

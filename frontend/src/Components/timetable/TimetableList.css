@@ -1,0 +1,41 @@
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.table-cell-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.table-cell-hover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #4361ee, #3f37c9);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.table-cell-hover:hover::after {
+  transform: translateX(0);
+}
+
+.action-button-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}

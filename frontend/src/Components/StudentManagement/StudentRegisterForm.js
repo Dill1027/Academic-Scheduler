@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2"; // <-- SweetAlert2 import
 
 const InsertStudent = () => {
   const [studentData, setStudentData] = useState({
@@ -14,11 +16,12 @@ const InsertStudent = () => {
 
   const [groups, setGroups] = useState([]);
   const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/groups")
+      .get("http://localhost:6001/api/groups")
       .then((response) => setGroups(response.data))
       .catch((error) => console.error("Error fetching groups", error));
   }, []);
@@ -76,154 +79,237 @@ const InsertStudent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     if (validateForm()) {
       try {
-        const response = await axios.post("http://localhost:5000/api/student", {
+        const response = await axios.post("http://localhost:6001/api/student", {
           ...studentData,
           status: "pending",
         });
 
         if (response.data.message) {
-          setSuccess(true);
-          setStudentData({
-            studentName: "",
-            registrationNumber: "",
-            email: "",
-            phoneNumber: "",
-            specialization: "",
-            groupId: "",
-            password: "",
+          Swal.fire({
+            icon: "success",
+            title: "Registration Successful!",
+            text: "The student has been registered successfully.",
+            showConfirmButton: false,
+            timer: 2000,
           });
-
-          setTimeout(() => setSuccess(false), 3000);
+          setTimeout(() => {
+            navigate("/userbase");
+          }, 2100);
         }
       } catch (error) {
         console.error("Registration error:", error.response?.data || error.message);
-        setErrors({
-          submit: error.response?.data?.error || "Registration failed. Please try again.",
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed!",
+          text: error.response?.data?.error || "Registration failed. Please try again.",
         });
+      } finally {
+        setIsSubmitting(false);
       }
+    } else {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Student Registration Form</h2>
+    <div className="container mt-4">
+      <div className="row justify-content-center">
+        <div className="col-lg-8">
+          <div className="card shadow-sm">
+            <div className="card-header bg-primary text-white">
+              <h4 className="mb-0">
+                <i className="bi bi-person-plus me-2"></i>
+                Student Registration
+              </h4>
+            </div>
 
-      {success && <div className="alert alert-success">Student registered successfully!</div>}
-      {errors.submit && <div className="alert alert-danger">{errors.submit}</div>}
+            <div className="card-body">
+              <form onSubmit={handleSubmit}>
+                {/* Full Name */}
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="studentName" className="form-label">
+                      <i className="bi bi-person-fill me-2"></i>
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="studentName"
+                      id="studentName"
+                      className={`form-control ${errors.studentName ? "is-invalid" : ""}`}
+                      placeholder="John Doe"
+                      onChange={handleChange}
+                      value={studentData.studentName}
+                    />
+                    {errors.studentName && (
+                      <div className="invalid-feedback d-block">{errors.studentName}</div>
+                    )}
+                  </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label htmlFor="studentName" className="form-label">Student Name</label>
-          <input
-            type="text"
-            name="studentName"
-            id="studentName"
-            className="form-control"
-            placeholder="Enter student name"
-            onChange={handleChange}
-            value={studentData.studentName}
-          />
-          {errors.studentName && <div className="text-danger">{errors.studentName}</div>}
+                  {/* Registration Number */}
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="registrationNumber" className="form-label">
+                      <i className="bi bi-card-heading me-2"></i>
+                      Registration Number *
+                    </label>
+                    <input
+                      type="text"
+                      name="registrationNumber"
+                      id="registrationNumber"
+                      className={`form-control ${errors.registrationNumber ? "is-invalid" : ""}`}
+                      placeholder="21XXXXXX"
+                      onChange={handleChange}
+                      value={studentData.registrationNumber}
+                    />
+                    {errors.registrationNumber && (
+                      <div className="invalid-feedback d-block">{errors.registrationNumber}</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Email and Phone */}
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="email" className="form-label">
+                      <i className="bi bi-envelope-fill me-2"></i>
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      className={`form-control ${errors.email ? "is-invalid" : ""}`}
+                      placeholder="student@example.com"
+                      onChange={handleChange}
+                      value={studentData.email}
+                    />
+                    {errors.email && (
+                      <div className="invalid-feedback d-block">{errors.email}</div>
+                    )}
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="phoneNumber" className="form-label">
+                      <i className="bi bi-telephone-fill me-2"></i>
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      name="phoneNumber"
+                      id="phoneNumber"
+                      className={`form-control ${errors.phoneNumber ? "is-invalid" : ""}`}
+                      placeholder="0712345678"
+                      onChange={handleChange}
+                      value={studentData.phoneNumber}
+                    />
+                    {errors.phoneNumber && (
+                      <div className="invalid-feedback d-block">{errors.phoneNumber}</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Password and Specialization */}
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="password" className="form-label">
+                      <i className="bi bi-lock-fill me-2"></i>
+                      Password *
+                    </label>
+                    <input
+                      type="password"
+                      name="password"
+                      id="password"
+                      className={`form-control ${errors.password ? "is-invalid" : ""}`}
+                      placeholder="••••••"
+                      onChange={handleChange}
+                      value={studentData.password}
+                    />
+                    {errors.password && (
+                      <div className="invalid-feedback d-block">{errors.password}</div>
+                    )}
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label htmlFor="specialization" className="form-label">
+                      <i className="bi bi-book-fill me-2"></i>
+                      Specialization *
+                    </label>
+                    <select
+                      name="specialization"
+                      id="specialization"
+                      className={`form-select ${errors.specialization ? "is-invalid" : ""}`}
+                      onChange={handleChange}
+                      value={studentData.specialization}
+                    >
+                      <option value="">Select Specialization</option>
+                      <option value="Information Technology">Information Technology</option>
+                      <option value="Software Engineering">Software Engineering</option>
+                      <option value="Cyber Security">Cyber Security</option>
+                      <option value="Interactive Media">Interactive Media</option>
+                      <option value="Data Science">Data Science</option>
+                    </select>
+                    {errors.specialization && (
+                      <div className="invalid-feedback d-block">{errors.specialization}</div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Group Assignment */}
+                <div className="mb-4">
+                  <label htmlFor="groupId" className="form-label">
+                    <i className="bi bi-people-fill me-2"></i>
+                    Group Assignment
+                  </label>
+                  <select
+                    name="groupId"
+                    id="groupId"
+                    className="form-select"
+                    onChange={handleChange}
+                    value={studentData.groupId}
+                  >
+                    <option value="">Select Group (Optional)</option>
+                    {groups.map((group) => (
+                      <option key={group._id} value={group._id}>
+                        {group.groupName} (Members: {group.students?.length || 0})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Submit Button */}
+                <div className="d-grid gap-2">
+                  <button
+                    type="submit"
+                    className="btn btn-primary py-2"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Registering...
+                      </>
+                    ) : (
+                      <>
+                        <i className="bi bi-person-plus me-2"></i>
+                        Register Student
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div className="card-footer text-muted small">
+              <i className="bi bi-info-circle me-2"></i>
+              Fields marked with * are required
+            </div>
+          </div>
         </div>
-
-        <div className="mb-3">
-          <label htmlFor="registrationNumber" className="form-label">Registration Number</label>
-          <input
-            type="text"
-            name="registrationNumber"
-            id="registrationNumber"
-            className="form-control"
-            placeholder="Enter registration number"
-            onChange={handleChange}
-            value={studentData.registrationNumber}
-          />
-          {errors.registrationNumber && <div className="text-danger">{errors.registrationNumber}</div>}
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            className="form-control"
-            placeholder="Enter email address"
-            onChange={handleChange}
-            value={studentData.email}
-          />
-          {errors.email && <div className="text-danger">{errors.email}</div>}
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="phoneNumber" className="form-label">Phone Number (optional)</label>
-          <input
-            type="tel"
-            name="phoneNumber"
-            id="phoneNumber"
-            className="form-control"
-            placeholder="Enter phone number"
-            onChange={handleChange}
-            value={studentData.phoneNumber}
-          />
-          {errors.phoneNumber && <div className="text-danger">{errors.phoneNumber}</div>}
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            className="form-control"
-            placeholder="Enter password"
-            onChange={handleChange}
-            value={studentData.password}
-          />
-          {errors.password && <div className="text-danger">{errors.password}</div>}
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="specialization" className="form-label">Specialization</label>
-          <select
-            name="specialization"
-            id="specialization"
-            className="form-select"
-            onChange={handleChange}
-            value={studentData.specialization}
-          >
-            <option value="">Select Specialization</option>
-            <option value="Information Technology">Information Technology</option>
-            <option value="Software Engineering">Software Engineering</option>
-            <option value="Cyber Security">Cyber Security</option>
-            <option value="Interactive Media">Interactive Media</option>
-            <option value="Data Science">Data Science</option>
-          </select>
-          {errors.specialization && <div className="text-danger">{errors.specialization}</div>}
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="groupId" className="form-label">Group (optional)</label>
-          <select
-            name="groupId"
-            id="groupId"
-            className="form-select"
-            onChange={handleChange}
-            value={studentData.groupId}
-          >
-            <option value="">Select Group</option>
-            {groups.map((group) => (
-              <option key={group._id} value={group._id}>
-                {group.groupName} (Members: {group.students.length})
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button type="submit" className="btn btn-primary w-100">Register Student</button>
-      </form>
+      </div>
     </div>
   );
 };

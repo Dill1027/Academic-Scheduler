@@ -47,6 +47,12 @@ const AddLectureForm = ({ closeModal }) => {
     };
 
     const validateForm = () => {
+        // Lecturer ID validation (must start with 'L' followed by exactly 3 digits)
+        const lecturerIdRegex = /^L\d{3}$/;
+        if (!lecturerIdRegex.test(lecturer.lecturerId)) {
+            return "Lecturer ID must start with 'L' followed by exactly 3 digits (e.g., L123)";
+        }
+
         // NIC validation (Sri Lankan format)
         const nicRegex = /^(\d{9}[vV]|\d{12})$/;
         if (!nicRegex.test(lecturer.nic)) {
@@ -89,8 +95,8 @@ const AddLectureForm = ({ closeModal }) => {
         }
 
         // Modules validation
-        if (lecturer.modules.length === 0) {
-            return "At least one module must be selected";
+        if (!lecturer.modules || lecturer.modules.length === 0) {
+            return "Please select at least one module";
         }
 
         return null;
@@ -113,7 +119,7 @@ const AddLectureForm = ({ closeModal }) => {
             console.log("Submitting lecturer data:", lecturer);
 
             const response = await axios.post(
-                "http://localhost:5000/api/lecturers/add", 
+                "http://localhost:6001/api/lecturers/add", 
                 {
                     ...lecturer,
                     DOB: lecturer.DOB // Keep as string, backend will convert
@@ -179,12 +185,14 @@ const AddLectureForm = ({ closeModal }) => {
             {error && <p className="error">{error}</p>}
 
             <form onSubmit={handleSubmit}>
-                <label>Lecturer ID:</label>
+                <label>Lecturer ID (e.g., L123):</label>
                 <input
                     type="text"
                     name="lecturerId"
                     value={lecturer.lecturerId}
                     onChange={handleChange}
+                    pattern="L\d{3}"
+                    title="Lecturer ID must start with 'L' followed by exactly 3 digits"
                     required
                 />
 
@@ -319,22 +327,24 @@ const AddLectureForm = ({ closeModal }) => {
                 </select>
 
                 {lecturer.specialization && lecturer.year && (
-                    <>
-                        <label>Modules:</label>
-                        <div className="checkbox-container">
+                    <div className="modules-section">
+                        <label>Select Modules:</label>
+                        <div className="modules-grid">
                             {moduleOptions[lecturer.specialization]?.[lecturer.year]?.map((module) => (
-                                <label key={module}>
+                                <label key={module} className="module-checkbox">
                                     <input
                                         type="checkbox"
-                                        value={module}
                                         checked={lecturer.modules.includes(module)}
                                         onChange={() => handleModuleChange(module)}
                                     />
-                                    {module}
+                                    <span>{module}</span>
                                 </label>
                             ))}
                         </div>
-                    </>
+                        {error && error.includes("module") && (
+                            <div className="error-message">{error}</div>
+                        )}
+                    </div>
                 )}
 
                 <button

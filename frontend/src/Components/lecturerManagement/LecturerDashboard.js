@@ -20,16 +20,19 @@ const LecturerDashboard = () => {
     const fetchGenderDistribution = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/lecturers/gender-distribution");
-        
-        // Transform the array into an object with gender as key and count as value
-        const genderCount = response.data.data.reduce((acc, { _id, count }) => {
-          acc[_id] = count;
-          return acc;
-        }, {});
-
-        setGenderData(genderCount);
+        if (response.data && response.data.data) {
+          const genderCount = response.data.data.reduce((acc, { _id, count }) => {
+            acc[_id || 'Unknown'] = count;
+            return acc;
+          }, {});
+          setGenderData(genderCount);
+        } else {
+          console.error("Invalid data format received:", response.data);
+          setGenderData({});
+        }
       } catch (error) {
         console.error("Error fetching gender distribution:", error);
+        setGenderData({});
       } finally {
         setLoading(false);
       }
@@ -40,20 +43,10 @@ const LecturerDashboard = () => {
 
   const handleDownloadReport = async () => {
     try {
-      const reportDate = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-      
       const response = await axios.get('http://localhost:5000/api/lecturers/download-report', {
         responseType: 'blob',
-        params: {
-          reportTitle: "Lecturer Master Report",
-          reportSubtitle: "Comprehensive Lecturer Information",
-          department: "Computer Science Department",
-          reportDate: reportDate,
-          preparedBy: "Academic Administration"
+        headers: {
+          'Accept': 'application/pdf'
         }
       });
       
@@ -63,7 +56,6 @@ const LecturerDashboard = () => {
       link.setAttribute('download', `lecturer-report-${new Date().toISOString().slice(0,10)}.pdf`);
       document.body.appendChild(link);
       link.click();
-      
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
     } catch (error) {
@@ -170,6 +162,7 @@ const LecturerDashboard = () => {
         <div style={{ display: "flex", gap: "20px" }}>
           <button onClick={() => navigate("/home")} style={navButtonStyle}>Home</button>
           <button onClick={() => navigate("/lectureview")} style={navButtonStyle}>Lecturers</button>
+          <button onClick={() => navigate("/students")} style={navButtonStyle}>Student List</button>
           <button onClick={handleDownloadReport} style={navButtonStyle}>Lecture Details Report</button>
           <button onClick={() => navigate("/reviews")} style={navButtonStyle}>Student Reviews</button>
           <button onClick={() => navigate("/userbase")} style={{ ...navButtonStyle, backgroundColor: "#dc3545" }}>Logout</button>
