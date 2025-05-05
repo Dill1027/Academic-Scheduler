@@ -16,11 +16,13 @@ const LecturerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  /*useEffect(() => {
+  useEffect(() => {
     const fetchGenderDistribution = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/employees/gender-distribution");
-        const genderCount = response.data.reduce((acc, { _id, count }) => {
+        const response = await axios.get("http://localhost:5000/api/lecturers/gender-distribution");
+        
+        // Transform the array into an object with gender as key and count as value
+        const genderCount = response.data.data.reduce((acc, { _id, count }) => {
           acc[_id] = count;
           return acc;
         }, {});
@@ -35,15 +37,61 @@ const LecturerDashboard = () => {
 
     fetchGenderDistribution();
   }, []);
-*/
+
+  const handleDownloadReport = async () => {
+    try {
+      const reportDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      const response = await axios.get('http://localhost:5000/api/lecturers/download-report', {
+        responseType: 'blob',
+        params: {
+          reportTitle: "Lecturer Master Report",
+          reportSubtitle: "Comprehensive Lecturer Information",
+          department: "Computer Science Department",
+          reportDate: reportDate,
+          preparedBy: "Academic Administration"
+        }
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `lecturer-report-${new Date().toISOString().slice(0,10)}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error("Error downloading report:", error);
+      alert("Failed to download report. Please try again.");
+    }
+  };
+
+  // Prepare data for the pie chart
   const pieChartData = {
-    labels: Object.keys(genderData).map(gender => gender.charAt(0).toUpperCase() + gender.slice(1)),
+    labels: Object.keys(genderData).map(gender => {
+      // Capitalize first letter and lowercase the rest
+      return gender ? gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase() : 'Unknown';
+    }),
     datasets: [
       {
         label: "Lecturers Gender Distribution",
         data: Object.values(genderData),
-        backgroundColor: ["#FAD006", "#06402B"],
-        hoverOffset: 4,
+        backgroundColor: [
+          '#FF6384', // Pink
+          '#36A2EB', // Blue
+          '#FFCE56', // Yellow
+          '#4BC0C0', // Teal
+          '#9966FF'  // Purple
+        ],
+        borderColor: '#fff',
+        borderWidth: 2,
+        hoverOffset: 10
       },
     ],
   };
@@ -52,17 +100,56 @@ const LecturerDashboard = () => {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { position: "top" },
-      title: { display: true, text: "Gender Distribution of Employees" },
+      legend: { 
+        position: "right",
+        labels: {
+          padding: 20,
+          font: {
+            size: 14
+          }
+        }
+      },
+      title: { 
+        display: true, 
+        text: "Gender Distribution of Lecturers",
+        font: {
+          size: 18
+        },
+        padding: {
+          top: 10,
+          bottom: 30
+        }
+      },
       datalabels: {
         formatter: (value, context) => {
           const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-          const percentage = ((value / total) * 100).toFixed(2) + "%";
-          return `${value} (${percentage})`;
+          const percentage = Math.round((value / total) * 100);
+          return `${value}\n(${percentage}%)`;
         },
         color: "#fff",
+        font: {
+          weight: 'bold',
+          size: 14
+        },
+        textAlign: 'center'
       },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const label = context.label || '';
+            const value = context.raw || 0;
+            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+            const percentage = Math.round((value / total) * 100);
+            return `${label}: ${value} (${percentage}%)`;
+          }
+        }
+      }
     },
+    cutout: '50%', // Makes it a donut chart if you want
+    animation: {
+      animateScale: true,
+      animateRotate: true
+    }
   };
 
   return (
@@ -82,10 +169,10 @@ const LecturerDashboard = () => {
         <div style={{ fontSize: "24px", fontWeight: "bold" }}>Lecturer Dashboard</div>
         <div style={{ display: "flex", gap: "20px" }}>
           <button onClick={() => navigate("/home")} style={navButtonStyle}>Home</button>
-          <button onClick={() => navigate("/lectureview")} style={navButtonStyle}>Lectures</button>
-          <button onClick={() => navigate("/students")} style={navButtonStyle}>Student List</button>
+          <button onClick={() => navigate("/lectureview")} style={navButtonStyle}>Lecturers</button>
+          <button onClick={handleDownloadReport} style={navButtonStyle}>Lecture Details Report</button>
           <button onClick={() => navigate("/reviews")} style={navButtonStyle}>Student Reviews</button>
-          <button onClick={() => navigate("/adminDashboard")} style={{ ...navButtonStyle, backgroundColor: "#dc3545" }}>Logout</button>
+          <button onClick={() => navigate("/userbase")} style={{ ...navButtonStyle, backgroundColor: "#dc3545" }}>Logout</button>
         </div>
       </div>
 
@@ -96,12 +183,21 @@ const LecturerDashboard = () => {
 
       {/* Gender Distribution Chart */}
       <div style={cardStyle}>
-        <h3>Gender Distribution of Lecture</h3>
+        <h2 style={{ marginBottom: "20px", color: "#333" }}>Lecturer Gender Distribution</h2>
         {loading ? (
-          <p>Loading...</p>
+          <div style={{ textAlign: "center", padding: "50px" }}>
+            <p>Loading gender distribution data...</p>
+          </div>
+        ) : Object.keys(genderData).length === 0 ? (
+          <div style={{ textAlign: "center", padding: "50px" }}>
+            <p>No gender distribution data available</p>
+          </div>
         ) : (
-          <div style={{ width: "100%", height: "300px" }}>
-            <Pie data={pieChartData} options={pieChartOptions} />
+          <div style={{ width: "100%", height: "400px", margin: "0 auto" }}>
+            <Pie 
+              data={pieChartData} 
+              options={pieChartOptions} 
+            />
           </div>
         )}
       </div>
@@ -132,6 +228,9 @@ const navButtonStyle = {
   cursor: "pointer",
   transition: "background-color 0.3s",
   fontSize: "16px",
+  '&:hover': {
+    backgroundColor: "#0056b3"
+  }
 };
 
 const addButtonStyle = {
@@ -143,6 +242,9 @@ const addButtonStyle = {
   fontSize: "16px",
   cursor: "pointer",
   transition: "background-color 0.3s",
+  '&:hover': {
+    backgroundColor: "#218838"
+  }
 };
 
 const cardStyle = {
@@ -188,6 +290,10 @@ const closeButtonStyle = {
   border: "none",
   fontSize: "20px",
   cursor: "pointer",
+  color: "#333",
+  '&:hover': {
+    color: "#000"
+  }
 };
 
 export default LecturerDashboard;
