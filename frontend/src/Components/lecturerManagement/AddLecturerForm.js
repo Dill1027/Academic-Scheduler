@@ -119,10 +119,10 @@ const AddLectureForm = ({ closeModal }) => {
             console.log("Submitting lecturer data:", lecturer);
 
             const response = await axios.post(
-                "http://localhost:6001/api/lecturers/add", 
+                "http://localhost:5000/api/lecturers/add", // Changed from 6001 to 5000
                 {
                     ...lecturer,
-                    DOB: lecturer.DOB // Keep as string, backend will convert
+                    DOB: lecturer.DOB
                 },
                 {
                     headers: {
@@ -163,7 +163,7 @@ const AddLectureForm = ({ closeModal }) => {
             if (err.response) {
                 setError(err.response.data.message || "Failed to add lecturer");
             } else if (err.request) {
-                setError("No response from server. Please try again.");
+                setError("Server is not responding. Please check if the server is running.");
             } else {
                 setError("An error occurred. Please try again.");
             }
