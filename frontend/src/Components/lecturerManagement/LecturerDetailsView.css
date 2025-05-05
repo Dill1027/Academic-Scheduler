@@ -186,11 +186,11 @@
 }
 
 .action-buttons {
+  display: flex;
+  gap: 1rem;
   padding: 1rem;
   background: #f8fafc;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
-  display: flex;
-  gap: 1rem;
 }
 
 .btn {
