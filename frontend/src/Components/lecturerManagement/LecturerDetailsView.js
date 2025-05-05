@@ -168,7 +168,9 @@ const LecturerDetailsView = () => {
                     </div>
                   </div>
                 </div>
-                <div className="action-buttons">
+                <div className="lecturer-actions"> 
+                  {/* <button className="btn btn-primary">edit</button> */}
+
                   <button 
                     onClick={() => handleUpdate(lecturer)} 
                     className="btn edit-btn"
@@ -184,6 +186,8 @@ const LecturerDetailsView = () => {
                     <span>Delete</span>
                   </button>
                 </div>
+
+                
               </div>
             ))
           )}

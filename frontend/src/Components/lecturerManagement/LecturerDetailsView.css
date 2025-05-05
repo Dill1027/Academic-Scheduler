@@ -141,7 +141,7 @@
   text-decoration: underline;
 }
 
-.action-buttons {
+.lecturer-actions {
   display: flex;
   gap: 1rem;
   padding: 1rem;
