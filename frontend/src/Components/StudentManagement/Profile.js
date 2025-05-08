@@ -13,28 +13,29 @@ const Profile = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:6001/api/student/${id}`, {
+        const response = await fetch(`http://localhost:5000/api/student/${id}`, {
           headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "Accept": "application/json"
           }
         });
 
         if (!response.ok) {
-          throw new Error("Failed to fetch student data");
+          throw new Error(response.status === 404 ? "Student not found" : "Failed to fetch student data");
         }
 
         const data = await response.json();
         setStudent(data);
       } catch (error) {
         console.error("Error fetching student:", error);
-        setError(error.message);
+        setError(error.message || "Unable to connect to the server. Please check your connection.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchStudent();
-  }, [id, navigate]);
+  }, [id]);
 
   if (loading) {
     return (

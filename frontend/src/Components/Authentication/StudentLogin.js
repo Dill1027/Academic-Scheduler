@@ -16,9 +16,12 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:6001/api/auth/logins", {
+      const response = await fetch("http://localhost:5000/api/auth/logins", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
         body: JSON.stringify({ email, password }),
       });
 
@@ -29,11 +32,13 @@ const Login = () => {
         localStorage.setItem("student", JSON.stringify(data.student));
         navigate(`/profile/${data.student._id}`);
       } else {
-        setError(data.message || "Invalid email or password");
+        setError(data.message || "Login failed. Please check your credentials.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      setError("An error occurred. Please try again.");
+      setError(
+        "Unable to connect to the server. Please check your internet connection and try again."
+      );
     } finally {
       setIsLoading(false);
     }

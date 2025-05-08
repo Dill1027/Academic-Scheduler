@@ -19,16 +19,22 @@ const ProfileUpdate = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:6001/api/student/${id}`);
+        const response = await fetch(`http://localhost:5000/api/student/${id}`, {
+          headers: {
+            "Accept": "application/json"
+          }
+        });
         if (!response.ok) throw new Error("Failed to fetch student data");
         const data = await response.json();
         setStudent(data);
       } catch (error) {
-        setError(error.message);
+        setError("Unable to load student data. Please try again later.");
+        console.error(error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchStudent();
   }, [id]);
 

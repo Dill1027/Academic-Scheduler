@@ -21,7 +21,7 @@ const InsertStudent = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:6001/api/groups")
+      .get("http://localhost:5000/api/groups")
       .then((response) => setGroups(response.data))
       .catch((error) => console.error("Error fetching groups", error));
   }, []);
@@ -49,8 +49,19 @@ const InsertStudent = () => {
       formErrors.studentName = "Student name must contain only letters.";
     }
 
-    if (!studentData.registrationNumber.trim()) {
+    const regNumber = studentData.registrationNumber.trim();
+    if (!regNumber) {
       formErrors.registrationNumber = "Registration number is required";
+    } else {
+      const yearPrefix = regNumber.substring(0, 2);
+      const isValidYear = ['21', '22', '23', '24'].includes(yearPrefix);
+      const isValidFormat = /^\d{8}$/.test(regNumber);
+
+      if (!isValidYear) {
+        formErrors.registrationNumber = "Registration number must start with year (21-24)";
+      } else if (!isValidFormat) {
+        formErrors.registrationNumber = "Registration number must be 8 digits";
+      }
     }
 
     if (!studentData.email.trim()) {
@@ -83,7 +94,7 @@ const InsertStudent = () => {
 
     if (validateForm()) {
       try {
-        const response = await axios.post("http://localhost:6001/api/student", {
+        const response = await axios.post("http://localhost:5000/api/student", {
           ...studentData,
           status: "pending",
         });
@@ -92,7 +103,7 @@ const InsertStudent = () => {
           Swal.fire({
             icon: "success",
             title: "Registration Successful!",
-            text: "The student has been registered successfully.",
+            text: "Your registration has been submitted for review.",
             showConfirmButton: false,
             timer: 2000,
           });
