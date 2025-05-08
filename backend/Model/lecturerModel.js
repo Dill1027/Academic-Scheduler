@@ -50,8 +50,14 @@ const LecturerSchema = new mongoose.Schema({
         required: [true, "Date of Birth is required"],
         validate: {
             validator: function (value) {
-                const ageDiff = new Date().getFullYear() - value.getFullYear();
-                return ageDiff >= 18;
+                const today = new Date();
+                const birthDate = new Date(value);
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const m = today.getMonth() - birthDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                return age >= 18;
             },
             message: "Lecturer must be at least 18 years old"
         }

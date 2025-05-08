@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 const Lecturer = require("../Model/lecturerModel");
-const  User = require("../Model/User");
+const User = require("../Model/User");
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const bcrypt = require('bcryptjs');
@@ -121,16 +121,11 @@ router.post("/add", upload.none(), async (req, res) => {
             password: hashedPassword
         });
         const newUser = new User({
-                    name: userName,
-                    email,
-                    password, // Store password in plain text
-                    role: "Lecturer",
-                });
-        
-                // Save both student and user
-                
-                
-        
+            name: userName,
+            email,
+            password, // Store password in plain text
+            role: "Lecturer",
+        });
 
         // Save to database
         await newLecturer.save();
@@ -307,62 +302,64 @@ router.get("/gender-distribution", async (req, res) => {
 // Generate and download lecturer report
 router.get("/download-report", async (req, res) => {
     try {
-        // Fetch all lecturers from database (without passwords)
         const lecturers = await Lecturer.find().select('-password').sort({ createdAt: -1 });
-        
-        // Create a new PDF document
         const doc = new PDFDocument({ margin: 50 });
-        
-        // Set response headers for PDF download
+
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=lecturers-report.pdf');
-        
-        // Pipe the PDF to the response
         doc.pipe(res);
-        
-        // Add title and header
-        doc.fontSize(20)
-           .text('Lecturer Details Report', { align: 'center' })
-           .moveDown(0.5);
-        
-        doc.fontSize(10)
-           .text(`Generated on: ${new Date().toLocaleDateString()}`, { align: 'right' })
-           .moveDown(2);
-        
-        // Add summary section
-        doc.fontSize(14)
-           .text('Summary', { underline: true })
-           .moveDown(0.5);
-        
-        doc.fontSize(12)
-           .text(`Total Lecturers: ${lecturers.length}`)
-           .moveDown(1);
-        
-        // Add gender distribution
+
+        // === Report Header ===
+        doc
+            .fillColor('#1F4E79')
+            .fontSize(24)
+            .font('Helvetica-Bold')
+            .text('INSTITUTE OF HIGHER EDUCATION', { align: 'center' })
+            .moveDown(0.2)
+            .fillColor('#000000')
+            .fontSize(14)
+            .font('Helvetica')
+            .text('Lecturer Full Details Report', { align: 'center' })
+            .moveDown(0.5)
+            .fontSize(10)
+            .text(`Generated on: ${new Date().toLocaleDateString()}`, { align: 'right' })
+            .moveDown(1.5);
+
+        // === Summary Section ===
+        doc
+            .font('Helvetica-Bold')
+            .fontSize(13)
+            .fillColor('#1F4E79')
+            .text('Summary', { underline: true })
+            .moveDown(0.5);
+
+        doc
+            .font('Helvetica')
+            .fontSize(11)
+            .fillColor('black')
+            .text(`Total Lecturers: ${lecturers.length}`)
+            .moveDown(0.5);
+
+        // Gender Distribution
         const genderCount = await Lecturer.aggregate([
             { $group: { _id: "$gender", count: { $sum: 1 } } }
         ]);
-        
-        doc.text('Gender Distribution:', { underline: true })
-           .moveDown(0.5);
-        
+
+        doc.font('Helvetica-Bold').text('Gender Distribution:', { underline: true }).moveDown(0.3);
+        doc.font('Helvetica');
         genderCount.forEach(gender => {
             doc.text(`${gender._id}: ${gender.count} (${Math.round((gender.count / lecturers.length) * 100)}%)`);
         });
-        
-        doc.moveDown(2);
-        
-        // Add detailed lecturer information
-        doc.fontSize(14)
-           .text('Lecturer Details', { underline: true })
-           .moveDown(1);
-        
-        // Add table headers
+        doc.moveDown(1.5);
+
+        // === Lecturer Details Table ===
         const tableHeaders = ['No.', 'ID', 'Name', 'Email', 'Phone', 'Specialization'];
         const columnWidths = [30, 60, 120, 150, 80, 100];
-        let y = doc.y;
+        
+        doc.addPage();
         
         // Draw table headers
+        let y = doc.y;
         doc.font('Helvetica-Bold');
         tableHeaders.forEach((header, i) => {
             doc.text(header, 50 + columnWidths.slice(0, i).reduce((a, b) => a + b, 0), y, {
@@ -371,15 +368,15 @@ router.get("/download-report", async (req, res) => {
             });
         });
         doc.font('Helvetica');
-        
+
         // Draw horizontal line
         y += 20;
         doc.moveTo(50, y).lineTo(50 + columnWidths.reduce((a, b) => a + b, 0), y).stroke();
         y += 10;
-        
-        // Add lecturer data rows
+
+        // Add lecturer rows
         lecturers.forEach((lecturer, index) => {
-            if (y > 700) { // Add new page if we're at the bottom
+            if (y > 700) {
                 doc.addPage();
                 y = 50;
                 
@@ -394,7 +391,7 @@ router.get("/download-report", async (req, res) => {
                 doc.font('Helvetica');
                 y += 30;
             }
-            
+
             const rowData = [
                 (index + 1).toString(),
                 lecturer.lecturerId,
@@ -403,25 +400,21 @@ router.get("/download-report", async (req, res) => {
                 lecturer.phoneNumber,
                 lecturer.specialization
             ];
-            
-            // Draw row data
+
             rowData.forEach((data, i) => {
                 doc.text(data, 50 + columnWidths.slice(0, i).reduce((a, b) => a + b, 0), y, {
                     width: columnWidths[i],
                     align: 'left'
                 });
             });
-            
+
             y += 20;
-            
-            // Add horizontal line between rows
             doc.moveTo(50, y).lineTo(50 + columnWidths.reduce((a, b) => a + b, 0), y).stroke();
             y += 10;
         });
-        
-        // Finalize the PDF
+
         doc.end();
-        
+
     } catch (error) {
         console.error("Error generating report:", error);
         errorResponse(res, 500, "Error generating report", error);
