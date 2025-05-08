@@ -139,6 +139,10 @@ const LecturerDetailsView = () => {
                   </div>
                   <div className="lecturer-details">
                     <div className="detail-group">
+                      <i className="bi bi-person"></i>
+                      <span>Username: {lecturer.userName}</span>
+                    </div>
+                    <div className="detail-group">
                       <i className="bi bi-envelope"></i>
                       <a href={`mailto:${lecturer.email}`}>{lecturer.email}</a>
                     </div>
@@ -147,30 +151,36 @@ const LecturerDetailsView = () => {
                       <a href={`tel:${lecturer.phoneNumber}`}>{lecturer.phoneNumber}</a>
                     </div>
                     <div className="detail-group">
+                      <i className="bi bi-calendar-date"></i>
+                      <span>DOB: {new Date(lecturer.DOB).toLocaleDateString()}</span>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-gender-ambiguous"></i>
+                      <span>Gender: {lecturer.gender}</span>
+                    </div>
+                    <div className="detail-group">
                       <i className="bi bi-book"></i>
-                      <span>{lecturer.specialization}</span>
+                      <span>Specialization: {lecturer.specialization}</span>
                     </div>
                     <div className="detail-group">
                       <i className="bi bi-calendar"></i>
-                      <span>{lecturer.year}</span>
+                      <span>Year: {lecturer.year}</span>
                     </div>
                     <div className="detail-group">
-                      <i className="bi bi-mortarboard"></i>
-                      <span>{Array.isArray(lecturer.modules) ? lecturer.modules.join(", ") : lecturer.modules}</span>
+                      <i className="bi bi-journal-text"></i>
+                      <span>Modules: {Array.isArray(lecturer.modules) ? lecturer.modules.join(", ") : lecturer.modules}</span>
                     </div>
                     <div className="detail-group">
                       <i className="bi bi-geo-alt"></i>
-                      <span>{lecturer.address}</span>
+                      <span>Address: {lecturer.address}</span>
                     </div>
                     <div className="detail-group">
                       <i className="bi bi-person-vcard"></i>
-                      <span>{lecturer.nic}</span>
+                      <span>NIC: {lecturer.nic}</span>
                     </div>
                   </div>
                 </div>
                 <div className="lecturer-actions"> 
-                  {/* <button className="btn btn-primary">edit</button> */}
-
                   <button 
                     onClick={() => handleUpdate(lecturer)} 
                     className="btn edit-btn"
@@ -186,8 +196,6 @@ const LecturerDetailsView = () => {
                     <span>Delete</span>
                   </button>
                 </div>
-
-                
               </div>
             ))
           )}

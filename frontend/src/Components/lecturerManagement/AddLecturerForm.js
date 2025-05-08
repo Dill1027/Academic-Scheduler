@@ -10,7 +10,6 @@ const AddLectureForm = ({ closeModal }) => {
     const [lecturer, setLecturer] = useState({
         lecturerId: "",
         fullName: "",
-        userName: "",
         email: "",
         phoneNumber: "",
         DOB: "",
@@ -82,7 +81,7 @@ const AddLectureForm = ({ closeModal }) => {
 
         // Required fields
         const requiredFields = [
-            'lecturerId', 'fullName', 'userName', 'email', 
+            'lecturerId', 'fullName', 'email', 
             'phoneNumber', 'DOB', 'gender', 'address', 
             'nic', 'specialization', 'year', 'password',
             'confirmPassword'
@@ -136,7 +135,6 @@ const AddLectureForm = ({ closeModal }) => {
                 setLecturer({
                     lecturerId: "",
                     fullName: "",
-                    userName: "",
                     email: "",
                     phoneNumber: "",
                     DOB: "",
@@ -201,15 +199,6 @@ const AddLectureForm = ({ closeModal }) => {
                     type="text"
                     name="fullName"
                     value={lecturer.fullName}
-                    onChange={handleChange}
-                    required
-                />
-
-                <label>Username:</label>
-                <input
-                    type="text"
-                    name="userName"
-                    value={lecturer.userName}
                     onChange={handleChange}
                     required
                 />
