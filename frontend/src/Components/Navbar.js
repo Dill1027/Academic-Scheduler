@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Navbar.css";
-
+import { FaSearch } from 'react-icons/fa'; // Add this import
 
 function Navbar() {
   return (
@@ -42,15 +42,17 @@ function Navbar() {
           </ul>
 
           {/* Search Bar & Login Button */}
-          <div className="d-flex">
-            <div className="input-group">
-              <input 
-                className="form-control" 
-                type="search" 
-                placeholder="Search" 
-                aria-label="Search" 
-              />
-              <button className="btn search-btn" type="submit">Search</button>
+          <div className="d-flex align-items-center">
+            <div className="search-container">
+              <div className="search-wrapper">
+                <FaSearch className="search-icon" />
+                <input 
+                  className="search-input" 
+                  type="search" 
+                  placeholder="Search..." 
+                  aria-label="Search"
+                />
+              </div>
             </div>
             <Link to="/login" className="btn login-btn ms-3">Login</Link>
           </div>
