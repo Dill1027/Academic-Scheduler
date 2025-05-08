@@ -3,6 +3,9 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import moduleOptions from "./moduleOptions";
 import "./AddLectureForm.css";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2';
 
 const AddLectureForm = ({ closeModal }) => {
     const navigate = useNavigate();
@@ -10,7 +13,7 @@ const AddLectureForm = ({ closeModal }) => {
     const [lecturer, setLecturer] = useState({
         lecturerId: "",
         fullName: "",
-        userName: "", // Add userName field
+        userName: "",
         email: "",
         phoneNumber: "",
         DOB: "",
@@ -24,7 +27,6 @@ const AddLectureForm = ({ closeModal }) => {
         confirmPassword: ""
     });
 
-    const [message, setMessage] = useState("");
     const [error, setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -47,13 +49,11 @@ const AddLectureForm = ({ closeModal }) => {
     };
 
     const validateForm = () => {
-        // Lecturer ID validation (must start with 'L' followed by exactly 3 digits)
         const lecturerIdRegex = /^L\d{3}$/;
         if (!lecturerIdRegex.test(lecturer.lecturerId)) {
             return "Lecturer ID must start with 'L' followed by exactly 3 digits (e.g., L123)";
         }
 
-        // Username validation
         const userNameRegex = /^[a-zA-Z0-9_]+$/;
         if (!lecturer.userName) {
             return "Username is required";
@@ -65,25 +65,21 @@ const AddLectureForm = ({ closeModal }) => {
             return "Username can only contain letters, numbers, and underscores";
         }
 
-        // NIC validation (Sri Lankan format)
         const nicRegex = /^(\d{9}[vV]|\d{12})$/;
         if (!nicRegex.test(lecturer.nic)) {
             return "Invalid NIC format (e.g., 123456789V or 123456789012)";
         }
 
-        // Phone number validation
         const phoneRegex = /^(?:\+94|0)?7\d{8}$/;
         if (!phoneRegex.test(lecturer.phoneNumber)) {
             return "Invalid phone number format. Use +947XXXXXXXX or 07XXXXXXXX";
         }
 
-        // Email validation
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         if (!emailRegex.test(lecturer.email)) {
             return "Invalid email format";
         }
 
-        // Password validation
         if (lecturer.password.length < 8) {
             return "Password must be at least 8 characters";
         }
@@ -92,7 +88,6 @@ const AddLectureForm = ({ closeModal }) => {
             return "Passwords do not match";
         }
 
-        // Required fields
         const requiredFields = [
             'lecturerId', 'fullName', 'userName', 'email', 
             'phoneNumber', 'DOB', 'gender', 'address', 
@@ -106,7 +101,6 @@ const AddLectureForm = ({ closeModal }) => {
             }
         }
 
-        // Modules validation
         if (!lecturer.modules || lecturer.modules.length === 0) {
             return "Please select at least one module";
         }
@@ -116,11 +110,16 @@ const AddLectureForm = ({ closeModal }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage("");
         setError("");
         
         const validationError = validateForm();
         if (validationError) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: validationError,
+                confirmButtonColor: '#d33'
+            });
             setError(validationError);
             return;
         }
@@ -128,10 +127,8 @@ const AddLectureForm = ({ closeModal }) => {
         setIsSubmitting(true);
 
         try {
-            console.log("Submitting lecturer data:", lecturer);
-
             const response = await axios.post(
-                "http://localhost:5000/api/lecturers/add", // Changed from 6001 to 5000
+                "http://localhost:5000/api/lecturers/add",
                 {
                     ...lecturer,
                     DOB: lecturer.DOB
@@ -144,7 +141,15 @@ const AddLectureForm = ({ closeModal }) => {
             );
 
             if (response.data.success) {
-                setShowSuccessPopup(true);
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Lecturer added successfully!',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true
+                });
+
                 setLecturer({
                     lecturerId: "",
                     fullName: "",
@@ -163,22 +168,35 @@ const AddLectureForm = ({ closeModal }) => {
                 });
 
                 setTimeout(() => {
-                    setShowSuccessPopup(false);
                     if (closeModal) closeModal();
                     navigate("/lecturerDetails");
                 }, 2000);
             } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Add Lecturer',
+                    text: response.data.message || "Failed to add lecturer",
+                    confirmButtonColor: '#d33'
+                });
                 setError(response.data.message || "Failed to add lecturer");
             }
         } catch (err) {
             console.error("Full error:", err);
+            let errorMessage = "An error occurred. Please try again.";
+            
             if (err.response) {
-                setError(err.response.data.message || "Failed to add lecturer");
+                errorMessage = err.response.data.message || "Failed to add lecturer";
             } else if (err.request) {
-                setError("Server is not responding. Please check if the server is running.");
-            } else {
-                setError("An error occurred. Please try again.");
+                errorMessage = "Server is not responding. Please check if the server is running.";
             }
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+                confirmButtonColor: '#d33'
+            });
+            setError(errorMessage);
         } finally {
             setIsSubmitting(false);
         }
@@ -192,8 +210,8 @@ const AddLectureForm = ({ closeModal }) => {
 
     return (
         <div className="form-container">
+            <ToastContainer position="top-right" />
             <h2>Add New Lecturer</h2>
-            {message && <p className="message">{message}</p>}
             {error && <p className="error">{error}</p>}
 
             <form onSubmit={handleSubmit}>
@@ -372,7 +390,6 @@ const AddLectureForm = ({ closeModal }) => {
                 </button>
             </form>
 
-            {/* Success Popup */}
             {showSuccessPopup && (
                 <div className="success-popup-overlay">
                     <div className="success-popup">
