@@ -10,6 +10,7 @@ const AddLectureForm = ({ closeModal }) => {
     const [lecturer, setLecturer] = useState({
         lecturerId: "",
         fullName: "",
+        userName: "", // Add userName field
         email: "",
         phoneNumber: "",
         DOB: "",
@@ -52,20 +53,32 @@ const AddLectureForm = ({ closeModal }) => {
             return "Lecturer ID must start with 'L' followed by exactly 3 digits (e.g., L123)";
         }
 
+        // Username validation
+        const userNameRegex = /^[a-zA-Z0-9_]+$/;
+        if (!lecturer.userName) {
+            return "Username is required";
+        }
+        if (lecturer.userName.length < 5 || lecturer.userName.length > 15) {
+            return "Username must be between 5 and 15 characters";
+        }
+        if (!userNameRegex.test(lecturer.userName)) {
+            return "Username can only contain letters, numbers, and underscores";
+        }
+
         // NIC validation (Sri Lankan format)
         const nicRegex = /^(\d{9}[vV]|\d{12})$/;
         if (!nicRegex.test(lecturer.nic)) {
             return "Invalid NIC format (e.g., 123456789V or 123456789012)";
         }
 
-        // Phone number validation (10 digits)
-        const phoneRegex = /^\d{10}$/;
+        // Phone number validation
+        const phoneRegex = /^(?:\+94|0)?7\d{8}$/;
         if (!phoneRegex.test(lecturer.phoneNumber)) {
-            return "Phone number must be 10 digits";
+            return "Invalid phone number format. Use +947XXXXXXXX or 07XXXXXXXX";
         }
 
         // Email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         if (!emailRegex.test(lecturer.email)) {
             return "Invalid email format";
         }
@@ -81,7 +94,7 @@ const AddLectureForm = ({ closeModal }) => {
 
         // Required fields
         const requiredFields = [
-            'lecturerId', 'fullName', 'email', 
+            'lecturerId', 'fullName', 'userName', 'email', 
             'phoneNumber', 'DOB', 'gender', 'address', 
             'nic', 'specialization', 'year', 'password',
             'confirmPassword'
@@ -135,6 +148,7 @@ const AddLectureForm = ({ closeModal }) => {
                 setLecturer({
                     lecturerId: "",
                     fullName: "",
+                    userName: "",
                     email: "",
                     phoneNumber: "",
                     DOB: "",
@@ -203,6 +217,19 @@ const AddLectureForm = ({ closeModal }) => {
                     required
                 />
 
+                <label>Username:</label>
+                <input
+                    type="text"
+                    name="userName"
+                    value={lecturer.userName}
+                    onChange={handleChange}
+                    required
+                    pattern="[a-zA-Z0-9_]+"
+                    title="Username can only contain letters, numbers, and underscores"
+                    minLength="5"
+                    maxLength="15"
+                />
+
                 <label>Email:</label>
                 <input
                     type="email"
@@ -212,15 +239,15 @@ const AddLectureForm = ({ closeModal }) => {
                     required
                 />
 
-                <label>Phone Number:</label>
+                <label>Phone Number (e.g., 0712345678 or +94712345678):</label>
                 <input
                     type="text"
                     name="phoneNumber"
                     value={lecturer.phoneNumber}
                     onChange={handleChange}
                     required
-                    pattern="\d{10}"
-                    title="Please enter exactly 10 digits"
+                    pattern="^(?:\+94|0)?7\d{8}$"
+                    title="Enter valid phone number starting with 07 or +947"
                 />
 
                 <label>Date of Birth:</label>
