@@ -30,7 +30,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:6001/api/auth/register",
+        "http://localhost:5000/api/auth/register",
         formData,
         {
           headers: {
@@ -246,17 +246,19 @@ const containerStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   minHeight: '100vh',
-  backgroundColor: '#f8f9fa',
+  background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
   padding: '20px',
 };
 
 const cardStyle = {
   width: '100%',
   maxWidth: '600px',
-  backgroundColor: '#ffffff',
-  borderRadius: '10px',
-  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+  borderRadius: '15px',
+  boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.1)',
+  backdropFilter: 'blur(8px)',
   padding: '40px',
+  border: '1px solid rgba(255, 255, 255, 0.18)',
 };
 
 const headerStyle = {
@@ -267,7 +269,7 @@ const headerStyle = {
 const titleStyle = {
   fontSize: '28px',
   fontWeight: '600',
-  color: '#2c3e50',
+  color: '#1976d2',
   marginBottom: '10px',
   display: 'flex',
   alignItems: 'center',
@@ -307,9 +309,10 @@ const inputStyle = {
   width: '100%',
   padding: '12px 15px',
   fontSize: '16px',
-  border: '1px solid #ddd',
+  border: '1px solid #90caf9',
   borderRadius: '6px',
-  transition: 'border-color 0.3s',
+  transition: 'all 0.3s ease',
+  backgroundColor: 'rgba(255, 255, 255, 0.9)',
 };
 
 inputStyle[':focus'] = {
@@ -330,7 +333,7 @@ const submitButtonStyle = {
   fontSize: '16px',
   fontWeight: '600',
   color: '#ffffff',
-  backgroundColor: '#3498db',
+  background: 'linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)',
   border: 'none',
   borderRadius: '6px',
   cursor: 'pointer',
@@ -338,10 +341,13 @@ const submitButtonStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   transition: 'all 0.3s ease',
+  boxShadow: '0 4px 15px rgba(25, 118, 210, 0.2)',
 };
 
 submitButtonStyle[':hover'] = {
-  backgroundColor: '#2980b9',
+  background: 'linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)',
+  transform: 'translateY(-2px)',
+  boxShadow: '0 6px 20px rgba(25, 118, 210, 0.3)',
 };
 
 submitButtonStyle[':disabled'] = {
@@ -371,9 +377,10 @@ const footerTextStyle = {
 };
 
 const linkStyle = {
-  color: '#3498db',
+  color: '#1976d2',
   textDecoration: 'none',
   fontWeight: '500',
+  transition: 'all 0.3s ease',
 };
 
 linkStyle[':hover'] = {

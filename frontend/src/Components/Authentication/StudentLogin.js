@@ -136,17 +136,22 @@ const containerStyle = {
   justifyContent: "center",
   alignItems: "center",
   minHeight: "100vh",
-  backgroundColor: "#f5f7fa",
+  background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
   padding: "20px",
+  position: "relative",
+  overflow: "hidden"
 };
 
 const cardStyle = {
   width: "100%",
   maxWidth: "450px",
-  backgroundColor: "#ffffff",
-  borderRadius: "10px",
-  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "15px",
+  boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.1)",
+  backdropFilter: "blur(8px)",
   padding: "40px",
+  border: "1px solid rgba(255, 255, 255, 0.18)",
+  transition: "transform 0.3s ease"
 };
 
 const headerStyle = {
@@ -220,7 +225,7 @@ const submitButtonStyle = {
   fontSize: "16px",
   fontWeight: "600",
   color: "#ffffff",
-  backgroundColor: "#3498db",
+  background: "linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)",
   border: "none",
   borderRadius: "6px",
   cursor: "pointer",
@@ -228,6 +233,7 @@ const submitButtonStyle = {
   alignItems: "center",
   justifyContent: "center",
   transition: "all 0.3s ease",
+  boxShadow: "0 4px 15px rgba(25, 118, 210, 0.2)"
 };
 
 submitButtonStyle[":hover"] = {
