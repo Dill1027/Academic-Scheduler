@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import "./LecturerDetails.css"; // Import the CSS file
 
 const LecturerDetails = () => {
   const [lecturers, setLecturers] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     const fetchLecturers = async () => {
@@ -50,7 +52,15 @@ const LecturerDetails = () => {
   return (
     <div className="lecturer-container">
       <div className="lecturer-card">
-        <h2 className="lecturer-title">Lecturer Details</h2>
+        <div className="header-container">
+          <button 
+            onClick={() => navigate('/lecturerDashbord')} 
+            className="back-button"
+          >
+            &larr; Back to Dashboard
+          </button>
+          <h2 className="lecturer-title">Lecturer Details</h2>
+        </div>
 
         {errorMessage && (
           <div className="error-message">

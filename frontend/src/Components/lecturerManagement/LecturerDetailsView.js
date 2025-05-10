@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 import UpdateLecturerForm from "./UpdateLecturerForm";
 import "./LecturerDetailsView.css";
 
@@ -12,6 +13,7 @@ const LecturerDetailsView = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [editingLecturer, setEditingLecturer] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLecturers = async () => {
@@ -44,12 +46,23 @@ const LecturerDetailsView = () => {
   }, []);
 
   const filteredLecturers = useMemo(() => {
-    if (!searchTerm) return lecturers;
-    const lowercaseSearch = searchTerm.toLowerCase();
-    return lecturers.filter(lecturer => 
-      lecturer.lecturerId.toLowerCase().includes(lowercaseSearch) ||
-      lecturer.fullName.toLowerCase().includes(lowercaseSearch)
-    );
+    if (!searchTerm.trim()) return lecturers;
+    
+    const searchTerms = searchTerm.trim().toLowerCase().split(' ');
+    
+    return lecturers.filter(lecturer => {
+      const searchableFields = [
+        lecturer.lecturerId,
+        lecturer.userName,
+        lecturer.fullName,
+        lecturer.email,
+        lecturer.specialization
+      ].map(field => field?.toLowerCase() || '');
+
+      return searchTerms.every(term =>
+        searchableFields.some(field => field.includes(term))
+      );
+    });
   }, [lecturers, searchTerm]);
 
   const handleDelete = async (id) => {
@@ -108,7 +121,16 @@ const LecturerDetailsView = () => {
       />
 
       <div className="lecturer-card">
-        <h2 className="lecturer-title">Lecturer Management</h2>
+        <div className="lecturer-header-container">
+          <button 
+            onClick={() => navigate('/lecturerDashbord')}
+            className="back-button"
+          >
+            &larr; Back to Dashboard
+          </button>
+          <h2 className="lecturer-title">Lecturer Management</h2>
+        </div>
+
         {errorMessage && (
           <div className="error-message">
             {errorMessage}
@@ -119,9 +141,10 @@ const LecturerDetailsView = () => {
         )}
 
         <div className="search-container">
+          <i className="bi bi-search search-icon"></i>
           <input
             type="text"
-            placeholder="Search by ID or Name..."
+            placeholder="Search by ID, Name, Email, or Specialization..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -130,6 +153,7 @@ const LecturerDetailsView = () => {
             <button 
               onClick={() => setSearchTerm("")} 
               className="clear-search-button"
+              aria-label="Clear search"
             >
               ×
             </button>
@@ -214,7 +238,6 @@ const LecturerDetailsView = () => {
         </div>
       </div>
 
-      {/* Update Modal */}
       {showUpdateModal && (
         <div className="modal-overlay">
           <div className="modal-content">

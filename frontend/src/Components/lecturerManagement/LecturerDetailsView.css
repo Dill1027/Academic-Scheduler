@@ -63,9 +63,19 @@
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
   border: 1px solid var(--gray-300);
   border-radius: 0.375rem;
+  font-size: 1rem;
+  color: #000000;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-500);
   font-size: 1rem;
 }
 
@@ -186,7 +196,7 @@
   text-decoration: underline;
 }
 
-.action-buttons {
+.lecturer-actions {
   display: flex;
   gap: 1rem;
   padding: 1rem;
@@ -273,7 +283,199 @@
     padding: 0.6rem;
   }
 
-  .action-buttons {
+  .lecturer-actions {
     flex-direction: column;
+  }
+
+  .lecturer-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .lecturer-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+  }
+
+  .lecturer-title {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .error-message {
+    color: #e74c3c;
+    background: #fadbd8;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .retry-button {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .search-container {
+    position: relative;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 1rem;
+  }
+
+  .search-input {
+    width: 100%;
+    padding: 10px 15px 10px 40px;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    font-size: 1rem;
+    color: #000000;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+
+  .clear-search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 5px;
+  }
+
+  .clear-search-button:hover {
+    color: #495057;
+  }
+
+  .lecturer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+  }
+
+  .lecturer-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lecturer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .lecturer-badge {
+    background: #3498db;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+
+  .lecturer-details {
+    flex-grow: 1;
+  }
+
+  .detail-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+
+  .detail-group i {
+    margin-right: 8px;
+    color: #7f8c8d;
+    width: 20px;
+    text-align: center;
+  }
+
+  .lecturer-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+
+  .btn {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+  }
+
+  .edit-btn {
+    background: #3498db;
+    color: white;
+  }
+
+  .delete-btn {
+    background: #e74c3c;
+    color: white;
+  }
+
+  .loading, .no-results {
+    text-align: center;
+    padding: 20px;
+    grid-column: 1 / -1;
+    color: #7f8c8d;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
   }
 }
