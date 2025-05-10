@@ -144,177 +144,214 @@ const StudentList = () => {
   }
 
   return (
-    <div className="container-fluid py-4">
-      <div className="card shadow-lg">
-        <div className="card-header bg-primary text-white">
-          <div className="d-flex justify-content-between align-items-center">
-            <h3 className="mb-0">
-              <FaUserGraduate className="me-2" />
-              Student Directory
-            </h3>
-            <span className="badge bg-light text-primary fs-6">
-              {filteredStudents.length} {filteredStudents.length === 1 ? 'Student' : 'Students'}
-            </span>
-          </div>
-        </div>
-
-        <div className="card-body">
-          <div className="row g-3 mb-4">
-            {/* Search Input */}
-            <div className="col-md-4">
-              <div className="input-group">
-                <span className="input-group-text bg-light">
-                  <FaSearch />
-                </span>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search by name or registration number..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-            
-            {/* Specialization Filter */}
-            <div className="col-md-3">
-              <div className="input-group">
-                <span className="input-group-text bg-light">
-                  <FaBook />
-                </span>
-                <select 
-                  onChange={(e) => setSpecializationFilter(e.target.value)} 
-                  value={specializationFilter} 
-                  className="form-select"
-                >
-                  <option value="">All Specializations</option>
-                  <option value="Information Technology">Information Technology</option>
-                  <option value="Software Engineering">Software Engineering</option>
-                  <option value="Cyber Security">Cyber Security</option>
-                  <option value="Interactive Media">Interactive Media</option>
-                  <option value="Data Science">Data Science</option>
-                </select>
-              </div>
-            </div>
-            
-            {/* Year Filter */}
-            <div className="col-md-3">
-              <div className="input-group">
-                <span className="input-group-text bg-light">
-                  <FaCalendarAlt />
-                </span>
-                <select 
-                  onChange={(e) => setYearFilter(e.target.value)} 
-                  value={yearFilter} 
-                  className="form-select"
-                >
-                  <option value="">All Years</option>
-                  <option value="1">Year 1</option>
-                  <option value="2">Year 2</option>
-                  <option value="3">Year 3</option>
-                  <option value="4">Year 4</option>
-                </select>
-              </div>
-            </div>
-
-            {/* PDF Export Button */}
-            <div className="col-md-2 d-grid">
-              <button 
-                onClick={generatePDF}
-                className="btn btn-danger"
-                disabled={filteredStudents.length === 0}
-              >
-                <FaFilePdf className="me-2" />
-                Export PDF
-              </button>
+    <div style={containerStyle}>
+      
+      <div className="container-fluid py-5">
+        <div className="card shadow-lg" style={cardStyle}>
+          <div className="card-header" style={headerStyle}>
+            <div className="d-flex justify-content-between align-items-center">
+              <h3 className="mb-0">
+                <FaUserGraduate className="me-2" />
+                Student Directory
+              </h3>
+              <span className="badge" style={badgeStyle}>
+                {filteredStudents.length} {filteredStudents.length === 1 ? 'Student' : 'Students'}
+              </span>
             </div>
           </div>
 
-          <div className="table-responsive">
-            <table className="table table-hover align-middle">
-              <thead className="table-light">
-                <tr>
-                  <th>
-                    <FaUserGraduate className="me-2" />
-                    Student Name
-                  </th>
-                  <th>
-                    <FaIdCard className="me-2" />
-                    Reg Number
-                  </th>
-                  <th>
-                    <FaEnvelope className="me-2" />
-                    Email
-                  </th>
-                  <th>
-                    <FaPhone className="me-2" />
-                    Phone
-                  </th>
-                  <th>
-                    <FaBook className="me-2" />
-                    Specialization
-                  </th>
-                  <th>
-                    <FaCalendarAlt className="me-2" />
-                    Year
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredStudents.length > 0 ? (
-                  filteredStudents.map((student, index) => (
-                    <tr key={index} className="cursor-pointer" onClick={() => {/* Add click handler if needed */}}>
-                      <td className="fw-semibold">{student.studentName || 'N/A'}</td>
-                      <td>{student.registrationNumber || 'N/A'}</td>
-                      <td>
-                        <a href={`mailto:${student.email}`} className="text-decoration-none">
-                          {student.email || 'N/A'}
-                        </a>
-                      </td>
-                      <td>
-                        {student.phoneNumber ? (
-                          <a href={`tel:${student.phoneNumber}`} className="text-decoration-none">
-                            {student.phoneNumber}
+          <div className="card-body">
+            <div className="row g-3 mb-4">
+              {/* Search Input */}
+              <div className="col-md-4">
+                <div className="input-group">
+                  <span className="input-group-text bg-light">
+                    <FaSearch />
+                  </span>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search by name or registration number..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              {/* Specialization Filter */}
+              <div className="col-md-3">
+                <div className="input-group">
+                  <span className="input-group-text bg-light">
+                    <FaBook />
+                  </span>
+                  <select 
+                    onChange={(e) => setSpecializationFilter(e.target.value)} 
+                    value={specializationFilter} 
+                    className="form-select"
+                  >
+                    <option value="">All Specializations</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Software Engineering">Software Engineering</option>
+                    <option value="Cyber Security">Cyber Security</option>
+                    <option value="Interactive Media">Interactive Media</option>
+                    <option value="Data Science">Data Science</option>
+                  </select>
+                </div>
+              </div>
+              
+              {/* Year Filter */}
+              <div className="col-md-3">
+                <div className="input-group">
+                  <span className="input-group-text bg-light">
+                    <FaCalendarAlt />
+                  </span>
+                  <select 
+                    onChange={(e) => setYearFilter(e.target.value)} 
+                    value={yearFilter} 
+                    className="form-select"
+                  >
+                    <option value="">All Years</option>
+                    <option value="1">Year 1</option>
+                    <option value="2">Year 2</option>
+                    <option value="3">Year 3</option>
+                    <option value="4">Year 4</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* PDF Export Button */}
+              <div className="col-md-2 d-grid">
+                <button 
+                  onClick={generatePDF}
+                  className="btn btn-danger"
+                  disabled={filteredStudents.length === 0}
+                >
+                  <FaFilePdf className="me-2" />
+                  Export PDF
+                </button>
+              </div>
+            </div>
+
+            <div className="table-responsive">
+              <table className="table table-hover align-middle">
+                <thead className="table-light">
+                  <tr>
+                    <th>
+                      <FaUserGraduate className="me-2" />
+                      Student Name
+                    </th>
+                    <th>
+                      <FaIdCard className="me-2" />
+                      Reg Number
+                    </th>
+                    <th>
+                      <FaEnvelope className="me-2" />
+                      Email
+                    </th>
+                    <th>
+                      <FaPhone className="me-2" />
+                      Phone
+                    </th>
+                    <th>
+                      <FaBook className="me-2" />
+                      Specialization
+                    </th>
+                    <th>
+                      <FaCalendarAlt className="me-2" />
+                      Year
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredStudents.length > 0 ? (
+                    filteredStudents.map((student, index) => (
+                      <tr key={index} className="cursor-pointer" onClick={() => {/* Add click handler if needed */}}>
+                        <td className="fw-semibold">{student.studentName || 'N/A'}</td>
+                        <td>{student.registrationNumber || 'N/A'}</td>
+                        <td>
+                          <a href={`mailto:${student.email}`} className="text-decoration-none">
+                            {student.email || 'N/A'}
                           </a>
-                        ) : 'N/A'}
-                      </td>
-                      <td>{student.specialization || 'N/A'}</td>
-                      <td>
-                        <span className="badge bg-info text-dark">
-                          {student.year ? `Year ${student.year}` : 'N/A'}
-                        </span>
+                        </td>
+                        <td>
+                          {student.phoneNumber ? (
+                            <a href={`tel:${student.phoneNumber}`} className="text-decoration-none">
+                              {student.phoneNumber}
+                            </a>
+                          ) : 'N/A'}
+                        </td>
+                        <td>{student.specialization || 'N/A'}</td>
+                        <td>
+                          <span className="badge bg-info text-dark">
+                            {student.year ? `Year ${student.year}` : 'N/A'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="6" className="text-center py-4">
+                        <div className="d-flex flex-column align-items-center">
+                          <FaSearch className="text-muted mb-2" size={48} />
+                          <h5 className="text-muted">No students found</h5>
+                          <p className="text-muted">Try adjusting your search or filters</p>
+                        </div>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="text-center py-4">
-                      <div className="d-flex flex-column align-items-center">
-                        <FaSearch className="text-muted mb-2" size={48} />
-                        <h5 className="text-muted">No students found</h5>
-                        <p className="text-muted">Try adjusting your search or filters</p>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
 
-        <div className="card-footer bg-light">
-          <div className="d-flex justify-content-between align-items-center">
-            <small className="text-muted">
-              Showing {filteredStudents.length} of {students.length} students
-            </small>
-            <small className="text-muted">
-              Last updated: {new Date().toLocaleString()}
-            </small>
+          <div className="card-footer bg-light">
+            <div className="d-flex justify-content-between align-items-center">
+              <small className="text-muted">
+                Showing {filteredStudents.length} of {students.length} students
+              </small>
+              <small className="text-muted">
+                Last updated: {new Date().toLocaleString()}
+              </small>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
+};
+
+// Add these styles at the bottom of the file
+const containerStyle = {
+  minHeight: '100vh',
+  backgroundColor: '#e3f2fd',
+  backgroundImage: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)'
+};
+
+const cardStyle = {
+  borderRadius: '15px',
+  border: 'none',
+  boxShadow: '0 8px 32px rgba(0,0,0,0.1)',
+  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+  backdropFilter: 'blur(8px)',
+  margin: '20px auto',
+  maxWidth: '1400px'
+};
+
+const headerStyle = {
+  background: 'linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)',
+  color: 'white',
+  borderRadius: '15px 15px 0 0',
+  padding: '1.5rem',
+  border: 'none'
+};
+
+const badgeStyle = {
+  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+  color: '#1976d2',
+  fontSize: '1rem',
+  padding: '0.5rem 1rem',
+  borderRadius: '50px',
+  boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
 };
 
 export default StudentList;
