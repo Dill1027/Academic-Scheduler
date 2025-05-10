@@ -6,6 +6,7 @@ import axios from "axios";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
+import Swal from 'sweetalert2'; // Add this import at the top
 
 // Register Chart.js components
 ChartJS.register(Title, Tooltip, Legend, ArcElement, ChartDataLabels);
@@ -43,6 +44,16 @@ const LecturerDashboard = () => {
 
   const handleDownloadReport = async () => {
     try {
+      // Show loading alert
+      Swal.fire({
+        title: 'Generating Report',
+        text: 'Please wait while we generate your report...',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
       const response = await axios.get('http://localhost:5000/api/lecturers/download-report', {
         responseType: 'blob',
         headers: {
@@ -50,6 +61,9 @@ const LecturerDashboard = () => {
         }
       });
       
+      // Close loading alert
+      Swal.close();
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -58,9 +72,23 @@ const LecturerDashboard = () => {
       link.click();
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
+
+      // Show success alert
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Report has been downloaded successfully',
+        timer: 2000,
+        showConfirmButton: false
+      });
     } catch (error) {
+      // Show error alert
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Failed to download report. Please try again.',
+      });
       console.error("Error downloading report:", error);
-      alert("Failed to download report. Please try again.");
     }
   };
 
