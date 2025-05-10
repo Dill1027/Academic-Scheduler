@@ -18,7 +18,7 @@ const OrganizedCoursesTable = () => {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   useEffect(() => {
-    fetchReportData();
+    fetchAllCourses();
   }, []);
 
   const showErrorToast = (message) => {
@@ -64,25 +64,19 @@ const OrganizedCoursesTable = () => {
     });
   };
 
-  const fetchReportData = async () => {
+  const fetchAllCourses = async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        'http://localhost:5000/api/docs/report/statistics',
-        { withCredentials: true }
-      );
-      
-      if (response.data.success) {
-        setCourses(response.data.data.courseStats);
-        showSuccessToast('Report data loaded successfully');
-      } else {
-        throw new Error(response.data.message || 'Failed to load report data');
-      }
+      const response = await axios.get('http://localhost:5000/api/docs', {
+        withCredentials: true
+      });
+      setCourses(response.data);
+      showSuccessToast('Courses loaded successfully');
     } catch (err) {
-      console.error("Error fetching report data:", err);
-      setError("Failed to fetch report data. Please try again.");
-      showErrorToast('Failed to fetch report data');
+      console.error("Error fetching courses:", err);
+      setError("Failed to fetch courses. Please try again.");
+      showErrorToast('Failed to fetch courses');
     } finally {
       setIsLoading(false);
     }
@@ -116,7 +110,7 @@ const OrganizedCoursesTable = () => {
   };
 
   const generatePDFReport = async () => {
-    if (!courses.length) {
+    if (courses.length === 0) {
       showErrorToast('No courses available to generate report');
       return;
     }
@@ -150,9 +144,10 @@ const OrganizedCoursesTable = () => {
       doc.text(`Generated on: ${date}`, pageWidth / 2, 32, { align: 'center' });
 
       let startY = 45; // Starting Y position for content
+      const grouped = groupCourses();
 
-      // Update to use actual fetched data
-      Object.entries(groupCourses()).forEach(([year, specializations]) => {
+      // Iterate through each year
+      Object.entries(grouped).forEach(([year, specializations]) => {
         // Add year header
         doc.setFillColor(44, 62, 80);
         doc.setTextColor(255, 255, 255);
@@ -161,12 +156,13 @@ const OrganizedCoursesTable = () => {
         doc.text(year, margin + 5, startY + 7);
         startY += 15;
 
-        const yearData = courses
-          .filter(course => course._id.year === year)
-          .map(course => [
-            course._id.specialization,
-            course.modules.join(', ')
-          ]);
+        // Add specialization table for this year
+        const yearData = [];
+        Object.entries(specializations).forEach(([spec, modules]) => {
+          if (modules.length > 0) {
+            yearData.push([spec, modules.join(', ')]);
+          }
+        });
 
         if (yearData.length > 0) {
           doc.autoTable({
@@ -228,8 +224,8 @@ const OrganizedCoursesTable = () => {
       doc.save(`Course_Modules_Report_${date.replace(/\//g, '-')}.pdf`);
       
       showSuccessToast('PDF report generated successfully!');
-    } catch (error) {
-      console.error("Error generating PDF:", error);
+    } catch (err) {
+      console.error("Error generating PDF:", err);
       showErrorToast('Failed to generate PDF report');
     } finally {
       setIsGeneratingPDF(false);
