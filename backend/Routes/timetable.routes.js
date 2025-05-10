@@ -1,8 +1,21 @@
 const express = require('express');
 const router = express.Router();
-<<<<<<< Updated upstream
 const Timetable = require('../models/Timetable');
+const {
+  generateTimetables,
+  getAllTimetables,
+  getFilteredTimetables
+} = require('../Controllers/timetable.controller');
 
+// Controller-based routes
+router.post('/generate', generateTimetables);
+router.get('/filtered', getFilteredTimetables);
+router.get('/filter', getFilteredTimetables); // Alias for backward compatibility
+
+// Get all timetable entries - use the controller method
+router.get('/', getAllTimetables);
+
+// Direct model-based routes
 // Create a new timetable entry
 router.post('/', async (req, res) => {
   try {
@@ -11,23 +24,6 @@ router.post('/', async (req, res) => {
     res.status(201).json(timetable);
   } catch (err) {
     res.status(400).json({ message: err.message });
-  }
-});
-
-// Get all timetable entries
-router.get('/', async (req, res) => {
-  try {
-    const { year, specialization, day } = req.query;
-    let query = {};
-    
-    if (year) query.year = year;
-    if (specialization) query.specialization = specialization;
-    if (day) query.day = day;
-
-    const timetable = await Timetable.find(query);
-    res.json(timetable);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
   }
 });
 
@@ -65,16 +61,3 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
-=======
-const {
-  generateTimetables,
-  getAllTimetables,
-  getFilteredTimetables
-} = require('../Controllers/timetable.controller');
-
-router.post('/generate', generateTimetables);
-router.get('/', getAllTimetables);
-router.get('/filter', getFilteredTimetables);
-
-module.exports = router;
->>>>>>> Stashed changes

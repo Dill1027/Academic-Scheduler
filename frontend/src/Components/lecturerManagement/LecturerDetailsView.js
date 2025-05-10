@@ -18,34 +18,10 @@ const LecturerDetailsView = () => {
       try {
         setIsLoading(true);
         const response = await axios.get("http://localhost:5000/api/lecturers/all");
-        setLecturers(response.data.data || []);
-        setErrorMessage("");
-<<<<<<< HEAD
         
-        const response = await fetch("http://localhost:6001/api/lecturers/all", {
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include'
-        });
-        if (!response.ok) throw new Error("Failed to fetch lecturers");
-
-        const result = await response.json();
-        console.log("Full API Response:", result);
-
-        let lecturersData = [];
+        // Process the data
+        let lecturersData = response.data.data || [];
         
-        if (Array.isArray(result)) {
-          lecturersData = result;
-        } else if (result.data && Array.isArray(result.data)) {
-          lecturersData = result.data;
-        } else if (result.lecturers && Array.isArray(result.lecturers)) {
-          lecturersData = result.lecturers;
-        } else {
-          throw new Error("Unexpected API response format");
-        }
-
         const formattedLecturers = lecturersData.map(lecturer => ({
           ...lecturer,
           modules: Array.isArray(lecturer.modules) ? lecturer.modules : [],
@@ -55,8 +31,7 @@ const LecturerDetailsView = () => {
         }));
 
         setLecturers(formattedLecturers);
-=======
->>>>>>> origin/new-main
+        setErrorMessage("");
       } catch (error) {
         console.error("Error fetching lecturers:", error);
         setErrorMessage("Failed to load lecturers. Please try again.");

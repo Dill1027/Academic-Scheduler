@@ -309,7 +309,6 @@ router.get("/gender-distribution", async (req, res) => {
 // Generate and download lecturer report
 router.get("/download-report", async (req, res) => {
     try {
-<<<<<<< HEAD
         // Set CORS headers explicitly for this route
         res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -317,18 +316,10 @@ router.get("/download-report", async (req, res) => {
         res.setHeader('Content-Disposition', 'attachment; filename=lecturers-report.pdf');
         
         // Fetch all lecturers from database (without passwords)
-=======
->>>>>>> origin/new-main
         const lecturers = await Lecturer.find().select('-password').sort({ createdAt: -1 });
         const doc = new PDFDocument({ margin: 50 });
-<<<<<<< HEAD
         
         // Pipe the PDF to the response
-=======
-
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=lecturers-report.pdf');
->>>>>>> origin/new-main
         doc.pipe(res);
 
         // === Report Header ===
