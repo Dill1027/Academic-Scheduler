@@ -33,7 +33,11 @@ connectDB();
 
 // Middleware
 app.use(cors({
+<<<<<<< HEAD
     origin: 'http://localhost:3000',
+=======
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
+>>>>>>> origin/new-main
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     exposedHeaders: ['Content-Range', 'X-Content-Range', 'Content-Disposition'],
@@ -74,7 +78,7 @@ app.use((err, req, res, next) => {
 app.use(errorHandler);
 
 // Start the server
-const PORT = process.env.PORT || 6001;
+const PORT = 5000; // Set explicit port for consistency
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

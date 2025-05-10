@@ -70,7 +70,7 @@ const ProfileUpdate = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update students");
+        throw new Error("Failed to update student");
       }
 
       navigate(`/profile/${id}`);
@@ -236,17 +236,19 @@ const containerStyle = {
   justifyContent: "center",
   alignItems: "center",
   minHeight: "100vh",
-  backgroundColor: "#f5f7fa",
+  background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
   padding: "20px",
 };
 
 const cardStyle = {
   width: "100%",
   maxWidth: "600px",
-  backgroundColor: "#ffffff",
-  borderRadius: "10px",
-  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "15px",
+  boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.1)",
   padding: "30px",
+  backdropFilter: "blur(8px)",
+  border: "1px solid rgba(255, 255, 255, 0.18)",
 };
 
 const headerContainerStyle = {
@@ -258,7 +260,7 @@ const headerContainerStyle = {
 
 const headerStyle = {
   fontSize: "24px",
-  color: "#2c3e50",
+  color: "#1976d2",
   fontWeight: "600",
   margin: "0 auto",
   display: "flex",
@@ -291,10 +293,11 @@ const iconStyle = {
 const inputStyle = {
   width: "100%",
   padding: "12px 15px",
-  borderRadius: "6px",
-  border: "1px solid #ddd",
+  borderRadius: "8px",
+  border: "1px solid #bbdefb",
   fontSize: "16px",
-  transition: "border-color 0.3s",
+  transition: "all 0.3s ease",
+  backgroundColor: "rgba(255, 255, 255, 0.9)",
 };
 
 inputStyle[":focus"] = {
@@ -310,10 +313,10 @@ const buttonGroupStyle = {
 };
 
 const submitButtonStyle = {
-  backgroundColor: "#3498db",
+  backgroundColor: "#42a5f5",
   color: "white",
   border: "none",
-  borderRadius: "6px",
+  borderRadius: "8px",
   padding: "12px 25px",
   fontSize: "16px",
   fontWeight: "600",
@@ -321,6 +324,7 @@ const submitButtonStyle = {
   display: "flex",
   alignItems: "center",
   transition: "all 0.3s ease",
+  boxShadow: "0 4px 15px rgba(66, 165, 245, 0.2)",
 };
 
 submitButtonStyle[":hover"] = {

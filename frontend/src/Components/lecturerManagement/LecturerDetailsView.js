@@ -1,18 +1,26 @@
 import React, { useState, useEffect, useMemo } from "react";
+import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import UpdateLecturerForm from "./UpdateLecturerForm";
 import "./LecturerDetailsView.css";
 
 const LecturerDetailsView = () => {
   const [lecturers, setLecturers] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
   const [searchTerm, setSearchTerm] = useState("");
+  const [editingLecturer, setEditingLecturer] = useState(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   useEffect(() => {
     const fetchLecturers = async () => {
       try {
         setIsLoading(true);
+        const response = await axios.get("http://localhost:5000/api/lecturers/all");
+        setLecturers(response.data.data || []);
         setErrorMessage("");
+<<<<<<< HEAD
         
         const response = await fetch("http://localhost:6001/api/lecturers/all", {
           headers: {
@@ -47,10 +55,11 @@ const LecturerDetailsView = () => {
         }));
 
         setLecturers(formattedLecturers);
+=======
+>>>>>>> origin/new-main
       } catch (error) {
-        console.error("Fetch error:", error);
-        setErrorMessage("Failed to load lecturer data. Please try again later.");
-        setLecturers([]);
+        console.error("Error fetching lecturers:", error);
+        setErrorMessage("Failed to load lecturers. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -59,59 +68,72 @@ const LecturerDetailsView = () => {
     fetchLecturers();
   }, []);
 
-  const requestSort = (key) => {
-    let direction = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-  };
-
   const filteredLecturers = useMemo(() => {
     if (!searchTerm) return lecturers;
-    
-    const term = searchTerm.toLowerCase();
+    const lowercaseSearch = searchTerm.toLowerCase();
     return lecturers.filter(lecturer => 
-      lecturer.lecturerId.toLowerCase().includes(term) ||
-      lecturer.fullName.toLowerCase().includes(term)
+      lecturer.lecturerId.toLowerCase().includes(lowercaseSearch) ||
+      lecturer.fullName.toLowerCase().includes(lowercaseSearch)
     );
   }, [lecturers, searchTerm]);
 
-  const sortedLecturers = useMemo(() => {
-    if (!sortConfig.key) return filteredLecturers;
-
-    return [...filteredLecturers].sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? -1 : 1;
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this lecturer?")) {
+      try {
+        await axios.delete(`http://localhost:5000/api/lecturers/${id}`);
+        setLecturers(prev => prev.filter(lecturer => lecturer._id !== id));
+        toast.success("Lecturer deleted successfully");
+      } catch (error) {
+        console.error("Delete error:", error);
+        toast.error("Failed to delete lecturer");
       }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
-    });
-  }, [filteredLecturers, sortConfig]);
+    }
+  };
 
-  const tableHeaders = [
-    { key: 'lecturerId', label: 'Lecturer ID' },
-    { key: 'fullName', label: 'Full Name' },
-    { key: 'userName', label: 'Username' },
-    { key: 'email', label: 'Email' },
-    { key: 'phoneNumber', label: 'Phone' },
-    { key: 'nic', label: 'NIC' },
-    { key: 'specialization', label: 'Specialization' },
-    { key: 'year', label: 'Year' },
-    { key: 'modules', label: 'Modules' },
-    { key: 'DOB', label: 'Date of Birth' },
-    { key: 'gender', label: 'Gender' },
-    { key: 'address', label: 'Address' },
-    { key: 'createdAt', label: 'Created At' },
-    { key: 'updatedAt', label: 'Updated At' }
-  ];
+  const handleUpdate = (lecturer) => {
+    setEditingLecturer(lecturer);
+    setShowUpdateModal(true);
+  };
+
+  const handleUpdateSubmit = async (updatedData) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/lecturers/${editingLecturer._id}`,
+        updatedData
+      );
+
+      setLecturers(prev =>
+        prev.map(lecturer =>
+          lecturer._id === editingLecturer._id ? response.data.data : lecturer
+        )
+      );
+
+      setShowUpdateModal(false);
+      setEditingLecturer(null);
+      toast.success("Lecturer updated successfully");
+    } catch (error) {
+      console.error("Update error:", error);
+      toast.error("Failed to update lecturer");
+    }
+  };
 
   return (
     <div className="lecturer-container">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
       <div className="lecturer-card">
-        <h2 className="lecturer-title">Lecturer Details</h2>
+        <h2 className="lecturer-title">Lecturer Management</h2>
         {errorMessage && (
           <div className="error-message">
             {errorMessage}
@@ -121,7 +143,6 @@ const LecturerDetailsView = () => {
           </div>
         )}
 
-        {/* Search Bar */}
         <div className="search-container">
           <input
             type="text"
@@ -140,66 +161,100 @@ const LecturerDetailsView = () => {
           )}
         </div>
 
-        <div className="table-container">
-          <div className="table-scroll">
-            <table className="lecturer-table">
-              <thead>
-                <tr>
-                  {tableHeaders.map(header => (
-                    <th 
-                      key={header.key}
-                      onClick={() => requestSort(header.key)}
-                      className={sortConfig.key === header.key ? `sort-${sortConfig.direction}` : ''}
-                    >
-                      {header.label}
-                      {sortConfig.key === header.key && (
-                        <span className="sort-icon">
-                          {sortConfig.direction === 'ascending' ? '↑' : '↓'}
-                        </span>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {isLoading ? (
-                  <tr>
-                    <td colSpan={tableHeaders.length} className="loading-cell">
-                      <div className="loading-spinner"></div>
-                      Loading lecturer data...
-                    </td>
-                  </tr>
-                ) : sortedLecturers.length === 0 ? (
-                  <tr>
-                    <td colSpan={tableHeaders.length} className="empty-cell">
-                      {searchTerm ? "No matching lecturers found" : "No lecturers found in the system"}
-                    </td>
-                  </tr>
-                ) : (
-                  sortedLecturers.map((lecturer) => (
-                    <tr key={lecturer._id || lecturer.lecturerId}>
-                      <td>{lecturer.lecturerId}</td>
-                      <td>{lecturer.fullName}</td>
-                      <td>{lecturer.userName}</td>
-                      <td>{lecturer.email}</td>
-                      <td>{lecturer.phoneNumber}</td>
-                      <td>{lecturer.nic || '-'}</td>
-                      <td>{lecturer.specialization || lecturer.faculty || '-'}</td>
-                      <td>{lecturer.year || '-'}</td>
-                      <td>{lecturer.modules?.join(", ") || '-'}</td>
-                      <td>{lecturer.DOB}</td>
-                      <td>{lecturer.gender || '-'}</td>
-                      <td>{lecturer.address || '-'}</td>
-                      <td>{lecturer.createdAt}</td>
-                      <td>{lecturer.updatedAt}</td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+        <div className="lecturer-grid">
+          {isLoading ? (
+            <div className="loading">Loading...</div>
+          ) : filteredLecturers.length === 0 ? (
+            <div className="no-results">No lecturers found</div>
+          ) : (
+            filteredLecturers.map((lecturer) => (
+              <div key={lecturer._id} className="lecturer-item">
+                <div className="lecturer-info">
+                  <div className="lecturer-header">
+                    <h3>{lecturer.fullName}</h3>
+                    <span className="lecturer-badge">{lecturer.lecturerId}</span>
+                  </div>
+                  <div className="lecturer-details">
+                    <div className="detail-group">
+                      <i className="bi bi-person"></i>
+                      <span>Username: {lecturer.userName}</span>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-envelope"></i>
+                      <a href={`mailto:${lecturer.email}`}>{lecturer.email}</a>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-telephone"></i>
+                      <a href={`tel:${lecturer.phoneNumber}`}>{lecturer.phoneNumber}</a>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-calendar-date"></i>
+                      <span>DOB: {new Date(lecturer.DOB).toLocaleDateString()}</span>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-gender-ambiguous"></i>
+                      <span>Gender: {lecturer.gender}</span>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-book"></i>
+                      <span>Specialization: {lecturer.specialization}</span>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-calendar"></i>
+                      <span>Year: {lecturer.year}</span>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-journal-text"></i>
+                      <span>Modules: {Array.isArray(lecturer.modules) ? lecturer.modules.join(", ") : lecturer.modules}</span>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-geo-alt"></i>
+                      <span>Address: {lecturer.address}</span>
+                    </div>
+                    <div className="detail-group">
+                      <i className="bi bi-person-vcard"></i>
+                      <span>NIC: {lecturer.nic}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="lecturer-actions"> 
+                  <button 
+                    onClick={() => handleUpdate(lecturer)} 
+                    className="btn edit-btn"
+                  >
+                    <i className="bi bi-pencil-square"></i>
+                    <span>Update</span>
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(lecturer._id)} 
+                    className="btn delete-btn"
+                  >
+                    <i className="bi bi-trash"></i>
+                    <span>Delete</span>
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
+
+      {/* Update Modal */}
+      {showUpdateModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h2>Update Lecturer</h2>
+            <UpdateLecturerForm
+              lecturer={editingLecturer}
+              onSubmit={handleUpdateSubmit}
+              onCancel={() => {
+                setShowUpdateModal(false);
+                setEditingLecturer(null);
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

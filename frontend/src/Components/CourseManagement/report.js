@@ -68,7 +68,7 @@ const OrganizedCoursesTable = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:6001/api/docs', {
+      const response = await axios.get('http://localhost:5000/api/docs', {
         withCredentials: true
       });
       setCourses(response.data);
@@ -84,17 +84,26 @@ const OrganizedCoursesTable = () => {
 
   const groupCourses = () => {
     const yearOrder = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
+    const specializationOrder = [
+      "Information Technology",
+      "Software Engineering", 
+      "Cyber Security",
+      "Interactive Media",
+      "Data Science"
+    ];
     const grouped = {};
     
     yearOrder.forEach(year => {
       grouped[year] = {};
+      specializationOrder.forEach(spec => {
+        grouped[year][spec] = [];
+      });
     });
 
     courses.forEach(course => {
-      if (!grouped[course.year][course.course]) {
-        grouped[course.year][course.course] = [];
+      if (grouped[course.year] && grouped[course.year][course.course]) {
+        grouped[course.year][course.course].push(course.moduleName);
       }
-      grouped[course.year][course.course].push(course.moduleName);
     });
 
     return grouped;
@@ -118,111 +127,97 @@ const OrganizedCoursesTable = () => {
       const pageWidth = doc.internal.pageSize.getWidth();
       const margin = 10;
       
-      // Header background
+      // Header setup
       doc.setFillColor(44, 62, 80);
-      doc.rect(0, 0, pageWidth, 50, 'F');
+      doc.rect(0, 0, pageWidth, 35, 'F');
       
-      // Institution Header with icon
-      doc.setFontSize(16);
-      doc.setTextColor(255, 255, 255);
-      doc.setFont('helvetica', 'bold');
-      doc.text('ACADEMIC SCHEDULER', pageWidth / 2, 20, { align: 'center' });
-      
-      // Report Title
       doc.setFontSize(14);
       doc.setTextColor(255, 255, 255);
-      doc.text('COURSE MODULES REPORT', pageWidth / 2, 30, { align: 'center' });
+      doc.setFont('helvetica', 'bold');
+      doc.text('ACADEMIC SCHEDULER', pageWidth / 2, 15, { align: 'center' });
+      doc.setFontSize(12);
+      doc.text('COURSE MODULES REPORT', pageWidth / 2, 25, { align: 'center' });
       
-      // Report Details
-      doc.setFontSize(10);
+      // Current date
+      doc.setFontSize(9);
       doc.setTextColor(200, 200, 200);
-      doc.text(`Generated on: ${date}`, pageWidth / 2, 37, { align: 'center' });
+      doc.text(`Generated on: ${date}`, pageWidth / 2, 32, { align: 'center' });
 
-      // Prepare data
+      let startY = 45; // Starting Y position for content
       const grouped = groupCourses();
-      const tableData = [];
-      
-      Object.entries(grouped).forEach(([year, coursesData]) => {
-        Object.entries(coursesData).forEach(([courseName, modules]) => {
-          tableData.push([year, courseName, modules.join(', ')]);
-        });
-      });
 
-      // Main table with alternating row colors
-      doc.autoTable({
-        head: [['Year', 'Course', 'Modules']],
-        body: tableData,
-        startY: 50,
-        styles: {
-          cellPadding: 5,
-          fontSize: 10,
-          valign: 'middle',
-          lineColor: [200, 200, 200],
-          lineWidth: 0.2,
-          textColor: [60, 60, 60],
-          fillColor: [255, 255, 255]
-        },
-        headStyles: {
-          fillColor: [44, 62, 80],
-          textColor: 255,
-          fontStyle: 'bold',
-          lineWidth: 0.3
-        },
-        alternateRowStyles: {
-          fillColor: [245, 245, 245]
-        },
-        columnStyles: {
-          0: { cellWidth: 20, fontStyle: 'bold' },
-          1: { cellWidth: 40 },
-          2: { cellWidth: 'auto' }
-        },
-        margin: { left: 15, right: 15 },
-        tableLineColor: [100, 100, 100],
-        tableLineWidth: 0.3,
-        didDrawCell: (data) => {
-          // Add subtle highlight to first column cells
-          if (data.column.index === 0) {
-            doc.setFillColor(240, 248, 255);
-            doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+      // Iterate through each year
+      Object.entries(grouped).forEach(([year, specializations]) => {
+        // Add year header
+        doc.setFillColor(44, 62, 80);
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(12);
+        doc.rect(margin, startY, pageWidth - 2 * margin, 10, 'F');
+        doc.text(year, margin + 5, startY + 7);
+        startY += 15;
+
+        // Add specialization table for this year
+        const yearData = [];
+        Object.entries(specializations).forEach(([spec, modules]) => {
+          if (modules.length > 0) {
+            yearData.push([spec, modules.join(', ')]);
           }
+        });
+
+        if (yearData.length > 0) {
+          doc.autoTable({
+            head: [['Specialization', 'Modules']],
+            body: yearData,
+            startY: startY,
+            margin: { left: margin, right: margin },
+            headStyles: {
+              fillColor: [70, 80, 100],
+              textColor: 255,
+              fontStyle: 'bold'
+            },
+            styles: {
+              fontSize: 10,
+              cellPadding: 5
+            },
+            columnStyles: {
+              0: { cellWidth: 50 },
+              1: { cellWidth: 'auto' }
+            }
+          });
+          
+          startY = doc.lastAutoTable.finalY + 15; // Add spacing between years
         }
       });
 
-      // Signature section
-      const finalY = doc.lastAutoTable.finalY + 20;
+      // Add signature and date section with better styling
+      const finalY = doc.lastAutoTable.finalY + 50;
       
-      // Divider line
-      doc.setDrawColor(150, 150, 150);
+      // Add decorative line above signature section
+      doc.setDrawColor(44, 62, 80);
       doc.setLineWidth(0.5);
-      doc.line(40, finalY, pageWidth - 40, finalY);
-      
-      // Signature labels with icons
+      doc.line(40, finalY - 20, pageWidth - 40, finalY - 20);
+
+      // Signature section
       doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.text('Prepared by: Academic Scheduler', 50, finalY + 10);
-      doc.text('Approved by: Department Head', pageWidth - 60, finalY + 10);
+      doc.setTextColor(44, 62, 80);
       
-      // Signature lines
-      doc.setDrawColor(100, 100, 100);
-      doc.line(50, finalY + 20, 100, finalY + 20);
-      doc.line(pageWidth - 100, finalY + 20, pageWidth - 50, finalY + 20);
-      
-      // Dates
+      // Left side - Signature
+      doc.text('Signature', 40, finalY);
+      doc.line(40, finalY + 15, 120, finalY + 15);
       doc.setFontSize(8);
-      doc.text('Date:', 50, finalY + 30);
-      doc.text('Date:', pageWidth - 60, finalY + 30);
+      doc.text('(Course Coordinator)', 40, finalY + 25);
 
-      // Watermark
-      doc.setFontSize(60);
-      doc.setTextColor(230, 230, 230);
-      doc.setFont('helvetica', 'italic');
-      doc.text('ACADEMIC', pageWidth / 2, doc.internal.pageSize.getHeight() / 2, { angle: 45, align: 'center' });
-
-      // Footer
+      // Right side - Date
+      doc.setFontSize(10);
+      doc.text('Date', pageWidth - 120, finalY);
+      doc.line(pageWidth - 120, finalY + 15, pageWidth - 40, finalY + 15);
       doc.setFontSize(8);
-      doc.setTextColor(150, 150, 150);
-      doc.text(`© ${new Date().getFullYear()} Academic Scheduler. All rights reserved.`, 
-        pageWidth / 2, doc.internal.pageSize.getHeight() - 10, { align: 'center' });
+      doc.text(new Date().toLocaleDateString(), pageWidth - 120, finalY + 25);
+
+      // Add decorative line below signature section
+      doc.setDrawColor(44, 62, 80);
+      doc.setLineWidth(0.5);
+      doc.line(40, finalY + 35, pageWidth - 40, finalY + 35);
 
       // Save the PDF
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -288,27 +283,25 @@ const OrganizedCoursesTable = () => {
             <table className="courses-table">
               <thead>
                 <tr>
-                  <th>Year</th>
-                  <th>Course</th>
+                  <th>Specialization</th>
                   <th>Modules</th>
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(groupedCourses).map(([year, coursesData]) => (
-                  Object.entries(coursesData).map(([courseName, modules], index) => (
-                    <tr key={`${year}-${courseName}`} className="hover-animation">
-                      {index === 0 && (
-                        <td rowSpan={Object.keys(coursesData).length} className="year-cell">
-                          <FaChalkboardTeacher className="year-icon" />
-                          {year}
-                        </td>
-                      )}
-                      <td className="course-cell">{courseName}</td>
-                      <td className="modules-cell">
-                        {modules.join(', ')}
-                      </td>
+                {Object.entries(groupedCourses).map(([year, specializations]) => (
+                  <React.Fragment key={year}>
+                    <tr className="year-header">
+                      <td colSpan={2}>{year}</td>
                     </tr>
-                  ))
+                    {Object.entries(specializations).map(([spec, modules]) => (
+                      modules.length > 0 && (
+                        <tr key={`${year}-${spec}`} className="hover-animation">
+                          <td className="course-cell">{spec}</td>
+                          <td className="modules-cell">{modules.join(', ')}</td>
+                        </tr>
+                      )
+                    ))}
+                  </React.Fragment>
                 ))}
               </tbody>
             </table>
@@ -475,18 +468,12 @@ const OrganizedCoursesTable = () => {
             box-shadow: 5px 0 15px -5px rgba(0,0,0,0.1);
           }
 
-          .year-cell {
-            width: 120px;
+          .year-header td {
+            background: linear-gradient(to right, #2c3e50, #4a6491);
+            color: white;
             font-weight: 600;
-            color: #3498db;
-            background-color: #f8fbff;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-          }
-
-          .year-icon {
-            color: #5e7055;
+            padding: 1rem;
+            font-size: 1.1rem;
           }
 
           .course-cell {
@@ -526,14 +513,6 @@ const OrganizedCoursesTable = () => {
             .courses-table td {
               padding: 0.8rem;
             }
-
-            .year-cell {
-              width: 90px;
-            }
-
-            .course-cell {
-              width: 150px;
-            }
           }
 
           @media (max-width: 480px) {
@@ -545,10 +524,6 @@ const OrganizedCoursesTable = () => {
             .courses-table td {
               padding: 0.6rem;
               font-size: 0.85rem;
-            }
-
-            .year-cell {
-              width: 80px;
             }
           }
         `}

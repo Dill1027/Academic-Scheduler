@@ -43,12 +43,12 @@ import Coursereport from "./Components/CourseManagement/report";
 // Timetable Components
 import YearSelection from './Components/timetable/YearSelection';
 import TimetableOptions from './Components/timetable/TimetableOptions';
-import Specialization from './Components/timetable/Specialization';
+import Specialization from './Components/timetable/SpecializationSelection';
 import StudentReview from './Components/StudentManagement/StudentReview';
 
 // About Contact Components
 import TeamContact from "./Components/AboutContact/TeamContact";
-import Blog from './Components/Blog/Blog';  // Update import path
+import Blog from './Components/AboutContact/Blog';
 
 const theme = createTheme();
 

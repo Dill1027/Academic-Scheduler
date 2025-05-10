@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaUserGraduate, FaUsersCog } from "react-icons/fa"; 
 import Footer from "../Navbar/footer";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AddDoc from "../CourseManagement/AddDoc";
@@ -14,47 +15,46 @@ function StudentManagement() {
     navigate(path);
   };
 
-  // Advanced CSS styles
   const styles = {
     container: {
       maxWidth: '1200px',
       margin: '0 auto',
-      padding: '40px 20px'
+      padding: '40px 20px',
+      minHeight: 'calc(100vh - 200px)'
     },
     title: {
-      fontSize: '2.5rem',
-      fontWeight: '600',
-      color: '#2c3e50',
-      marginBottom: '2rem',
+      fontSize: '2.8rem',
+      fontWeight: '700',
+      color: '#1a237e',
+      marginBottom: '3rem',
       textAlign: 'center',
       position: 'relative',
-      paddingBottom: '15px',
+      paddingBottom: '20px',
+      textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
       '&:after': {
         content: '""',
         position: 'absolute',
         bottom: '0',
         left: '50%',
         transform: 'translateX(-50%)',
-        width: '80px',
-        height: '4px',
-        background: 'linear-gradient(90deg, #3498db, #9b59b6)',
-        borderRadius: '2px'
+        width: '100px',
+        height: '5px',
+        background: 'linear-gradient(90deg, #1976d2, #1a237e)',
+        borderRadius: '25px'
       }
     },
     cardContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      gap: '30px',
-      flexWrap: 'wrap'
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+      gap: '2rem',
+      padding: '20px'
     },
     card: {
-      width: '280px',
-      height: '180px',
+      minHeight: '220px',
       background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
-      borderRadius: '16px',
-      boxShadow: '0 10px 20px rgba(0,0,0,0.1)',
+      borderRadius: '20px',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
       transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-      cursor: 'pointer',
       overflow: 'hidden',
       position: 'relative',
       '&:hover': {

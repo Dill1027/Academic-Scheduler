@@ -13,28 +13,29 @@ const Profile = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`http://localhost:6001/api/student/${id}`, {
+        const response = await fetch(`http://localhost:5000/api/student/${id}`, {
           headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "Accept": "application/json"
           }
         });
 
         if (!response.ok) {
-          throw new Error("Failed to fetch student data");
+          throw new Error(response.status === 404 ? "Student not found" : "Failed to fetch student data");
         }
 
         const data = await response.json();
         setStudent(data);
       } catch (error) {
         console.error("Error fetching student:", error);
-        setError(error.message);
+        setError(error.message || "Unable to connect to the server. Please check your connection.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchStudent();
-  }, [id, navigate]);
+  }, [id]);
 
   if (loading) {
     return (
@@ -138,23 +139,25 @@ const Profile = () => {
 const containerStyle = {
   display: "flex",
   justifyContent: "center",
-  alignItems: "center",
+  alignItems: "center", 
   minHeight: "100vh",
-  backgroundColor: "#f8f9fa",
+  background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
   padding: "20px",
 };
 
 const profileCardStyle = {
   width: "100%",
   maxWidth: "800px",
-  backgroundColor: "#ffffff",
-  borderRadius: "12px",
-  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "15px",
+  boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.1)",
   overflow: "hidden",
+  backdropFilter: "blur(8px)",
+  border: "1px solid rgba(255, 255, 255, 0.18)",
 };
 
 const profileHeaderStyle = {
-  backgroundColor: "#1E88E5",
+  background: "linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)",
   color: "white",
   padding: "30px",
   textAlign: "center",
@@ -170,6 +173,7 @@ const avatarStyle = {
   justifyContent: "center",
   alignItems: "center",
   margin: "0 auto 15px",
+  border: "3px solid rgba(255, 255, 255, 0.3)",
 };
 
 const nameStyle = {
@@ -238,10 +242,10 @@ const buttonContainerStyle = {
 };
 
 const editButtonStyle = {
-  backgroundColor: "#1E88E5",
+  backgroundColor: "#42a5f5",
   color: "white",
   border: "none",
-  borderRadius: "6px",
+  borderRadius: "8px",
   padding: "12px 25px",
   fontSize: "16px",
   fontWeight: "600",
@@ -249,6 +253,7 @@ const editButtonStyle = {
   display: "flex",
   alignItems: "center",
   transition: "all 0.3s ease",
+  boxShadow: "0 4px 15px rgba(66, 165, 245, 0.2)",
 };
 
 editButtonStyle[":hover"] = {

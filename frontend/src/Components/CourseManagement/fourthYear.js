@@ -58,6 +58,9 @@ function Fourth() {
         });
     };
 
+    // Add base URL
+    const BASE_URL = 'http://localhost:5000';
+
     // Fetch 1st Year data when the component mounts
     useEffect(() => {
         fetchData();
@@ -68,7 +71,7 @@ function Fourth() {
         setError("");
 
         try {
-            const response = await axios.get(`http://localhost:6001/api/docs/year/4th Year`);
+            const response = await axios.get(`${BASE_URL}/api/docs/year/4th Year`);
             // Ensure all arrays exist and are properly initialized
             const processedData = response.data.map(module => ({
                 ...module,
@@ -112,7 +115,7 @@ function Fourth() {
         e.stopPropagation();
         if (!doc) return;
         const link = document.createElement("a");
-        link.href = `http://localhost:6001/uploads/${doc}`;
+        link.href = `${BASE_URL}/uploads/${doc}`;
         link.download = originalName || "document";
         link.click();
         showAlert('success', 'Download Started', 'Your file download has started.');
@@ -128,7 +131,7 @@ function Fourth() {
         
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:6001/api/docs/delete/${id}`);
+                await axios.delete(`${BASE_URL}/api/docs/delete/${id}`);
                 showAlert('success', 'Deleted!', 'Module has been deleted.');
                 fetchData();
             } catch (error) {
@@ -205,7 +208,7 @@ function Fourth() {
                 }
             });
 
-            await axios.put(`http://localhost:6001/api/docs/update/${currentModule._id}`, formData, {
+            await axios.put(`${BASE_URL}/api/docs/update/${currentModule._id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -321,7 +324,7 @@ function Fourth() {
                                                             return (
                                                                 <div key={idx} className="lec d-flex gap-4 align-items-center">
                                                                     <a
-                                                                        href={`http://localhost:6001/uploads/${doc}`}
+                                                                        href={`${BASE_URL}/uploads/${doc}`}
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         className="d-block"
@@ -520,7 +523,7 @@ function Fourth() {
                                             ) : doc ? (
                                                 <>
                                                     <a
-                                                        href={`http://localhost:6001/uploads/${doc}`}
+                                                        href={`${BASE_URL}/uploads/${doc}`}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="me-2"

@@ -105,62 +105,146 @@ function AdminReview() {
   }
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center mb-4">Admin Review: Pending Student Registrations</h2>
-      
-      <div className="card">
-        <div className="card-header bg-primary text-white">
-          <h5 className="mb-0">
-            Pending Approvals ({pendingStudents.length})
-          </h5>
-        </div>
+    <div style={containerStyle}>
+      <div className="container mt-5">
+        <h2 style={headerStyle}>Admin Review: Pending Student Registrations</h2>
         
-        {pendingStudents.length === 0 ? (
-          <div className="card-body text-center">
-            <p className="text-muted">No pending student registrations found.</p>
+        <div style={cardStyle}>
+          <div style={cardHeaderStyle}>
+            <h5 className="mb-0">
+              Pending Approvals ({pendingStudents.length})
+            </h5>
           </div>
-        ) : (
-          <div className="list-group list-group-flush">
-            {pendingStudents.map(student => (
-              <div key={student._id} className="list-group-item">
-                <div className="row align-items-center">
-                  <div className="col-md-8">
-                    <h5>{student.studentName}</h5>
-                    <div className="row">
-                      <div className="col-md-6">
-                        <p className="mb-1"><strong>Email:</strong> {student.email}</p>
-                        <p className="mb-1"><strong>Reg No:</strong> {student.registrationNumber}</p>
-                      </div>
-                      <div className="col-md-6">
-                        <p className="mb-1"><strong>Specialization:</strong> {student.specialization}</p>
-                        <p className="mb-1"><strong>Year:</strong> {student.year || 'N/A'}</p>
+          
+          {pendingStudents.length === 0 ? (
+            <div style={emptyMessageStyle}>
+              <p>No pending student registrations found.</p>
+            </div>
+          ) : (
+            <div className="list-group list-group-flush">
+              {pendingStudents.map(student => (
+                <div key={student._id} style={listItemStyle}>
+                  <div className="row align-items-center">
+                    <div className="col-md-8">
+                      <h5 style={studentNameStyle}>{student.studentName}</h5>
+                      <div className="row">
+                        <div className="col-md-6">
+                          <p className="mb-1"><strong>Email:</strong> {student.email}</p>
+                          <p className="mb-1"><strong>Reg No:</strong> {student.registrationNumber}</p>
+                        </div>
+                        <div className="col-md-6">
+                          <p className="mb-1"><strong>Specialization:</strong> {student.specialization}</p>
+                          <p className="mb-1"><strong>Year:</strong> {student.year || 'N/A'}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="col-md-4 text-end">
-                    <div className="btn-group">
-                      <button
-                        onClick={() => handleDecision(student._id, "accept")}
-                        className="btn btn-success me-2"
-                      >
-                        <i className="bi bi-check-circle me-1"></i> Approve
-                      </button>
-                      <button
-                        onClick={() => handleDecision(student._id, "decline")}
-                        className="btn btn-danger"
-                      >
-                        <i className="bi bi-x-circle me-1"></i> Decline
-                      </button>
+                    <div className="col-md-4 text-end">
+                      <div className="btn-group">
+                        <button
+                          onClick={() => handleDecision(student._id, "accept")}
+                          style={approveButtonStyle}
+                        >
+                          <i className="bi bi-check-circle me-1"></i> Approve
+                        </button>
+                        <button
+                          onClick={() => handleDecision(student._id, "decline")}
+                          style={declineButtonStyle}
+                        >
+                          <i className="bi bi-x-circle me-1"></i> Decline
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
+
+const containerStyle = {
+  minHeight: "100vh",
+  background: "linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)",
+  padding: "20px",
+};
+
+const headerStyle = {
+  color: "#1976d2",
+  textAlign: "center",
+  marginBottom: "2rem",
+  fontSize: "2rem",
+  fontWeight: "600",
+};
+
+const cardStyle = {
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  borderRadius: "15px",
+  boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.1)",
+  backdropFilter: "blur(8px)",
+  border: "1px solid rgba(255, 255, 255, 0.18)",
+  overflow: "hidden",
+};
+
+const cardHeaderStyle = {
+  background: "linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)",
+  color: "white",
+  padding: "1rem 1.5rem",
+  borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+};
+
+const listItemStyle = {
+  padding: "1.5rem",
+  borderBottom: "1px solid rgba(0, 0, 0, 0.05)",
+  transition: "background-color 0.3s ease",
+  "&:hover": {
+    backgroundColor: "rgba(66, 165, 245, 0.05)",
+  },
+};
+
+const studentNameStyle = {
+  color: "#1976d2",
+  marginBottom: "1rem",
+  fontSize: "1.2rem",
+  fontWeight: "600",
+};
+
+const approveButtonStyle = {
+  backgroundColor: "#4caf50",
+  color: "white",
+  border: "none",
+  padding: "8px 16px",
+  borderRadius: "6px",
+  marginRight: "8px",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    backgroundColor: "#388e3c",
+    transform: "translateY(-2px)",
+  },
+};
+
+const declineButtonStyle = {
+  backgroundColor: "#f44336",
+  color: "white",
+  border: "none",
+  padding: "8px 16px",
+  borderRadius: "6px",
+  cursor: "pointer",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    backgroundColor: "#d32f2f",
+    transform: "translateY(-2px)",
+  },
+};
+
+const emptyMessageStyle = {
+  padding: "2rem",
+  textAlign: "center",
+  color: "#7f8c8d",
+  fontSize: "1.1rem",
+};
 
 export default AdminReview;

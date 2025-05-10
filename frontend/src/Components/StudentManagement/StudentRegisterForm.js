@@ -21,7 +21,7 @@ const InsertStudent = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:6001/api/groups")
+      .get("http://localhost:5000/api/groups")
       .then((response) => setGroups(response.data))
       .catch((error) => console.error("Error fetching groups", error));
   }, []);
@@ -49,8 +49,19 @@ const InsertStudent = () => {
       formErrors.studentName = "Student name must contain only letters.";
     }
 
-    if (!studentData.registrationNumber.trim()) {
+    const regNumber = studentData.registrationNumber.trim();
+    if (!regNumber) {
       formErrors.registrationNumber = "Registration number is required";
+    } else {
+      const yearPrefix = regNumber.substring(0, 2);
+      const isValidYear = ['21', '22', '23', '24'].includes(yearPrefix);
+      const isValidFormat = /^\d{8}$/.test(regNumber);
+
+      if (!isValidYear) {
+        formErrors.registrationNumber = "Registration number must start with year (21-24)";
+      } else if (!isValidFormat) {
+        formErrors.registrationNumber = "Registration number must be 8 digits";
+      }
     }
 
     if (!studentData.email.trim()) {
@@ -83,7 +94,7 @@ const InsertStudent = () => {
 
     if (validateForm()) {
       try {
-        const response = await axios.post("http://localhost:6001/api/student", {
+        const response = await axios.post("http://localhost:5000/api/student", {
           ...studentData,
           status: "pending",
         });
@@ -92,7 +103,7 @@ const InsertStudent = () => {
           Swal.fire({
             icon: "success",
             title: "Registration Successful!",
-            text: "The student has been registered successfully.",
+            text: "Your registration has been submitted for review.",
             showConfirmButton: false,
             timer: 2000,
           });
@@ -116,11 +127,26 @@ const InsertStudent = () => {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4" style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
+      padding: '40px 20px'
+    }}>
       <div className="row justify-content-center">
         <div className="col-lg-8">
-          <div className="card shadow-sm">
-            <div className="card-header bg-primary text-white">
+          <div className="card" style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.1)',
+            borderRadius: '15px'
+          }}>
+            <div className="card-header" style={{
+              background: 'linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)',
+              color: 'white',
+              borderRadius: '15px 15px 0 0',
+              padding: '20px'
+            }}>
               <h4 className="mb-0">
                 <i className="bi bi-person-plus me-2"></i>
                 Student Registration
@@ -303,7 +329,11 @@ const InsertStudent = () => {
               </form>
             </div>
 
-            <div className="card-footer text-muted small">
+            <div className="card-footer text-muted small" style={{
+              background: 'rgba(25, 118, 210, 0.05)',
+              borderRadius: '0 0 15px 15px',
+              padding: '15px'
+            }}>
               <i className="bi bi-info-circle me-2"></i>
               Fields marked with * are required
             </div>

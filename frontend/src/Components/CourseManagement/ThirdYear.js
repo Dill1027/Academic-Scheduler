@@ -59,7 +59,7 @@ function Third() {
     };
 
     // Update the base URL
-    const BASE_URL = 'http://localhost:6001';
+    const BASE_URL = 'http://localhost:5000';
 
     // Fetch 3rd Year data when the component mounts
     useEffect(() => {
