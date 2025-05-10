@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 import UpdateLecturerForm from "./UpdateLecturerForm";
 import "./LecturerDetailsView.css";
 
@@ -12,6 +13,7 @@ const LecturerDetailsView = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [editingLecturer, setEditingLecturer] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLecturers = async () => {
@@ -107,7 +109,16 @@ const LecturerDetailsView = () => {
       />
 
       <div className="lecturer-card">
-        <h2 className="lecturer-title">Lecturer Management</h2>
+        <div className="lecturer-header-container">
+          <button 
+            onClick={() => navigate('/lecturerDashbord')}
+            className="back-button"
+          >
+            &larr; Back to Dashboard
+          </button>
+          <h2 className="lecturer-title">Lecturer Management</h2>
+        </div>
+
         {errorMessage && (
           <div className="error-message">
             {errorMessage}
@@ -117,25 +128,25 @@ const LecturerDetailsView = () => {
           </div>
         )}
 
-       <div className="search-container">
-  <i className="bi bi-search search-icon"></i>
-  <input
-    type="text"
-    placeholder="Search by ID, Name, Email, or Specialization..."
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    className="search-input"
-  />
-  {searchTerm && (
-    <button 
-      onClick={() => setSearchTerm("")} 
-      className="clear-search-button"
-      aria-label="Clear search"
-    >
-      ×
-    </button>
-  )}
-</div>
+        <div className="search-container">
+          <i className="bi bi-search search-icon"></i>
+          <input
+            type="text"
+            placeholder="Search by ID, Name, Email, or Specialization..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+          {searchTerm && (
+            <button 
+              onClick={() => setSearchTerm("")} 
+              className="clear-search-button"
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
 
         <div className="lecturer-grid">
           {isLoading ? (
@@ -215,7 +226,6 @@ const LecturerDetailsView = () => {
         </div>
       </div>
 
-      {/* Update Modal */}
       {showUpdateModal && (
         <div className="modal-overlay">
           <div className="modal-content">
