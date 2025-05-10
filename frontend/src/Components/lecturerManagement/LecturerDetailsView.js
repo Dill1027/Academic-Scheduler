@@ -32,12 +32,23 @@ const LecturerDetailsView = () => {
   }, []);
 
   const filteredLecturers = useMemo(() => {
-    if (!searchTerm) return lecturers;
-    const lowercaseSearch = searchTerm.toLowerCase();
-    return lecturers.filter(lecturer => 
-      lecturer.lecturerId.toLowerCase().includes(lowercaseSearch) ||
-      lecturer.fullName.toLowerCase().includes(lowercaseSearch)
-    );
+    if (!searchTerm.trim()) return lecturers;
+    
+    const searchTerms = searchTerm.trim().toLowerCase().split(' ');
+    
+    return lecturers.filter(lecturer => {
+      const searchableFields = [
+        lecturer.lecturerId,
+        lecturer.userName,
+        lecturer.fullName,
+        lecturer.email,
+        lecturer.specialization
+      ].map(field => field?.toLowerCase() || '');
+
+      return searchTerms.every(term =>
+        searchableFields.some(field => field.includes(term))
+      );
+    });
   }, [lecturers, searchTerm]);
 
   const handleDelete = async (id) => {
@@ -106,23 +117,25 @@ const LecturerDetailsView = () => {
           </div>
         )}
 
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search by ID or Name..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-          {searchTerm && (
-            <button 
-              onClick={() => setSearchTerm("")} 
-              className="clear-search-button"
-            >
-              ×
-            </button>
-          )}
-        </div>
+       <div className="search-container">
+  <i className="bi bi-search search-icon"></i>
+  <input
+    type="text"
+    placeholder="Search by ID, Name, Email, or Specialization..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="search-input"
+  />
+  {searchTerm && (
+    <button 
+      onClick={() => setSearchTerm("")} 
+      className="clear-search-button"
+      aria-label="Clear search"
+    >
+      ×
+    </button>
+  )}
+</div>
 
         <div className="lecturer-grid">
           {isLoading ? (
