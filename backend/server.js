@@ -73,7 +73,7 @@ app.use((err, req, res, next) => {
 app.use(errorHandler);
 
 // Start the server
-const PORT = 5000; // Set explicit port for consistency
+const PORT = process.env.PORT || 6001;
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
