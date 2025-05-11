@@ -18,6 +18,14 @@ export const moduleData = {
       { code: 'IT2030HI', name: 'Human-Computer Interaction', lecturer: 'Dr. H. Moore' },
       { code: 'IT2040NF', name: 'Networking Fundamentals', lecturer: 'Prof. N. Taylor' },
       { code: 'IT2050PM', name: 'IT Project Management', lecturer: 'Dr. P. Anderson' }
+    ],
+    'Software Engineering': [
+      { code: 'SE2001', name: 'Software Engineering Principles', lecturer: 'Dr. Wilson' },
+      { code: 'SE2002', name: 'Software Design Patterns', lecturer: 'Prof. Martinez' },
+      { code: 'SE2003', name: 'Software Testing', lecturer: 'Dr. Anderson' },
+      { code: 'SE2004', name: 'Web Application Development', lecturer: 'Prof. Davis' },
+      { code: 'SE2005', name: 'Database Systems', lecturer: 'Dr. Taylor' },
+      { code: 'SE2006', name: 'Object-Oriented Programming', lecturer: 'Prof. Smith' }
     ]
   },
   year3: {

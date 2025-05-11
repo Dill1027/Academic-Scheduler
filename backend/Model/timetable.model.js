@@ -38,8 +38,7 @@ const timetableSchema = new mongoose.Schema({
   },
   specialization: {
     type: String,
-    required: true,
-    enum: ['Information Technology', 'Data Science', 'Software Engineering', 'Interactive Media', 'Cyber Security']
+    required: true
   },
   moduleCode: {
     type: String,

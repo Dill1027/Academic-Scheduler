@@ -100,7 +100,8 @@ function App() {
 
         {/* Timetable Routes */}
         <Route path="/timetable" element={<YearSelection />} />
-        <Route path="/timetable/view/:year/:specialization" element={<TimetableOptions />} />
+        <Route path="/specializations/:yearId" element={<Specialization />} />
+        <Route path="/timetable-options/:yearId/:specializationId" element={<TimetableOptions />} />
 
         {/* Specialization Route */}
         <Route path="/specializations/:id" element={<Specialization />} />

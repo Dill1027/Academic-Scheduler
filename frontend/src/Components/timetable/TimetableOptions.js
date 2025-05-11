@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Add useNavigate
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container, Typography, Box, CircularProgress, Alert,
   Table, TableBody, TableCell, TableContainer, TableHead, 
   TableRow, Paper, Tabs, Tab, Select, MenuItem, FormControl,
-  InputLabel, Fade, Zoom, Button, useTheme,  // Add useTheme here
+  InputLabel, Fade, Zoom, Button, useTheme,
 } from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'; // Add this import
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { styled } from '@mui/material/styles';
 import { moduleData, rooms, timeSlots, weekDays } from '../../data/timetableData';
 import { keyframes } from '@emotion/react';
+import { generateTimetablesForYearSpec, getFilteredTimetables } from '../../services/timetableApi';
+import Navbar from '../Navbar';
+import Footer from '../Navbar/footer';
+import { generateTimetablePDF } from '../../utils/pdfGenerator';
 
 // Animation keyframes
 const pulse = keyframes`
@@ -182,19 +188,22 @@ const LoadingContainer = styled(Box)(({ theme }) => ({
 const TimetableOptions = () => {
   const { yearId, specializationId } = useParams();
   const navigate = useNavigate();
-  const theme = useTheme(); // Add this line
+  const theme = useTheme();
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedOption, setSelectedOption] = useState(0);
   const [selectedRoom, setSelectedRoom] = useState('');
+  const [timetableData, setTimetableData] = useState([]);
+  const [regenerating, setRegenerating] = useState(false);
+  const timetableRef = React.useRef(null);
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
   const getSpecName = (id) => {
     const specs = {
       1: 'Information Technology',
-      2: 'Software Engineering',
+      2: 'Software Engineering', 
       3: 'Information Systems Engineering',
       4: 'Cyber Security',
       5: 'Data Science',
@@ -211,181 +220,420 @@ const TimetableOptions = () => {
     ));
   };
 
-  const generateTimetableData = () => {
-    const getModulesForYearAndSpec = (year, spec) => {
-      if (year === '1') {
-        return moduleData.year1.modules;
-      }
-      if (moduleData[`year${year}`]?.[spec]) {
-        return moduleData[`year${year}`][spec];
-      }
-      return moduleData[`year${year}`]?.common || [];
-    };
+  const processTimetableData = (backendData) => {
+    if (!backendData || !backendData.length) {
+      console.log('No timetable data available, using mock data');
+      return generateMockTimetableData();
+    }
 
-    const currentSpecName = getSpecName(Number(specializationId));
-    const modules = getModulesForYearAndSpec(yearId, currentSpecName);
-    
-    return Array(5).fill(null).map((_, optionIndex) => ({
-      id: optionIndex + 1,
-      schedule: days.map(day => ({
-        day,
-        slots: timeSlots.map(() => {
-          const random = Math.random();
-          if (random > 0.6 && modules.length) {
-            const module = modules[Math.floor(Math.random() * modules.length)];
-            const room = rooms[Math.floor(Math.random() * rooms.length)];
-            return {
-              code: module.code,
-              name: module.name,
-              room: room,
-              lecturer: module.lecturer
-            };
-          }
-          return null;
-        })
-      }))
-    }));
+    try {
+      console.log('Processing timetable data:', backendData);
+      
+      return backendData.map((timetable, optionIndex) => {
+        const schedule = days.map((dayName, dayIndex) => {
+          const dayData = timetable.days?.find(d => d?.day === dayName) || { slots: [] };
+          
+          return {
+            day: dayName,
+            slots: timeSlots.map((timeSlot, timeIndex) => {
+              const apiTimeFormat = timeSlot.replace(/ /g, '');
+              
+              const foundSlot = dayData.slots?.find(s => {
+                return s?.time === apiTimeFormat || 
+                       s?.time === timeSlot || 
+                       (s?.time?.startsWith(timeSlot.split(' - ')[0]) && 
+                        s?.time?.endsWith(timeSlot.split(' - ')[1]));
+              });
+              
+              if (foundSlot) {
+                return {
+                  code: foundSlot.code || timetable.moduleCode || 'Unknown',
+                  name: foundSlot.subject || 'Unknown Subject',
+                  room: foundSlot.venu || foundSlot.room || rooms[Math.floor(Math.random() * rooms.length)],
+                  lecturer: foundSlot.lecturer || 'Unknown Lecturer'
+                };
+              }
+              
+              if (optionIndex === 0 && timeIndex % 2 === dayIndex % 2) {
+                const module = moduleData.year1.modules[Math.floor(Math.random() * moduleData.year1.modules.length)];
+                return {
+                  code: module.code,
+                  name: module.name,
+                  room: rooms[Math.floor(Math.random() * rooms.length)],
+                  lecturer: module.lecturer
+                };
+              }
+              
+              return null;
+            })
+          };
+        });
+        
+        return {
+          id: optionIndex + 1,
+          schedule
+        };
+      });
+    } catch (err) {
+      console.error('Error processing timetable data:', err);
+      setError(`Error processing timetable data: ${err.message}`);
+      return generateMockTimetableData();
+    }
+  };
+
+  const generateMockTimetableData = () => {
+    try {
+      const getModulesForYearAndSpec = (year, spec) => {
+        if (year === '1') {
+          return moduleData.year1.modules;
+        }
+        if (moduleData[`year${year}`]?.[spec]) {
+          return moduleData[`year${year}`][spec];
+        }
+        if (moduleData[`year${year}`]?.common) {
+          return moduleData[`year${year}`].common;
+        }
+        return moduleData.year1.modules;
+      };
+
+      const currentSpecName = getSpecName(Number(specializationId));
+      
+      let modules = getModulesForYearAndSpec(yearId, currentSpecName);
+      
+      if (!modules || modules.length === 0) {
+        console.warn(`No modules found for Year ${yearId}, Specialization: ${currentSpecName}`);
+        modules = [
+          { code: 'CS101', name: 'Introduction to Computing', lecturer: 'Dr. Smith' },
+          { code: 'CS102', name: 'Programming Fundamentals', lecturer: 'Prof. Johnson' },
+          { code: 'CS103', name: 'Database Systems', lecturer: 'Dr. Williams' },
+          { code: 'CS104', name: 'Web Development', lecturer: 'Prof. Brown' },
+          { code: 'CS105', name: 'Computer Networks', lecturer: 'Dr. Davis' }
+        ];
+      }
+      
+      return Array(3).fill(null).map((_, optionIndex) => ({
+        id: optionIndex + 1,
+        schedule: days.map((day, dayIndex) => ({
+          day,
+          slots: timeSlots.map((time, timeIndex) => {
+            const shouldCreateClass = 
+              (timeIndex + dayIndex + optionIndex) % 3 === 0 || 
+              (dayIndex * 2 + timeIndex) % 4 === optionIndex % 4;
+              
+            if (shouldCreateClass && modules.length) {
+              const module = modules[Math.floor(Math.random() * modules.length)];
+              const room = rooms[Math.floor(Math.random() * rooms.length)];
+              return {
+                code: module.code,
+                name: module.name,
+                room: room,
+                lecturer: module.lecturer
+              };
+            }
+            return null;
+          })
+        }))
+      }));
+    } catch (error) {
+      console.error('Error generating mock data:', error);
+      
+      return Array(3).fill(null).map((_, optionIndex) => ({
+        id: optionIndex + 1,
+        schedule: days.map((day, dayIndex) => ({
+          day,
+          slots: timeSlots.map((time, timeIndex) => {
+            if ((timeIndex + dayIndex) % 3 === optionIndex % 3) {
+              return {
+                code: `CS${100 + timeIndex + dayIndex}`,
+                name: `Course ${timeIndex + 1}`,
+                room: `Room ${String.fromCharCode(65 + timeIndex % 6)}`,
+                lecturer: `Dr. ${String.fromCharCode(65 + (timeIndex + dayIndex) % 26)}`
+              };
+            }
+            return null;
+          })
+        }))
+      }));
+    }
+  };
+
+  const handleRegenerateTimetables = async () => {
+    try {
+      setRegenerating(true);
+      const specName = getSpecName(Number(specializationId));
+      
+      const result = await generateTimetablesForYearSpec(yearId, encodeURIComponent(specName));
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to regenerate timetables');
+      }
+      
+      console.log('New timetables generated:', result.data);
+      
+      const processedData = processTimetableData(result.data);
+      setOptions(processedData);
+      setTimetableData(result.data);
+      setSelectedOption(0);
+      
+      setError(null);
+      
+    } catch (err) {
+      console.error('Failed to regenerate timetables:', err);
+      setError(`Failed to regenerate timetables: ${err.message}`);
+      
+      const mockData = generateMockTimetableData();
+      setOptions(mockData);
+    } finally {
+      setRegenerating(false);
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    if (timetableRef.current) {
+      const specName = getSpecName(Number(specializationId));
+      const fileName = `timetable_year${yearId}_${specName.replace(/\s+/g, '_')}_option${selectedOption + 1}.pdf`;
+      generateTimetablePDF(timetableRef.current, fileName);
+    }
   };
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      const options = generateTimetableData();
-      setOptions(options);
-      setLoading(false);
-    }, 1000);
+    const fetchTimetableData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const specName = getSpecName(Number(specializationId));
+        console.log(`Fetching timetables for Year ${yearId}, Specialization: ${specName}`);
+        
+        let result = await getFilteredTimetables({
+          year: Number(yearId),
+          specialization: specName
+        });
+
+        console.log('API response:', result);
+        
+        if (!result.data || result.data.length === 0) {
+          console.log('No timetables found. Generating new ones...');
+          result = await generateTimetablesForYearSpec(yearId, encodeURIComponent(specName));
+        }
+
+        if (result.error) {
+          throw new Error(result.error);
+        }
+
+        console.log('Timetable data received:', result.data);
+        
+        if (!result.data || result.data.length === 0) {
+          console.log('No timetable data available after generation, using mock data.');
+          const mockData = generateMockTimetableData();
+          setOptions(mockData);
+        } else {
+          const processedData = processTimetableData(result.data);
+          setOptions(processedData);
+          setTimetableData(result.data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch timetable data:', err);
+        setError(`Failed to load timetable: ${err.message}`);
+        
+        const mockData = generateMockTimetableData();
+        setOptions(mockData);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimetableData();
   }, [yearId, specializationId]);
 
   if (loading) {
     return (
-      <LoadingContainer>
-        <CircularProgress />
-      </LoadingContainer>
+      <>
+        <Navbar />
+        <LoadingContainer>
+          <CircularProgress />
+        </LoadingContainer>
+        <Footer />
+      </>
     );
   }
 
   if (error) {
     return (
-      <Container>
-        <Alert severity="error" sx={{ mt: 4 }}>{error}</Alert>
-      </Container>
+      <>
+        <Navbar />
+        <Container>
+          <Alert severity="error" sx={{ mt: 4 }}>{error}</Alert>
+          <Button 
+            variant="contained" 
+            startIcon={<ArrowBackIcon />} 
+            onClick={() => navigate(-1)}
+            sx={{ mt: 2 }}
+          >
+            Go Back
+          </Button>
+        </Container>
+        <Footer />
+      </>
     );
   }
 
   return (
-    <StyledContainer maxWidth="xl">
-      <Zoom in={true} timeout={500}>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={() => navigate(-1)}
-          variant="contained"
-          color="secondary"
-          sx={{
-            mb: 4,
-            borderRadius: '50px',
-            boxShadow: theme.shadows[4],
-            color: 'rgba(255, 255, 255, 0.9)',
-            width: '200px',
-            height: '48px',
-            fontSize: '1rem',
-            '&:hover': {
-              transform: 'translateY(-2px)',
-              boxShadow: theme.shadows[8],
-              color: '#e0e0e0',
-            },
-            transition: 'all 0.3s ease',
-            position: 'relative',
-            zIndex: 1
-          }}
-        >
-          Back
-        </Button>
-      </Zoom>
+    <>
+      <Navbar />
+      <Container maxWidth="xl" sx={{ py: 5 }}>
+        <StyledContainer maxWidth="xl">
+          <Zoom in={true} timeout={500}>
+            <Button
+              startIcon={<ArrowBackIcon />}
+              onClick={() => navigate(`/specializations/${yearId}`)}
+              variant="contained"
+              color="secondary"
+              sx={{
+                mb: 4,
+                borderRadius: '50px',
+                boxShadow: theme.shadows[4],
+                color: 'rgba(255, 255, 255, 0.9)',
+                width: '200px',
+                height: '48px',
+                fontSize: '1rem',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: theme.shadows[8],
+                  color: '#e0e0e0',
+                },
+                transition: 'all 0.3s ease',
+                position: 'relative',
+                zIndex: 1
+              }}
+            >
+              Back
+            </Button>
+          </Zoom>
 
-      <Title variant="h3" gutterBottom>
-        {getSpecName(Number(specializationId))} - Year {yearId}
-      </Title>
+          <Title variant="h3" gutterBottom>
+            {getSpecName(Number(specializationId))} - Year {yearId}
+          </Title>
 
-      <RoomSelect>
-        <InputLabel id="room-select-label">Select Room</InputLabel>
-        <Select
-          labelId="room-select-label"
-          value={selectedRoom}
-          onChange={(e) => setSelectedRoom(e.target.value)}
-          label="Select Room"
-        >
-          <MenuItem value=""><em>All Rooms</em></MenuItem>
-          {getRoomOptions()}
-        </Select>
-      </RoomSelect>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, flexWrap: 'wrap', gap: 2 }}>
+            <RoomSelect>
+              <InputLabel id="room-select-label">Select Room</InputLabel>
+              <Select
+                labelId="room-select-label"
+                value={selectedRoom}
+                onChange={(e) => setSelectedRoom(e.target.value)}
+                label="Select Room"
+              >
+                <MenuItem value=""><em>All Rooms</em></MenuItem>
+                {getRoomOptions()}
+              </Select>
+            </RoomSelect>
 
-      <StyledTabs
-        value={selectedOption}
-        onChange={(e, newValue) => setSelectedOption(newValue)}
-        centered
-        variant="scrollable"
-        scrollButtons="auto"
-      >
-        {options.map((_, index) => (
-          <StyledTab key={index} label={`Timetable Option ${index + 1}`} />
-        ))}
-      </StyledTabs>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<RefreshIcon />}
+                onClick={handleRegenerateTimetables}
+                disabled={regenerating}
+                sx={{
+                  borderRadius: '8px',
+                  height: '56px'
+                }}
+              >
+                {regenerating ? 'Generating...' : 'Regenerate Timetables'}
+              </Button>
 
-      {options[selectedOption] && (
-        <Zoom in={true} timeout={500}>
-          <TableContainer 
-            component={Paper} 
-            sx={{ 
-              overflowX: 'auto',
-              borderRadius: '12px',
-              boxShadow: 3,
-              '&:hover': {
-                boxShadow: 6
-              }
-            }}
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<GetAppIcon />}
+                onClick={handleDownloadPDF}
+                sx={{
+                  borderRadius: '8px',
+                  height: '56px'
+                }}
+              >
+                Download PDF
+              </Button>
+            </Box>
+          </Box>
+
+          <StyledTabs
+            value={selectedOption}
+            onChange={(e, newValue) => setSelectedOption(newValue)}
+            centered
+            variant="scrollable"
+            scrollButtons="auto"
           >
-            <Table sx={{ minWidth: 800 }}>
-              <TableHead>
-                <TableRow>
-                  <HeaderCell>Time</HeaderCell>
-                  {days.map(day => (
-                    <HeaderCell key={day}>{day}</HeaderCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {timeSlots.map((timeSlot, timeIndex) => (
-                  <TableRow key={timeSlot} hover>
-                    <TimeCell>{timeSlot}</TimeCell>
-                    {days.map((day, dayIndex) => {
-                      const subject = options[selectedOption].schedule[dayIndex].slots[timeIndex];
-                      const isSelectedRoom = selectedRoom ? subject?.room === selectedRoom : true;
-                      return (
-                        <ContentCell 
-                          key={`${day}-${timeSlot}`}
-                          hascontent={subject && isSelectedRoom ? 1 : 0}
-                        >
-                          {subject && isSelectedRoom && (
-                            <Fade in={true} timeout={800}>
-                              <Box sx={{ textAlign: 'center' }}>
-                                <div className="subject">{subject.code}</div>
-                                <div className="subject-name">{subject.name}</div>
-                                <div className="room">{subject.room}</div>
-                                <div className="lecturer">{subject.lecturer}</div>
-                              </Box>
-                            </Fade>
-                          )}
-                        </ContentCell>
-                      );
-                    })}
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Zoom>
-      )}
-    </StyledContainer>
+            {options.map((option, index) => (
+              <StyledTab key={index} label={`Timetable Option ${index + 1}`} />
+            ))}
+          </StyledTabs>
+
+          {options[selectedOption] && (
+            <Zoom in={true} timeout={500}>
+              <TableContainer 
+                component={Paper} 
+                sx={{ 
+                  overflowX: 'auto',
+                  borderRadius: '12px',
+                  boxShadow: 3,
+                  '&:hover': {
+                    boxShadow: 6
+                  }
+                }}
+                ref={timetableRef}
+              >
+                <Table sx={{ minWidth: 800 }}>
+                  <TableHead>
+                    <TableRow>
+                      <HeaderCell>Time</HeaderCell>
+                      {days.map(day => (
+                        <HeaderCell key={day}>{day}</HeaderCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {timeSlots.map((timeSlot, timeIndex) => (
+                      <TableRow key={timeSlot} hover>
+                        <TimeCell>{timeSlot}</TimeCell>
+                        {days.map((day, dayIndex) => {
+                          const schedule = options[selectedOption]?.schedule || [];
+                          const daySchedule = schedule[dayIndex] || { slots: [] };
+                          const subject = daySchedule.slots?.[timeIndex];
+                          
+                          const isSelectedRoom = !selectedRoom || (subject?.room === selectedRoom);
+                          
+                          return (
+                            <ContentCell 
+                              key={`${day}-${timeSlot}`}
+                              hascontent={subject && isSelectedRoom ? 1 : 0}
+                            >
+                              {subject && isSelectedRoom && (
+                                <Fade in={true} timeout={800}>
+                                  <Box sx={{ textAlign: 'center' }}>
+                                    <div className="subject">{subject.code || 'N/A'}</div>
+                                    <div className="subject-name">{subject.name || 'Unknown Subject'}</div>
+                                    <div className="room">{subject.room || 'No Room'}</div>
+                                    <div className="lecturer">{subject.lecturer || 'No Lecturer'}</div>
+                                  </Box>
+                                </Fade>
+                              )}
+                            </ContentCell>
+                          );
+                        })}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Zoom>
+          )}
+        </StyledContainer>
+      </Container>
+      <Footer />
+    </>
   );
 };
 

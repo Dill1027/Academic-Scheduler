@@ -262,6 +262,50 @@ const Home = () => {
             >
               Learn More
             </motion.button>
+
+            <motion.button
+              style={{
+                padding: "16px 36px",
+                fontSize: "1.1rem",
+                fontWeight: 600,
+                background: "linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%)",
+                color: "white",
+                border: "none",
+                borderRadius: "50px",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
+                boxShadow: "0 4px 15px rgba(110, 72, 170, 0.4)",
+                position: "relative",
+                overflow: "hidden",
+                zIndex: 1
+              }}
+              onClick={() => navigate("/timetable")}
+              whileHover={{ 
+                transform: "translateY(-3px)",
+                boxShadow: "0 7px 20px rgba(110, 72, 170, 0.5)"
+              }}
+              whileTap={{ 
+                transform: "translateY(1px)",
+                boxShadow: "0 2px 10px rgba(110, 72, 170, 0.4)"
+              }}
+            >
+              <span style={{ position: "relative", zIndex: 2 }}>
+                View Timetable <FaArrowRight style={{ marginLeft: "8px" }} />
+              </span>
+              <span style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                background: "linear-gradient(135deg, #9d50bb 0%, #6e48aa 100%)",
+                opacity: 0,
+                transition: "opacity 0.3s ease",
+                zIndex: 1
+              }}></span>
+            </motion.button>
           </motion.div>
         </motion.div>
         
