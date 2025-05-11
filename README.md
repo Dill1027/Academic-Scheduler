@@ -31,6 +31,11 @@ The Academic Scheduler is an intelligent, full-stack web application designed to
 - **PDF Generation** with dynamic templates
 - **Excel Import/Export** for bulk operations
 - **Role-Based Access Control** (RBAC)
+- **Interactive Timetable Viewer** with filtering capabilities
+- **Real-time Collaboration** for administrators
+- **Multi-criteria Scheduling** for optimal resource allocation
+- **Automated Conflict Resolution** with intelligent suggestions
+- **Custom Calendar Integration** with popular platforms
 
 ## System Architecture 🏗️
 

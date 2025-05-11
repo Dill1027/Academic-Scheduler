@@ -8,6 +8,14 @@ exports.register = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
+    // Improved validation
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required (name, email, password, role)"
+      });
+    }
+
     // Check if user already exists
     let user = await User.findOne({ email });
     if (user) {

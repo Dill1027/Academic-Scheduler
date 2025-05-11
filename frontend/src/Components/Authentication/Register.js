@@ -67,8 +67,10 @@ const Register = () => {
         formData,
         {
           headers: {
-            'Content-Type': 'application/json'
-          }
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          withCredentials: true
         }
       );
 
@@ -89,11 +91,23 @@ const Register = () => {
       }
     } catch (err) {
       console.error("Registration error:", err);
-      setError(
-        err.response?.data?.message || 
-        err.response?.data?.error ||
-        "Registration failed. Please check your details and try again."
-      );
+      
+      const errorMessage = err.response?.data?.message || 
+                          err.response?.data?.error ||
+                          (err.message === 'Network Error' ? 
+                            'Cannot connect to server. Please check your connection or try again later.' :
+                            "Registration failed. Please check your details and try again.");
+                            
+      setError(errorMessage);
+      
+      if (err.message === 'Network Error') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Connection Error',
+          text: 'Cannot connect to the server. This might be due to CORS issues or server being offline.',
+          showConfirmButton: true
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -190,7 +204,6 @@ const Register = () => {
             </select>
           </div>
 
-          {/* Conditional rendering for lecturer fields */}
           {formData.role === "Lecturer" && (
             <>
               <div style={inputGroupStyle}>
@@ -218,7 +231,6 @@ const Register = () => {
             </>
           )}
 
-          {/* Admin code field */}
           {formData.role === "Admin" && (
             <div style={inputGroupStyle}>
               <label htmlFor="adminCode" style={labelStyle}>Admin Code</label>
@@ -271,7 +283,6 @@ const Register = () => {
   );
 };
 
-// Styles
 const containerStyle = {
   display: 'flex',
   justifyContent: 'center',

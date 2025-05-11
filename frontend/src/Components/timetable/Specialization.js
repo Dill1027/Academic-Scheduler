@@ -136,7 +136,7 @@ const SpecializationSelection = () => {
   };
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate('/timetable'); // Go back to year selection
   };
 
   if (loading) {
