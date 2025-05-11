@@ -16,6 +16,7 @@ import { generateTimetablesForYearSpec, getFilteredTimetables } from '../../serv
 import Navbar from '../Navbar';
 import Footer from '../Navbar/footer';
 import { generateTimetablePDF } from '../../utils/pdfGenerator';
+import Swal from 'sweetalert2';
 
 // Animation keyframes
 const pulse = keyframes`
@@ -358,34 +359,61 @@ const TimetableOptions = () => {
   };
 
   const handleRegenerateTimetables = async () => {
-    try {
-      setRegenerating(true);
-      const specName = getSpecName(Number(specializationId));
-      
-      const result = await generateTimetablesForYearSpec(yearId, encodeURIComponent(specName));
-      
-      if (!result.success) {
-        throw new Error(result.error || 'Failed to regenerate timetables');
+    Swal.fire({
+      title: 'Regenerate Timetables?',
+      text: 'This will create new timetable options and replace the current ones. Are you sure you want to continue?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: theme.palette.primary.main,
+      cancelButtonColor: theme.palette.grey[500],
+      confirmButtonText: 'Yes, regenerate!',
+      cancelButtonText: 'Cancel'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          setRegenerating(true);
+          const specName = getSpecName(Number(specializationId));
+          
+          const result = await generateTimetablesForYearSpec(yearId, encodeURIComponent(specName));
+          
+          if (!result.success) {
+            throw new Error(result.error || 'Failed to regenerate timetables');
+          }
+          
+          console.log('New timetables generated:', result.data);
+          
+          const processedData = processTimetableData(result.data);
+          setOptions(processedData);
+          setTimetableData(result.data);
+          setSelectedOption(0);
+          
+          setError(null);
+          
+          Swal.fire({
+            title: 'Success!',
+            text: 'Timetables have been regenerated successfully.',
+            icon: 'success',
+            confirmButtonColor: theme.palette.primary.main
+          });
+          
+        } catch (err) {
+          console.error('Failed to regenerate timetables:', err);
+          setError(`Failed to regenerate timetables: ${err.message}`);
+          
+          const mockData = generateMockTimetableData();
+          setOptions(mockData);
+          
+          Swal.fire({
+            title: 'Error',
+            text: `Failed to regenerate timetables: ${err.message}`,
+            icon: 'error',
+            confirmButtonColor: theme.palette.primary.main
+          });
+        } finally {
+          setRegenerating(false);
+        }
       }
-      
-      console.log('New timetables generated:', result.data);
-      
-      const processedData = processTimetableData(result.data);
-      setOptions(processedData);
-      setTimetableData(result.data);
-      setSelectedOption(0);
-      
-      setError(null);
-      
-    } catch (err) {
-      console.error('Failed to regenerate timetables:', err);
-      setError(`Failed to regenerate timetables: ${err.message}`);
-      
-      const mockData = generateMockTimetableData();
-      setOptions(mockData);
-    } finally {
-      setRegenerating(false);
-    }
+    });
   };
 
   const handleDownloadPDF = () => {
