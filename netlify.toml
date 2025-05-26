@@ -1,0 +1,7 @@
+[build]
+  base = "."
+  publish = "frontend/build"
+  command = "cd frontend && npm install && npm run build"
+
+[build.environment]
+  CI = "false"
