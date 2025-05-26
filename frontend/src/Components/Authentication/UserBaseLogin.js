@@ -358,6 +358,38 @@ const LoginSelection = () => {
               width: 100px;
               height: 100px;
             }
+            
+            h2.fw-bold {
+              font-size: 2rem;
+            }
+            
+            .row {
+              margin: 0 10px;
+            }
+          }
+          
+          @media (max-width: 480px) {
+            .card {
+              min-height: 280px;
+            }
+            
+            h2.fw-bold {
+              font-size: 1.8rem;
+            }
+            
+            .icon-container {
+              width: 80px;
+              height: 80px;
+            }
+            
+            button {
+              padding: 10px !important;
+              font-size: 0.9rem !important;
+            }
+            
+            .container {
+              padding: 10px !important;
+            }
           }
         `}
       </style>

@@ -4,7 +4,34 @@
   padding: 0;
   box-sizing: border-box;
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Cross-browser compatibility */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+/* Focus styles for accessibility */
+*:focus-visible {
+  outline: 2px solid #4f55c3;
+  outline-offset: 2px;
+}
+
+button, a {
+  touch-action: manipulation;
+}
+
+/* iOS button appearance fix */
+button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 .logo_set {
   display: flex;
   align-items: center;
@@ -32,6 +59,7 @@
   background-color: #4f55c3;
   padding: 25px;
   flex-direction: column;
+  z-index: 1000;
 }
 .nav_item_set {
   cursor: pointer;
@@ -40,6 +68,7 @@
   font-size: 20px;
   color: white;
   padding: 5px 10px;
+  transition: all 0.3s ease;
 }
 .nav_item_set:hover {
   background-color: white;
@@ -222,11 +251,6 @@
 .text-primary {
   color: rgb(0, 0, 126) !important;
 }
-
-
-
-
-
 
 /* Add this to your global styles or theme */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -519,16 +543,59 @@ html {
   }
 }
 
-@media (max-width: 600px) {
-  .table-container {
-    overflow-x: auto;
+@media (max-width: 768px) {
+  .side_bar_full {
+    width: 200px;
+    padding: 15px;
   }
   
-  .time-cell, .venu-cell {
-    font-size: 0.75rem;
+  .lef_child {
+    margin-left: 200px;
   }
   
-  .subject-cell {
-    font-size: 0.8rem;
+  .nav_item_set {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+  
+  .search_bar {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .side_bar_full {
+    width: 100%;
+    height: auto;
+    position: relative;
+    padding: 10px;
+  }
+  
+  .lef_child {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  .action_set {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  
+  .from_data {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .nav_item_set {
+    padding: 8px 12px;
+  }
+  
+  .function_btn, .search_btn, .frombtn {
+    padding: 8px 20px;
   }
 }

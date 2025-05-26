@@ -3,7 +3,8 @@
     padding: 1rem;  /* Reduced footer height */
     background-color: #333;
     color: #fff;
-    background-size:cover;
+    background-size: cover;
+    width: 100%;
   }
   
   .footer-container h6 {
@@ -44,10 +45,49 @@
   .footer-container a {
     color: #fff;
     text-decoration: none;
+    transition: color 0.2s ease;
+    position: relative;
+    display: inline-block;
   }
   
   .footer-container a:hover {
     text-decoration: underline;
+    color: #4a6cf7;
+  }
+  
+  /* Responsive Footer */
+  @media (max-width: 768px) {
+    .footer-container h6 {
+      font-size: 1rem;
+    }
+    
+    table#calendar th,
+    table#calendar td {
+      padding: 5px;
+      font-size: 0.8rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .footer-container {
+      padding: 0.8rem;
+    }
+    
+    table#calendar {
+      font-size: 0.7rem;
+    }
+    
+    table#calendar th,
+    table#calendar td {
+      padding: 3px;
+    }
+  }
+  
+  /* Touch-friendly links */
+  @media (hover: none) {
+    .footer-container a {
+      padding: 5px 0;
+    }
   }
   
   .text-center {
@@ -61,4 +101,3 @@
     margin-right: 8px; /* Add spacing between text and image */
     vertical-align: middle; /* Align images with text */
   }
-  

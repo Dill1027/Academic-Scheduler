@@ -226,6 +226,10 @@ const cardStyle = {
   transition: 'transform 0.3s ease',
   '&:hover': {
     transform: 'translateY(-5px)'
+  },
+  '@media (max-width: 480px)': {
+    padding: '25px',
+    maxWidth: '90%'
   }
 };
 
@@ -242,12 +246,18 @@ const titleStyle = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  '@media (max-width: 480px)': {
+    fontSize: '20px'
+  }
 };
 
 const subtitleStyle = {
   fontSize: '14px',
   color: '#7f8c8d',
   margin: '0',
+  '@media (max-width: 480px)': {
+    fontSize: '12px'
+  }
 };
 
 const formStyle = {
@@ -266,6 +276,9 @@ const labelStyle = {
   color: '#34495e',
   display: 'flex',
   alignItems: 'center',
+  '@media (max-width: 480px)': {
+    fontSize: '13px'
+  }
 };
 
 const iconStyle = {
@@ -280,6 +293,10 @@ const inputStyle = {
   border: '1px solid #ddd',
   borderRadius: '6px',
   transition: 'border-color 0.3s',
+  '@media (max-width: 480px)': {
+    padding: '10px 12px',
+    fontSize: '14px'
+  }
 };
 
 inputStyle[':focus'] = {
