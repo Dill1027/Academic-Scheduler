@@ -1,4 +1,5 @@
 # Academic Scheduler - Conflict-Free Timetable Management System 📅
+https://dancing-entremet-155108.netlify.app/
 
 ## Enhanced Project Overview 🌟
 
